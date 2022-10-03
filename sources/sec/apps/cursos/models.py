@@ -8,3 +8,6 @@ class Curso(models.Model):
     modulos = models.IntegerField(2)
     descuento = models.IntegerField(2)
     precio = models.IntegerField(4)
+
+    def __str__(self):
+        return f'fechaDesde={self.fechaDesde}, fechaHasta={self.fechaHasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
