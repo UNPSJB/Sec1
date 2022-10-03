@@ -7,3 +7,5 @@ class Persona(models.Model):
     apellido = models.CharField(max_length= 30)
     fechaNacimiento = models.DateTimeField()
     
+    def __str__(self):
+        return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
