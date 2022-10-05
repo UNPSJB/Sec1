@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <title> Listado Cursos </title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg" style="background-color: #064080">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="administrativo.html">
+        <img src="img/sec_noticia.png" alt="logo" width="150px">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión Afiliados
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+              <li><a class="dropdown-item" href="listadoAfiliados.html">Listado de afiliados</a></li>
+              <li class="dropdown-divider"></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión Cursos
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Agregar curso</a></li>
+              <li><a class="dropdown-item" href="listadoCursos.html">Listado de cursos</a></li>
+              <li class="dropdown-divider"></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión Profesores
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Agregar profesor</a></li>
+              <li><a class="dropdown-item" href="listadoProfesores.html">Listado de profesores</a></li>
+              <li class="dropdown-divider"></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión Salones
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Agregar salón</a></li>
+              <li><a class="dropdown-item" href="#">Listado de salones</a></li>
+              <li class="dropdown-divider"></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión Alquileres
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+              <li><a class="dropdown-item" href="#">Listado de alquileres</a></li>
+              <li class="dropdown-divider"></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+</div>
+    <div class="container my-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <h3>Listado de Cursos</h3>
+                <div class="container">
+                  <div class="row justify-content-end">
+                      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <form class="d-flex" role="search">
+                          <input class="form-control me-3" type="search" placeholder="Ingrese campo a buscar" aria-label="Search">
+                          <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        </form>
+                      </div>
+                </div>
+                <br>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th> Nombre </th>
+                            <th> Fecha Desde </th>
+                            <th> Fecha Hasta </th>
+                            <th> Descuento </th>
+                            <th> Profesor </th>
+                            <th> Precio </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <div>
+                            <tr>
+                                <td> Desarrollo de software</td>
+                                <td> 01/08/21 </td>
+                                <td> 21/11/12 </td>
+                                <td> 15% </td>
+                                <td> Diego </td>
+                                <td> 15000$ </td>
+                                <td><a href="#" class="btn btn-success"> Ver </a></td>
+                            </tr>
+                        </div>
+                        <div>
+                            <tr>
+                                <td> Desarrollo de software</td>
+                                <td> 01/08/21 </td>
+                                <td> 21/11/12 </td>
+                                <td> 15% </td>
+                                <td> Diego </td>
+                                <td> 15000$ </td>
+                                <td><a href="#" class="btn btn-success"> Ver </a></td>
+                            </tr>
+                        </div>
+                        <div>
+                            <tr>
+                                <td> Desarrollo de software</td>
+                                <td> 01/08/21 </td>
+                                <td> 21/11/12 </td>
+                                <td> 15% </td>
+                                <td> Diego </td>
+                                <td> 15000$ </td>
+                                <td><a href="#" class="btn btn-success"> Ver </a></td>
+                            </tr>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
