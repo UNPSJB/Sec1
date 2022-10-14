@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +16,7 @@
     <nav class="navbar navbar-expand-lg" style="background-color: #064080">
         <div class="container-fluid">
           <a class="navbar-brand" href="home.html">
-            <img src="img/sec_noticia.png" alt="logo" width="150px">
+            <img src="{% static 'img/sec_noticia.png' %}" alt="logo" width="150px">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -39,7 +41,7 @@
             <!-- tarjeta 1 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/gimnasio.png" class="card-img-top" alt="gimnasio">
+                    <img src="{% static 'img/gimnasio.png' %}" class="card-img-top" alt="gimnasio">
                     <div class="card-body">
                         <h4> Gimnasio </h4>
                         <p class="text-muted"> Como SEC, queremos que siempre te mantengas saludable, es por eso que disponemos de un gimnasio para que puedas ejercitarte solo, o con amigos. Contamos con coachs para entrenamiento funcional y muscular, que te guiarán en tus ejercicios.</p>
@@ -50,7 +52,7 @@
             <!-- tarjeta 2 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/polideportivo.png" class="card-img-top" alt="polideportivo">
+                    <img src="{% static 'img/polideportivo.png' %}" class="card-img-top" alt="polideportivo">
                     <div class="card-body">
                         <h4> Cursos </h4>
                         <p class="text-muted">Como SEC les brindamos una amplia cantidad de talleres/cursos para que puedas aumentar tus conocimientos sobre algún área en particular. ¿Qué estás esperando?, inscribite.</p>
@@ -61,7 +63,7 @@
             <!-- tarjeta 3 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/beneficios.png" alt="card-img-top" alt="beneficios">
+                    <img src="{% static 'img/beneficios.png' %}" class="card-img-top" alt="beneficios">
                     <div class="card-body">
                         <h4> Beneficios </h4>
                         <p class="text-muted"> Como afiliado, dispondrás de varios beneficios, como lo son, descuentos en los cursos dictados por el SEC, salones para alquilar, a su vez, se te otorgará una tarjeta, la cuál te dará beneficios en el área de salúd. ¿Qué esperás para afiliarte?.</p>
