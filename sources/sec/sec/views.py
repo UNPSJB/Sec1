@@ -24,8 +24,8 @@ def home(request):
 def listadoCursos(request):
     return render(request,"listadoCursos.html")
 
-def listadoProfesores(request):
-    return render(request,"listadoProfesores.html")
+#def listadoProfesores(request):
+#    return render(request,"listadoProfesores.html")
 
 def listadoSalones(request):
     return render(request,"listadoSalones.html")
