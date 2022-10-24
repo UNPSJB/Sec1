@@ -9,8 +9,8 @@ def beneficios(request):
 def contacto(request):
     return render(request,"contacto.html")
 
-def cursos(request):
-    return render(request,"cursos.html")
+#def cursos(request):
+#    return render(request,"cursos.html")
 
 def gimnasio(request):
     return render(request,"gimnasio.html")
@@ -18,8 +18,8 @@ def gimnasio(request):
 def home(request):
     return render(request,"home.html")
 
-def listadoAfiliados(request):
-    return render(request,"listadoAfiliados.html")
+#def listadoAfiliados(request):
+#    return render(request,"listadoAfiliados.html")
 
 def listadoCursos(request):
     return render(request,"listadoCursos.html")

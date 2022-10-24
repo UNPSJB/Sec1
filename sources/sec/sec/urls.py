@@ -19,17 +19,19 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('administrativo.html/', administrativo),
-    path('beneficios.html/', beneficios),
-    path('contacto.html/', contacto),
-    path('cursos.html/', cursos),
-    path('gimnasio.html/', gimnasio),
-    path('', home),
-    path('listadoAfiliados.html/', listadoAfiliados),
-    path('listadoCursos.html/', listadoCursos),
-    path('listadoProfesores.html/', listadoProfesores),
-    path('listadoSalones.html/', listadoSalones),
-    path('login.html/', login),
-    path('usuario.html/', usuario),
+    path('administrativo/', administrativo, name= 'administrativo'),
+    path('beneficios/', beneficios),
+    path('contacto/', contacto),
+    #path('cursos.html/', cursos),
+    path('cursos/', include('apps.cursos.urls')),
+    path('gimnasio/', gimnasio),
+    path('', home, name= 'home'),
+    #path('listadoAfiliados.html/', listadoAfiliados, ),
+    path('listadoAfiliados/', include('apps.afiliados.urls')),
+    path('listadoCursos/', listadoCursos),
+    path('listadoProfesores/', listadoProfesores),
+    path('listadoSalones/', listadoSalones),
+    path('login/', login, name= 'login'),
+    path('usuario/', usuario),
     path('admin/', admin.site.urls)
 ]

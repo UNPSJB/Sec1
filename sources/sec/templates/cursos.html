@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +13,8 @@
 <body style="background-color:#0f66c3">
     <nav class="navbar navbar-expand-lg" style="background-color: #064080">
         <div class="container-fluid">
-          <a class="navbar-brand" href="home.html">
-            <img src="img/sec_noticia.png" alt="logo" width="150px">
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static '/img/sec_noticia.png' %}" alt="logo" width="150px">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -20,10 +22,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link text-white" aria-current="page" href="login.html"> Iniciar Sesión </a>
+                <a class="nav-link text-white" aria-current="page" href="{% url 'login' %}"> Iniciar Sesión </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="contacto.html">Contacto</a>
+                <a class="nav-link text-white" href="contacto">Contacto</a>
               </li>
             </ul>
           </div>
@@ -34,7 +36,7 @@
             <!-- tarjeta 1 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/bartender.png" class="card-img-top" alt="gimnasio">
+                    <img src="{% static '/img/bartender.png' %}" class="card-img-top" alt="gimnasio">
                     <div class="card-body">
                         <h4> Candy Bar </h4>
                         <p class="text-muted">🔖 CURSO CANDY BAR
@@ -48,7 +50,7 @@
             <!-- tarjeta 2 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/ceramica.png" class="card-img-top" alt="polideportivo">
+                    <img src="{% static '/img/ceramica.png' %}" class="card-img-top" alt="polideportivo">
                     <div class="card-body">
                         <h4> Cerámica </h4>
                         <p class="text-muted"> CERAMICA
@@ -63,7 +65,7 @@
             <!-- tarjeta 3 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
                 <div class="card shadow">
-                    <img src="img/fotografia.png" alt="card-img-top" alt="beneficios">
+                    <img src="{% static 'img/fotografia.png' %}" alt="card-img-top" alt="beneficios">
                     <div class="card-body">
                         <h4> Fotografía </h4>
                         <p class="text-muted"> Taller de Fotografía con celular
