@@ -21,8 +21,8 @@ def home(request):
 #def listadoAfiliados(request):
 #    return render(request,"listadoAfiliados.html")
 
-def listadoCursos(request):
-    return render(request,"listadoCursos.html")
+#def listadoCursos(request):
+#    return render(request,"listadoCursos.html")
 
 #def listadoProfesores(request):
 #    return render(request,"listadoProfesores.html")

@@ -28,10 +28,9 @@ urlpatterns = [
     path('', home, name= 'home'),
     #path('listadoAfiliados.html/', listadoAfiliados, ),
     path('listadoAfiliados/', include('apps.afiliados.urls')),
-    path('listadoCursos/', listadoCursos),
-    #path('listadoProfesores/', listadoProfesores),
+    path('listadoCursos/', include('apps.cursos.urls')),
     path('listadoProfesores/', include('apps.profesores.urls')),
-    path('listadoSalones/', listadoSalones),
+    path('listadoSalones/', include('apps.salones.urls')),
     path('login/', login, name= 'login'),
     path('usuario/', usuario),
     path('admin/', admin.site.urls)
