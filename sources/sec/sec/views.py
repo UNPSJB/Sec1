@@ -26,9 +26,11 @@ def agregarCurso(request):
 
 def listadoCursos(request):
     return render(request,"listadoCursos.html")
+#def listadoCursos(request):
+#    return render(request,"listadoCursos.html")
 
-def listadoProfesores(request):
-    return render(request,"listadoProfesores.html")
+#def listadoProfesores(request):
+#    return render(request,"listadoProfesores.html")
 
 def agregarProfesor(request):
     return render(request,"agregarProfesor.html")

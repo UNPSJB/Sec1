@@ -12,4 +12,3 @@ class Salon(models.Model):
 
     def __str__(self):
         return f'id={self.id}, nombre={self.nombre}, direccion={self.direccion}, capacidad={self.capacidad}, montoSalon={self.montoSalon}, encargado={self.encargado}'
-# Create your models here.
