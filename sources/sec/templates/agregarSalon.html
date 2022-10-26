@@ -64,71 +64,30 @@
 </li>
 {% endblock %}
 {% block container %}
-<div>
-    <div class="container my-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-              <div class="card shadow p-3">
-                <h3>Listado de Afiliados</h3>
-                <div class="container">
-                  <div class="row justify-content-end">
-                      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <form class="d-flex" role="search">
-                          <input class="form-control me-3" type="search" placeholder="Ingrese campo a buscar" aria-label="Search">
-                          <button class="btn btn-outline-success" type="submit">Buscar</button>
-                        </form>
-                      </div>
-                </div>
-                <br>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th> Nro Afiliado </th>
-                            <th> Nombre </th>
-                            <th> Apellido </th>
-                            <th> Tel </th>
-                            <th> E-mail </th>
-                            <th> Fecha Nacimiento</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <div>
-                            <tr>
-                                <td>123</td>
-                                <td>Joaquín</td>
-                                <td> Castro </td>
-                                <td> 2804555555 </td>
-                                <td> Joako@gmail.com</td>
-                                <td> 08/05/99 </td>
-                                <td><a href="#" class="btn btn-success"> Ver </a></td>
-                            </tr>
-                        </div>
-                        <div>
-                          <tr>
-                              <td>123</td>
-                              <td>Joaquín</td>
-                              <td> Castro </td>
-                              <td> 2804555555 </td>
-                              <td> Joako@gmail.com</td>
-                              <td> 08/05/99 </td>
-                              <td><a href="#" class="btn btn-success"> Ver </a></td>
-                          </tr>
-                      </div>
-                      <div>
-                        <tr>
-                            <td>123</td>
-                            <td>Joaquín</td>
-                            <td> Castro </td>
-                            <td> 2804555555 </td>
-                            <td> Joako@gmail.com</td>
-                            <td> 08/05/99 </td>
-                            <td><a href="#" class="btn btn-success"> Ver </a></td>
-                        </tr>
-                    </div>
-                    </tbody>
-                </table>
-              </div>
+<div style="background-color:#0f66c3">
+    <br>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="bg-white p-5 rounded-5 shadow" style="width: 25rem">
+            <div class="text-center fs-3">Agregar Salón</div>  
+            <br>  
+            <div class="input-group">
+                <input class="form-control bg-light" type="text" placeholder="Ingrese nombre del salón">
             </div>
+            <br>
+            <div class="input-group">
+                <input class="form-control bg-light" type="text" placeholder="Ingrese la dirección del salón">
+            </div>
+            <br>
+            <div class="input-group">
+                <input class="form-control bg-light" type="text" placeholder="Ingrese la capacidad máxima del salón">
+            </div>
+            <br>
+            <div class="input-group">
+                <input class="form-control bg-light" type="text" placeholder="Ingrese el monto">
+            </div>
+            <br>
+            <a class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color:#064080"> Agregar </a>
         </div>
-    </div>
+    </div>         
 </div>
 {% endblock %}
