@@ -12,3 +12,11 @@ class Salon(models.Model):
 
     def __str__(self):
         return f'id={self.id}, nombre={self.nombre}, direccion={self.direccion}, capacidad={self.capacidad}, montoSalon={self.montoSalon}, encargado={self.encargado}'
+
+class Servicio(models.Model): 
+    nombre = models.CharField(_MAX_LENGTH=20)
+    descripcion = models.CharField(_MAX_LENGTH=120)
+    obligatorio = models.BooleanField()
+
+    def __str__(self):
+        return f'id={self.id}, nombre={self.nombre}, descripcion={self.descripcion}, obligatorio={self.obligatorio}'
