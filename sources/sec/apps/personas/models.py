@@ -19,8 +19,9 @@ class Persona(models.Model):
 
 class Familiar (models.Model): 
     PARENTESCO = [ 'Padre', 'Madre', 'Abuelo', 'Tia'] 
-
     tipoParentesco = models.PositiveSmallIntegerField(choices = PARENTESCO)
+    persona = models.ForeignKey(Persona)
+    persona2 = models.ForeignKey(Persona)
 
 class Rol(models.Model):
     TIPO = 0
