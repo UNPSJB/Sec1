@@ -15,9 +15,9 @@ class Curso(models.Model):
         return f'fechaDesde={self.fechaDesde}, fechaHasta={self.fechaHasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
 
 
-class Aula(models.model): 
-    nroAula = models.PositiveIntegerField(_MAX_LENGTH=30)
-    capacidad = models.PositiveIntegerField(_MAX_LENGTH=2)
+class Aula(models.Model): 
+    nroAula = models.PositiveIntegerField(max_length=30)
+    capacidad = models.PositiveIntegerField(max_length=2)
 
 def __str__ (self): 
     return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
@@ -25,13 +25,13 @@ def __str__ (self):
 
 class Profesor(Rol):
     TIPO = 2
-    dni: models.CharField(max_length=8)
-    nombre: models.CharField(max_length=20)
-    apellido: models.CharField(max_length=20)
-    domicilio: models.CharField(max_length=50)
-    telefono: models.CharField(max_length=20)
-    especializacion: models.CharField(max_length=30)
-    añosExperiencia: models.IntegerField(max_length=2)
+    dni = models.CharField(max_length=8)
+    nombre = models.CharField(max_length=20)
+    apellido = models.CharField(max_length=20)
+    domicilio = models.CharField(max_length=50)
+    telefono = models.CharField(max_length=20)
+    especializacion = models.CharField(max_length=30)
+    añosExperiencia = models.IntegerField(max_length=2)
     cbu: models.IntegerField(max_length=20)
     fechaDesde = models.DateField() 
     fechaHasta = models.DateField()
@@ -51,13 +51,13 @@ class Dictado(models.Model):
     aula = models.ManyToManyField(Aula)
     cursos = models.ForeignKey(Curso, on_delete = models.CASCADE)
     profesores = models.ManyToManyField(Profesor, through = 'Titular') 
-    costo = models.FloatField(_MAX_LENGTH=10)
+    costo = models.FloatField(max_length=10)
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 
 
 class Titular (models.Model): 
-    profesor = models.ForeignKey(Profesor)
-    dictado = models.ForeignKey(Dictado)
+    profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
+    dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
 
 def __str__(self):
     return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'

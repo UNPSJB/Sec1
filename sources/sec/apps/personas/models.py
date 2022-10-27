@@ -1,4 +1,5 @@
-from typing_extensions import Self
+
+import this
 from unittest.util import _MAX_LENGTH
 from django.db import models
 
@@ -8,7 +9,7 @@ class Persona(models.Model):
     apellido = models.CharField(max_length= 30)
     fechaNacimiento = models.DateField()
     encargado = models.BooleanField() 
-    parentesco = models.ManyToManyField(Self, through = 'Familiar')
+    parentesco = models.ManyToManyField( 'self' , through = 'Familiar')
 
     
     def __str__(self):
@@ -18,10 +19,9 @@ class Persona(models.Model):
     #    Afiliado.objects.create(persona=self)
 
 class Familiar (models.Model): 
-    PARENTESCO = [ 'Padre', 'Madre', 'Abuelo', 'Tia'] 
+    PARENTESCO = [] 
     tipoParentesco = models.PositiveSmallIntegerField(choices = PARENTESCO)
-    persona = models.ForeignKey(Persona)
-    persona2 = models.ForeignKey(Persona)
+    persona = models.ForeignKey(Persona, on_delete = models.CASCADE) 
 
 class Rol(models.Model):
     TIPO = 0
