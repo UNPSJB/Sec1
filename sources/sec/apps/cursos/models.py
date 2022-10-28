@@ -11,8 +11,8 @@ class Aula(models.Model):
     nroAula = models.PositiveIntegerField(max_length=30)
     capacidad = models.PositiveIntegerField(max_length=2)
 
-def __str__ (self): 
-    return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
+    def __str__ (self): 
+        return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
 
 class Curso(models.Model):
     nombre = models.CharField(max_length = 10)
@@ -39,8 +39,6 @@ class Profesor(Rol):
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
     añosExperiencia = models.IntegerField(max_length=2)
     cbu: models.IntegerField(max_length=20)
-    fechaDesde = models.DateField() 
-    fechaHasta = models.DateField()
 
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.añosExperiencia}, cbu={self.cbu}'
@@ -59,12 +57,13 @@ class Dictado(models.Model):
     costo = models.FloatField(max_length=10)
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 
+    def __str__(self):
+        return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
 
 class Titular (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
 
-def __str__(self):
-    return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
+
 
 
