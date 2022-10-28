@@ -9,4 +9,3 @@ class Aula(models.model):
 def __str__ (self): 
     return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
 
-
