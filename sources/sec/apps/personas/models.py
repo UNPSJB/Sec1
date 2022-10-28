@@ -11,12 +11,8 @@ class Persona(models.Model):
     encargado = models.BooleanField() 
     parentesco = models.ManyToManyField( 'self' , through = 'Familiar')
 
-    
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
-
-    #def afiliar(self):
-    #    Afiliado.objects.create(persona=self)
 
 class Familiar (models.Model): 
     PARENTESCO = [] 
