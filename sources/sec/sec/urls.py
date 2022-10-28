@@ -39,7 +39,7 @@ urlpatterns = [
     path('listadoAlumnos/', listadoAlumnos, name='listadoAlumnos'),
     path('listadoAlquileres/', listadoAlquileres, name='listadoAlquileres'),
     path('listadoCursos/', include('apps.cursos.urls')),
-    path('listadoProfesores/', include('apps.profesores.urls')),
+   # path('listadoProfesores/', include('apps.profesores.urls')),
     path('listadoSalones/', include('apps.salones.urls')),
     path('login/', login, name= 'login'),
     path('usuario/', usuario),
