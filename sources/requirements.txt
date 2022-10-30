@@ -2,3 +2,11 @@ asgiref==3.5.2
 backports.zoneinfo==0.2.1
 Django==4.1.1
 sqlparse==0.4.3
+asgiref==3.5.2
+backports.zoneinfo==0.2.1
+Django==4.1.1
+django-extensions==3.2.1
+psycopg2-binary==2.9.3
+pydotplus==2.0.2
+pyparsing==3.0.9
+sqlparse==0.4.3
