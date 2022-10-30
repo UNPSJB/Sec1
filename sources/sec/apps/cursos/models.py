@@ -7,6 +7,9 @@ from apps.personas.models import Persona
 class Especialidad (models.Model): 
     nombre = models.CharField(max_length = 10)
 
+    def __str__ (self): 
+        return f'id={self.id}, nombre={self.nombre}'
+
 class Aula(models.Model): 
     nroAula = models.PositiveIntegerField(max_length=30)
     capacidad = models.PositiveIntegerField(max_length=2)
