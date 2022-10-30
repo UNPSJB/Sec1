@@ -25,11 +25,8 @@ class Afiliado(Rol):
     fechaIngresoTrabajo = models.DateField()
     sueldo = models.CharField(max_length=50)
     jornadaLaboral = models.CharField(max_length=50) 
-    #empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
-    cuitEmpresa = models.CharField(max_length=50)
-    razonSocial = models.CharField(max_length=50)
-    ramaEmpresa = models.CharField(max_length=50)
-    domicilioEmpresa = models.CharField(max_length=50)
+    empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
+
 
     
 

@@ -17,22 +17,6 @@ class Aula(models.Model):
     def __str__ (self): 
         return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
 
-class Curso(models.Model):
-    nombre = models.CharField(max_length = 10)
-    fechaDesde = models.DateField()
-    fechaHasta = models.DateField()
-    cupo = models.IntegerField(max_length = 2)
-    modulos = models.IntegerField( max_length = 2)
-    descuento = models.IntegerField(max_length = 2)
-    precio = models.IntegerField(max_length = 4)
-    pagos = models.CharField(max_length = 20)
-    especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
-
-    def __str__(self):
-        return f'fechaDesde={self.fechaDesde}, fechaHasta={self.fechaHasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
-
-
-
 class Profesor(Rol):
     TIPO = 2
     dni = models.CharField(max_length=8)
@@ -47,6 +31,25 @@ class Profesor(Rol):
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.añosExperiencia}, cbu={self.cbu}'
 
+
+class Curso(models.Model):
+    nombre = models.CharField(max_length = 10)
+    fechaDesde = models.DateField()
+    fechaHasta = models.DateField()
+    cupo = models.IntegerField(max_length = 2)
+    modulos = models.IntegerField( max_length = 2)
+    profesores = models.ManyToManyField(Profesor, through = 'Titularidad') 
+    descuento = models.IntegerField(max_length = 2)
+    precio = models.IntegerField(max_length = 4)
+    pagos = models.CharField(max_length = 20)
+    especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return f'fechaDesde={self.fechaDesde}, fechaHasta={self.fechaHasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
+
+
+
+
 class Alumno (Rol): 
     TIPO = 3
     curso= models.OneToOneField(Curso, on_delete = models.CASCADE, parent_link = True)
@@ -57,7 +60,6 @@ class Alumno (Rol):
 class Dictado(models.Model): 
     aula = models.ManyToManyField(Aula)
     cursos = models.ForeignKey(Curso, on_delete = models.CASCADE)
-    profesores = models.ManyToManyField(Profesor, through = 'Titular') 
     costo = models.FloatField(max_length=10)
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 

@@ -18,7 +18,7 @@ class Persona(models.Model):
 class Relacion (models.Model): 
     TIPO = [] 
     tipoParentesco = models.PositiveSmallIntegerField(choices = TIPO)
-    persona = models.ForeignKey(Persona, on_delete = models.CASCADE) 
+    #persona = models.ForeignKey(Persona, on_delete = models.CASCADE) 
     relacionado = models.ForeignKey(Persona, on_delete = models.CASCADE) 
 
 
