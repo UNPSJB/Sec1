@@ -44,7 +44,6 @@ class Profesor(Rol):
     añosExperiencia = models.IntegerField(max_length=2)
     cbu: models.IntegerField(max_length=20)
 
-
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.añosExperiencia}, cbu={self.cbu}'
 
@@ -62,6 +61,8 @@ class Dictado(models.Model):
     costo = models.FloatField(max_length=10)
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 
+    def __str__(self):
+        return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
@@ -70,7 +71,5 @@ class Titularidad (models.Model):
     fechaHasta = models.DateField() 
     
 
-    def __str__(self):
-        return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
 
 
