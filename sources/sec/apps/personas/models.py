@@ -9,15 +9,19 @@ class Persona(models.Model):
     apellido = models.CharField(max_length= 30)
     fechaNacimiento = models.DateField()
     encargado = models.BooleanField() 
-    parentesco = models.ManyToManyField( 'self' , through = 'Familiar')
+    tipoRelacion = models.ManyToManyField( 'self' , null = True, through = 'Relacion', related_name = 'relacionados')
 
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
 
-class Familiar (models.Model): 
-    PARENTESCO = [] 
-    tipoParentesco = models.PositiveSmallIntegerField(choices = PARENTESCO)
+
+class Relacion (models.Model): 
+    TIPO = [] 
+    tipoParentesco = models.PositiveSmallIntegerField(choices = TIPO)
     persona = models.ForeignKey(Persona, on_delete = models.CASCADE) 
+    relacionado = models.ForeignKey(Persona, on_delete = models.CASCADE) 
+
+
 
 class Rol(models.Model):
     TIPO = 0

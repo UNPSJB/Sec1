@@ -36,7 +36,6 @@ class Alquiler (models.Model):
 
 class PagoAlquiler (models.Model): 
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    fecha = models.DateField() 
     fechaPago = models.DateField() 
     monto = models.FloatField(max_length = 6)
     tipoPago = models.CharField(max_length  = 5) 

@@ -25,6 +25,7 @@ class Curso(models.Model):
     modulos = models.IntegerField( max_length = 2)
     descuento = models.IntegerField(max_length = 2)
     precio = models.IntegerField(max_length = 4)
+    pagos = models.CharField(max_length = 20)
     especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
 
     def __str__(self):
@@ -62,9 +63,11 @@ class Dictado(models.Model):
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 
 
-class Titular (models.Model): 
+class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
-    dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
+    fechaDesde = models.DateField() 
+    fechaHasta = models.DateField() 
     
 
     def __str__(self):
