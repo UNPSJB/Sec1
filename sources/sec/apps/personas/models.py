@@ -2,6 +2,7 @@
 import this
 from unittest.util import _MAX_LENGTH
 from django.db import models
+from django.contrib.auth.models import User
 
 class Persona(models.Model):
     dni = models.CharField(max_length=8)
@@ -9,17 +10,17 @@ class Persona(models.Model):
     apellido = models.CharField(max_length= 30)
     fechaNacimiento = models.DateField()
     encargado = models.BooleanField() 
-    tipoRelacion = models.ManyToManyField( 'self' , null = True, through = 'Relacion', related_name = 'relacionados')
+    usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
 
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
 
 
-class Relacion (models.Model): 
-    TIPO = [] 
-    tipoParentesco = models.PositiveSmallIntegerField(choices = TIPO)
-    #persona = models.ForeignKey(Persona, on_delete = models.CASCADE) 
-    relacionado = models.ForeignKey(Persona, on_delete = models.CASCADE) 
+class Vinculo (models.Model): 
+    TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor")] 
+    tipoVinculo = models.PositiveSmallIntegerField(choices = TIPO)
+    vinculante = models.ForeignKey(Persona, related_name = "vinculantes", on_delete = models.CASCADE) 
+    vinculado = models.ForeignKey(Persona, related_name = "vinculados",  on_delete = models.CASCADE) 
 
 
 

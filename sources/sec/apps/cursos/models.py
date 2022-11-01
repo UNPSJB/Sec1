@@ -1,7 +1,7 @@
 from statistics import mode
 from django.db import models
 from apps.personas.models import Rol 
-from apps.personas.models import Persona
+from apps.personas.models import Vinculo
 
 
 class Especialidad (models.Model): 
@@ -52,14 +52,17 @@ class Curso(models.Model):
 
 class Alumno (Rol): 
     TIPO = 3
-    curso= models.OneToOneField(Curso, on_delete = models.CASCADE, parent_link = True)
-    responsable= models.OneToOneField(Persona, on_delete = models.CASCADE, parent_link = True) 
+    curso= models.ForeignKey(Curso, on_delete = models.CASCADE)
 
-    
+
+    @property
+    def responsable(self):
+        vinculo = self.persona.vinculantes.filter(tipo=Vinculo.TUTOR).first()
+        return vinculo.vinculante if vinculo is not None else None
 
 class Dictado(models.Model): 
     aula = models.ManyToManyField(Aula)
-    cursos = models.ForeignKey(Curso, on_delete = models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     costo = models.FloatField(max_length=10)
     fechaInicio = models.DateField()
     fechaFin = models.DateField() 
