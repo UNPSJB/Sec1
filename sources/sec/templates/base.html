@@ -7,16 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-<style>
-html {
-  height: 100%;
-}
-body {
-  min-height: 100%;
-  background-color:#0f66c3;
-}
-    
-</style>
+    <link rel="stylesheet" href="{% static 'estilos/estilos.css' %}">
     {% block extracss %}{% endblock %}
 </head>
 <body>
@@ -36,8 +27,7 @@ body {
         </div>
 </nav>
     
-        {% block container %}{% endblock %}
-    
+    {% block container %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script> 
     {% block extrajs %}{% endblock %}

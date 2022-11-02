@@ -61,3 +61,27 @@ def listadoAlumnos(request):
 
 def listadoDePendientes(request):
     return render(request,"listadoPendientes.html")
+
+def agregarAfiliado(request):
+    return render(request,"agregarAfiliado.html")
+
+def agregarAlquiler(request):
+    return render(request,"agregarAlquiler.html")
+
+def verAlumno(request):
+    return render(request,"verAlumno.html")
+
+def verAlquiler(request):
+    return render(request,"verAlquiler.html")
+
+def verProfesor(request):
+    return render(request,"verProfesor.html")
+
+def verCurso(request):
+    return render(request,"verCurso.html")
+
+def verSalon(request):
+    return render(request,"verSalon.html")
+
+def verAfiliado(request):
+    return render(request,"verAfiliado.html")

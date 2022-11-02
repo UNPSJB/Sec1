@@ -6,7 +6,7 @@
     Gestión Afiliados
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
     <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
     <li class="dropdown-divider"></li>
@@ -57,7 +57,7 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
     <li class="dropdown-divider"></li>
   </ul>
@@ -65,29 +65,40 @@
 {% endblock %}
 {% block container %}
 <div style="background-color:#0f66c3">
-    <br>
-    <div class="d-flex justify-content-center align-items-center">
-        <div class="bg-white p-5 rounded-5 shadow" style="width: 25rem">
-            <div class="text-center fs-3">Agregar Salón</div>  
-            <br>  
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese nombre del salón">
+  <div class="container">
+    <header> Agregar Salón </header>
+    <form action="#">
+        <div class="form first">
+            <div class="datos curso">
+                <span class="title"> Datos de salón </span>
+
+                <div class="fields">
+                    <div class="input-field">
+                      <label> Nombre Salón </label>
+                      <input type="text" placeholder="Ingrese nombre de salón" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Dirección </label>
+                        <input type="text" placeholder="Ingrese dirección" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Capacidad </label>
+                      <input type="number" placeholder="Ingrese capacidad del salón" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Monto </label>
+                      <input type="number" placeholder="Ingrese monto" required>
+                    </div>
+                </div>
             </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese la dirección del salón">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese la capacidad máxima del salón">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese el monto">
-            </div>
-            <br>
-            <a class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color:#064080"> Agregar </a>
+            <button>
+              <span> Crear </span>
+            </button>
         </div>
-    </div>         
+    </form>
+  </div>        
 </div>
 {% endblock %}

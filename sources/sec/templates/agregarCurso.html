@@ -6,7 +6,7 @@
     Gestión Afiliados
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
     <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
     <li class="dropdown-divider"></li>
@@ -57,7 +57,7 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
     <li class="dropdown-divider"></li>
   </ul>
@@ -65,45 +65,55 @@
 {% endblock %}
 {% block container %}
 <div style="background-color:#0f66c3">
-  <br>
-    <div class="d-flex justify-content-center align-items-center">
-        <div class="bg-white p-5 rounded-5 shadow" style="width: 25rem">
-            <div class="text-center fs-3">Agregar Curso</div>  
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Nombre del nuevo curso">
+  <div class="container">
+    <header> Agregar Curso </header>
+    <form action="#">
+        <div class="form first">
+            <div class="datos curso">
+                <span class="title"> Datos de curso </span>
+
+                <div class="fields">
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                        <label> Nombre curso </label>
+                        <input type="text" placeholder="Ingrese el nombre" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Fecha Inicio </label>
+                      <input type="date" placeholder="Ingrese fecha de inicio" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Fecha Fin </label>
+                        <input type="date" placeholder="Ingrese fecha de fin" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Cupo de curso </label>
+                      <input type="number" placeholder="Ingrese cupo del curso" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Descuento </label>
+                      <input type="number" placeholder="Ingrese descuento" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Precio </label>
+                      <input type="number" placeholder="Ingrese el precio" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Pago </label>
+                      <input type="number" placeholder="Ingrese el pago" required>
+                    </div>
+                </div>
             </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Fecha de inicio">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Fecha de fin">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="FIngrese el cupo del curso">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Descuento">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese el precio del curso">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="number" placeholder="Pago">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Profesor a cargo del nuevo curso">
-            </div>
-            <br>
-            <a class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color:#064080"> Agregar </a>
+            <button>
+              <span> Crear </span>
+            </button>
         </div>
-    </div>         
+    </form>
+  </div>       
 </div>
 {% endblock %}

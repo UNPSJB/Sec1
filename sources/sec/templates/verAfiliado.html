@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block itemNavbar %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Afiliados
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
+    <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alumnos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAlumno' %}">Agregar alumno</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlumnos' %}">Listado de alumnos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Cursos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarCurso' %}">Agregar curso</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoCursos' %}">Listado de cursos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Profesores
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarProfesor' %}">Agregar profesor</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoProfesores' %}">Listado de profesores</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Salones
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarSalon' %}">Agregar salón</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoSalones' %}">Listado de salones</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alquileres
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+{% endblock %}
+{% block container %}
+<div style="background-color: #0f66c3">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/persona.png' %}" class="img-thumbnail" alt="persona">
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b>DATOS PERSONALES</b></label>
+          <div class="input-group">
+            <input type="text" placeholder="Nombre">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Apellido">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="DNI">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="N° de afiliado">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Fecha de Nacimiento">
+          </div>
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <br>
+          <div class="input-group">
+            <input type="text" placeholder="CUIL">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Nacionalidad">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Estado Civil">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Domicilio">
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Teléfono">
+          </div>
+        </div>
+      </div>
+      <div class="container-listados my-3"> 
+        <div class="table-responsive card shadow p-3"> 
+            <div class="row">
+              <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                <h3> Familiares </h3>
+              </div>
+              <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="#" class="btn btn-success"> + </a>
+                  <a href="#" class="btn btn-success"> - </a>
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th> DNI </th>
+                        <th> Nombre </th>
+                        <th> Apellido </th>
+                        <th> Fecha de nacimiento </th>
+                        <th> Relación </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                        <tr>
+                            <td> 40400400 </td>
+                            <td> Pepe </td>
+                            <td> Pepe </td>
+                            <td> 13/02/22 </td>
+                            <td> Hijo </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+          </div> 
+      </div>
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3">
+            <div class="row">
+              <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                <h3> Cursos vigentes </h3>
+              </div>
+              <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{% url 'agregarAlumno' %}" class="btn btn-success"> + </a>
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th> Nombre </th>
+                      <th> Fecha Desde </th>
+                      <th> Fecha Hasta </th>
+                      <th> Descuento </th>
+                      <th> Profesor </th>
+                      <th> Precio </th>
+                      <th> Acciones </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                        <tr>
+                          <td> Desarrollo de software</td>
+                          <td> 01/08/21 </td>
+                          <td> 21/11/12 </td>
+                          <td> 15% </td>
+                          <td> Diego </td>
+                          <td> 15000$ </td>
+                          <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div class="container-listados my-3"> 
+      <div class="table-responsive card shadow p-3"> 
+          <div class="row">
+            <div class="col sm-12 col-md-4 col-lg-4 py-3">
+              <h3> Alquileres vigentes </h3>
+            </div>
+            <div class="col sm-12 col-md-8 col-lg-8 py-3">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'agregarAlquiler' %}" class="btn btn-success"> + </a>
+              </div>
+            </div>
+          </div>
+          <table class="table table-striped table-responsive">
+              <thead>
+                  <tr>
+                      <th> Nro Alquiler </th>
+                      <th> Salón </th>
+                      <th> Fecha Reserva </th>
+                      <th> Fecha Inicio </th>
+                      <th> Servicios </th>
+                      <th> Acciones </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <div>
+                      <tr>
+                          <td> 123 </td>
+                          <td> Salon 1 </td>
+                          <td> 12/12/21 </td>
+                          <td> 13/02/22 </td>
+                          <td> <div> <input type="checkbox"> </div></td>
+                          <td><a href="{% url 'verAlquiler' %}" class="btn btn-success"> Ver </a></td>
+                      </tr>
+                  </div>
+              </tbody>
+          </table>
+        </div> 
+    </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@
     Gestión Afiliados
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
     <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
     <li class="dropdown-divider"></li>
@@ -57,7 +57,7 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
     <li class="dropdown-divider"></li>
   </ul>
@@ -65,30 +65,19 @@
 {% endblock %}
 {% block container %}
 <div>
-    <div class="container my-3">
+    <div class="container-listados my-3">
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-              <div class="card shadow p-3">
-                <h3>Listado de Profesores</h3>
-                <div class="container">
-                  <div class="row justify-content-end">
-                      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <form class="d-flex" role="search">
-                          <input class="form-control me-3" type="search" placeholder="Ingrese campo a buscar" aria-label="Search">
-                          <button class="btn btn-outline-success" type="submit">Buscar</button>
-                        </form>
-                      </div>
-                </div>
-                <br>
+              <div class="table-responsive card shadow p-3">
+                <h3>Listado de Pendientes</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th> DNI </th>
+                            <th> Nro Afiliado </th>
                             <th> Nombre </th>
                             <th> Apellido </th>
                             <th> Tel </th>
                             <th> E-mail </th>
-                            <th> Fecha Nacimiento </th>
-                            <th> Especialización </th>
+                            <th> Fecha Nacimiento</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,7 +89,6 @@
                                 <td> 2804555555 </td>
                                 <td> Joako@gmail.com</td>
                                 <td> 08/05/99 </td>
-                                <td> Matemática </td>
                                 <td><a href="#" class="btn btn-success" style="background-color: rgb(6, 161, 6)"> Aceptar </a></td>
                                 <td><a href="#" class="btn btn-success" style="background-color: red"> Denegar </a></td>
                             </tr>
@@ -113,7 +101,6 @@
                                 <td> 2804555555 </td>
                                 <td> Joako@gmail.com</td>
                                 <td> 08/05/99 </td>
-                                <td> Matemática </td>
                                 <td><a href="#" class="btn btn-success" style="background-color: rgb(6, 161, 6)"> Aceptar </a></td>
                                 <td><a href="#" class="btn btn-success" style="background-color: red"> Denegar </a></td>
                             </tr>

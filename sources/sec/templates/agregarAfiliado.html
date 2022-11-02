@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block itemNavbar %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Afiliados
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
+    <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alumnos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAlumno' %}">Agregar alumno</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlumnos' %}">Listado de alumnos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Cursos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarCurso' %}">Agregar curso</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoCursos' %}">Listado de cursos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Profesores
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarProfesor' %}">Agregar profesor</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoProfesores' %}">Listado de profesores</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Salones
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarSalon' %}">Agregar salón</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoSalones' %}">Listado de salones</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alquileres
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+{% endblock %}
+{% block container %}
+<div style="background-color: #0f66c3">
+    <div class="container">
+        <header> Registrar Afiliado </header>
+        <form action="#">
+            <div class="form first">
+                <div class="datos personales">
+                    <span class="title">Datos Personales</span>
+
+                    <div class="fields">
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Nombre completo </label>
+                            <input type="text" placeholder="Ingrese el nombre" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Apellido completo </label>
+                            <input type="text" placeholder="Ingrese el apellido" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label> Fecha de Nacimiento </label>
+                            <input type="date" placeholder="Ingrese fecha de nacimiento" required>
+                        </div>
+
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> DNI </label>
+                            <input type="text" placeholder="Ingrese número de documento" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> CUIL </label>
+                            <input type="text" placeholder="Ingrese cuil" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Nacionalidad </label>
+                            <input type="text" placeholder="Ingrese nacionalidad" required>
+                        </div>
+
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Estado Civil </label>
+                            <select> 
+                                <option value="disable selected"></option>
+                                <option value="soltero"> Soltero/a </option>
+                                <option value="casado"> Casádo/a </option>
+                                <option value="divorciado"> Divorciado/a </option>
+                                <option value="voiudo"> Viudo/a </option>
+                                <option value="separado"> Separádo/a </option>
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Domicilio </label>
+                            <input type="text" placeholder="Ingrese domicilio" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Teléfono </label>
+                            <input type="text" placeholder="Ingrese número de teléfono" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> E-Mail </label>
+                            <input type="text" placeholder="Ingrese correo electrónico" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="datos empresa">
+                    <span class="title">Datos de la empresa </span>
+
+                    <div class="fields">
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> CUIT </label>
+                            <input type="text" placeholder="Ingrese cuit de la empresa" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Razón Social </label>
+                            <input type="text" placeholder="Ingrese razón social" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label> Domicilio </label>
+                            <input type="text" placeholder="Ingrese domicilio" required>
+                        </div>
+
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Fecha de ingreso al trabajo </label>
+                            <input type="date" placeholder="Ingrese fecha de ingreso" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Sueldo </label>
+                            <input type="number" placeholder="Ingrese sueldo percibido" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Jornada Laboral </label>
+                            <input type="text" placeholder="Ingrese jornada laboral" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="datos familiar a cargo">
+                    <span class="title"> Familiar a cargo </span>
+
+                    <div class="fields">
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Nombre </label>
+                            <input type="text" placeholder="Ingrese nombre" required>
+                        </div>
+
+                        <div class="input-field">
+                            <label> Apellido </label>
+                            <input type="text" placeholder="Ingrese apellido" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label> Tipo de relación </label>
+                            <select> 
+                                <option value="disable selected" placeholder="Tipo de relación"></option>
+                                <option value="hijo"> Hijo </option>
+                                <option value="hija"> Hija </option>
+                                <option value="conyuge"> Cónyuge </option>
+                            </select>
+                        </div>
+
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Fecha de nacimiento </label>
+                            <input type="date" placeholder="Ingrese fecha de nacimiento" required>
+                        </div>
+                    </div>
+                </div>
+                <button>
+                    <span> Crear </span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
