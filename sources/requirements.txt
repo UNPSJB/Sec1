@@ -10,3 +10,4 @@ psycopg2-binary==2.9.3
 pydotplus==2.0.2
 pyparsing==3.0.9
 sqlparse==0.4.3
+django-crispy-forms==1.14.0
