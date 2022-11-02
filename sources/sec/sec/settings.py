@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'apps.personas',
     'apps.cursos',
     'apps.afiliados',
+    'apps.salones',
+    'django_extensions', #Para el diagrama de clases
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+#Para el diagrama de clases
+GRAPH_MODELS = {
+    'all_applications': True, 
+    'group_models': True, 
+}

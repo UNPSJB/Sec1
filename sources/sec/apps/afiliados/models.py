@@ -1,5 +1,17 @@
 from django.db import models
 from apps.personas.models import Rol
+from apps.personas.models import Persona
+
+
+class Empresa(models.Model):
+    cuit = models.CharField(max_length=50)
+    razonSocial = models.CharField(max_length=50)
+    rama = models.CharField(max_length=50)
+    domicilioEmpresa = models.CharField(max_length=50)
+
+def __str__(self):
+    return f'cuit={self.cuit}, razonSocial={self.razonSocial}, rama={self.rama}, domicilioEmpresa={self.domicilioEmpresa}'
+
 
 
 class Afiliado(Rol):
@@ -12,16 +24,13 @@ class Afiliado(Rol):
     email = models.CharField(max_length=50)
     fechaIngresoTrabajo = models.DateField()
     sueldo = models.CharField(max_length=50)
-    JornadaLaboral = models.CharField(max_length=50)
+    jornadaLaboral = models.CharField(max_length=50) 
+    empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
 
-def __str__(self):
-    return f'tipo={self.TIPO}, cuil={self.cuil}, nacionalidad={self.nacionalidad}, estadoCivil={self.estadoCivil}, domicilio={self.domicilio}, telefono={self.telefono}, email={self.email}, fechaIngresoTrabajo={self.fechaIngresoTrabajo}, sueldo={self.sueldo}, JornadaLaboral={self.JornadaLaboral}'
 
-class Empresa(models.Model):
-    cuit = models.CharField(max_length=50)
-    razonSocial = models.CharField(max_length=50)
-    rama = models.CharField(max_length=50)
-    domicilioEmpresa = models.CharField(max_length=50)
+    
 
-def __str__(self):
-    return f'cuit={self.cuit}, razonSocial={self.razonSocial}, rama={self.rama}, domicilioEmpresa={self.domicilioEmpresa}'
+    def __str__(self):
+        return f'tipo={self.TIPO}, cuil={self.cuil}, nacionalidad={self.nacionalidad}, estadoCivil={self.estadoCivil}, domicilio={self.domicilio}, telefono={self.telefono}, email={self.email}, fechaIngresoTrabajo={self.fechaIngresoTrabajo}, sueldo={self.sueldo}, JornadaLaboral={self.JornadaLaboral}'
+
+
