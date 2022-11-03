@@ -31,13 +31,15 @@ class Alquiler (models.Model):
     afiliado = models.ForeignKey(Afiliado, on_delete = models.CASCADE)
     seña = models.FloatField(max_length = 8)
     fechaReserva = models.DateField() 
-    fechaInicio = models.DateField() 
+    fechaInicio = models.DateField( null = True, blank = True) 
 
 
 class PagoAlquiler (models.Model): 
+    TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
     fechaPago = models.DateField() 
     monto = models.FloatField(max_length = 6)
-    tipoPago = models.CharField(max_length  = 5) 
-
+    formaPago = models.PositiveBigIntegerField(choices = TIPOPAGO)
+    
+    
 
