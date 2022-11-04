@@ -22,9 +22,9 @@ class Aula(models.Model):
 
 class Profesor(Rol):
     TIPO = 2
-    dni = models.CharField(max_length=11)
-    nombre = models.CharField(max_length=20)
-    apellido = models.CharField(max_length=20)
+    #dni = models.CharField(max_length=11)
+    #nombre = models.CharField(max_length=20)
+    #apellido = models.CharField(max_length=20)
     domicilio = models.CharField(max_length=50)
     telefono = models.CharField(max_length=20)
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
@@ -38,8 +38,8 @@ class Profesor(Rol):
 class Curso(models.Model):
     TIPO = [(0, "Clase"), (1, "Mensual")]
     nombre = models.CharField(max_length = 10)
-    fechaDesde = models.DateField()
-    fechaHasta = models.DateField()
+    desde = models.DateField()
+    hasta = models.DateField()
     cupo = models.IntegerField(max_length = 20)
     modulos = models.IntegerField( max_length = 20)
     profesores = models.ManyToManyField(Profesor, through = 'Titularidad') 
@@ -59,8 +59,8 @@ class Dictado(models.Model):
     aula = models.ManyToManyField(Aula)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     costo = models.FloatField(max_length=10)
-    fechaInicio = models.DateField()
-    fechaFin = models.DateField() 
+    inicio = models.DateField()
+    fin = models.DateField() 
 
     def __str__(self):
         return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
@@ -68,8 +68,8 @@ class Dictado(models.Model):
 
 class Clase (models.Model): 
     DIA = [(1,"Lunes"), (2, "Martes"), (3, "Miercoles"), (4, "Jueves"), (5, "Viernes")]
-    horaInicio = models.TimeField() 
-    horaFin = models.TimeField() 
+    inicio = models.TimeField() 
+    fin = models.TimeField() 
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
 
@@ -88,30 +88,30 @@ class Alumno (Rol):
 
 
 class PagoDictado (models.Model): 
-    TIPOPAGO = [(0, "Debito"), (1, "Credito"), (2, "Efectivo")]
+    TIPO = [(0, "Debito"), (1, "Credito"), (2, "Efectivo")]
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
     alumno = models.ForeignKey(Alumno, on_delete = models.CASCADE)
-    fechaPago = models.DateField() 
+    pago = models.DateField() 
     monto = models.FloatField(max_length = 10)
-    tipoPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
+    tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
 
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
-    fechaDesde = models.DateField() 
-    fechaHasta = models.DateField(null = True, blank = True) 
+    desde = models.DateField() 
+    hasta = models.DateField(null = True, blank = True) 
     
 
 class Liquidacion (models.Model): 
-    fechaLiquidacion = models.DateField()
+    liquidacion = models.DateField()
     monto = models.FloatField(max_length = 4) 
-    profesorTitular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
+    Titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
 
 
 class AsistenciaProfesor (models.Model): 
-    fechaAsistencia = models.DateField()
-    profesorTitular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
+    asistencia = models.DateField()
+    titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
 
 
 

@@ -9,8 +9,43 @@ class Persona(models.Model):
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     fechaNacimiento = models.DateField()
-    encargado = models.BooleanField() 
     usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
+    es_afiliado = models.BooleanField(default = False) 
+    es_alumno = models.BooleanField(default = False) 
+    es_profesor=models.BooleanField(default=False)
+    es_encargado=models.BooleanField(default=False)
+
+    def afiliar(self, afiliado, fecha):
+        assert not self.es_afiliado, "Ya soy afiliado" 
+        afiliado.desde = fecha
+        afiliado.persona = self
+        afiliado.save()
+        self.es_afiliado=True
+        self.save()
+
+    def desafiliar(self, afiliado, fecha):
+        assert afiliado.persona == self, "Afiliado no existe o es incorrecto"
+        afiliado.hasta = fecha
+        afiliado.save()
+        self.es_afiliado = False
+        self.save()
+        
+    def inscribir(self, alumno, curso):
+        assert alumno.curso == curso, "Alumno ya inscripto en el curso"
+        alumno.persona = self
+        alumno.save()
+        curso.alumnos.add(alumno)
+        self.es_alumno=True
+        self.save()
+
+    def desinscribir(self, alumno, fecha):
+        assert alumno.persona == self, "Alumno equivocado o inexistente"
+        alumno.hasta = fecha
+        alumno.save()
+        
+        self.es_alumno = False
+        self.save()
+    
 
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
@@ -29,8 +64,8 @@ class Rol(models.Model):
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    fechaDesde = models.DateTimeField(auto_now_add=True)
-    fechaHasta = models.DateTimeField(null=True, blank=True)
+    desde = models.DateTimeField(auto_now_add=True)
+    hasta = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.persona} es {self.get_tipo_display()}"
