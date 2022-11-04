@@ -10,9 +10,9 @@ class PersonaForm(ModelForm):
         model = Persona
         fields = '__all__'
         exclude=['persona', 'tipo']
-        Widgets ={
-            'fechaNacimiento': forms.DateInput(attrs={'type':'datetime-local'}),
-            }
+        #Widgets ={
+         #   'fechaNacimiento': forms.DateInput(attrs={'type':'datetime-local'}),
+          #  }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,7 +26,7 @@ class PersonaForm(ModelForm):
                     'dni', 
                     'nombre',
                     'apellido',
-                    'fechaNacimiento'      
+                    'fechaNacimiento',    
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 

@@ -2,11 +2,7 @@ from django.shortcuts import render
 
 def administrativo(request):
     
-<<<<<<< HEAD
 #    print (request.user.persona)
-=======
-    #print (request.user.persona)
->>>>>>> 02a1b23849bbfacd16958d25522f0b7e4affce13
     return render(request,"administrativo.html")
 
 def beneficios(request):

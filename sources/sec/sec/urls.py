@@ -47,14 +47,11 @@ urlpatterns = [
     path('usuario/', usuario),
     path('admin/', admin.site.urls),
     path('registro/', registro, name= 'registro'),
-<<<<<<< HEAD
-    path('afiliados/', include('apps.afiliados.urls'))
-=======
+    path('afiliados/', include('apps.afiliados.urls')),
     path('verAlumno/', verAlumno, name='verAlumno'),
     path('verAlquiler/', verAlquiler, name='verAlquiler'),
     path('verProfesor/', verProfesor, name='verProfesor'),
     path('verCurso/', verCurso, name='verCurso'),
     path('verSalon/', verSalon, name='verSalon'),
     path('verAfiliado/', verAfiliado, name='verAfiliado'),
->>>>>>> 02a1b23849bbfacd16958d25522f0b7e4affce13
 ]
