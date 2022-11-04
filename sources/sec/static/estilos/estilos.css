@@ -74,8 +74,8 @@ textarea {
         justify-content: center;
         padding-bottom: 15px;   
     }
-    .container {
-        background-color: #fff;
+    .nuestro-container {
+        background-color: white;
         position: relative;
         max-width: 900px;
         width: 100%;

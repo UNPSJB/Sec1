@@ -8,8 +8,6 @@ from .models import Afiliado, Empresa
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML
 
-
-
 class AfiliadoForm(forms.ModelForm):
     
     class Meta:
