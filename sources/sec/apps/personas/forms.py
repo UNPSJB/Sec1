@@ -14,9 +14,9 @@ class PersonaForm(ModelForm):
             "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
             "fechaNacimiento": forms.TextInput(attrs={'type': 'date'})
         }
-        #labels = {
-        #        "fechaNacimiento": "Fecha de Nacimiento",
-        #}
+        labels = {
+            'fechaNacimiento': 'Fecha de nacimiento'
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

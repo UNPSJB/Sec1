@@ -14,15 +14,26 @@ class EmpresaForm(forms.ModelForm):
         model = Empresa
         fields = "__all__"
 
+        labels = {
+            'razonSocial': 'Razon social',
+            'domicilioEmpresa': 'Domicilio de la empresa',
+        }
+
 class AfiliadoForm(forms.ModelForm):
     
     class Meta:
         model = Afiliado
         fields = "__all__"
         exclude = ['persona','tipo']
-        #widgets = {
-        #    "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
-        #}
+        
+        widgets = {
+            "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'})
+        }
+        labels = {
+            'fechaIngresoTrabajo': 'Fecha de ingreso al trabajo',
+            'estadoCivil': 'Estado civil',
+            'jornadaLaboral': 'Jornada laboral',
+        }
 
     def clean_dni(self):
         self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
