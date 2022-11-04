@@ -1,11 +1,15 @@
-{% extends 'formMain.html' %}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block main %}
-<div class="col-5">
-    <h3>{{ titulo }}</h3>
-    {% crispy form form.helper %}
+{% block container %}
 
+<div class="row">
+    <div class="col-12">
+        <h3>{{ titulo }}</h3>
+        {% crispy form form.helper %}
+    
+    </div>
 </div>
+
 {% endblock %}

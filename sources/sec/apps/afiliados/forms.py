@@ -54,17 +54,25 @@ class AfiliadoForm(forms.ModelForm):
                    "Datos Personales",
                 HTML(
                     '<hr/>'),
+                    'dni',
+                    'nombre',
+                    'apellido',
+                    'fechaNacimiento',
                     'cuil',
                     'nacionalidad',
                     'estadoCivil',
                     'domicilio',
                     'teléfono',
                     'email',
-                    'fechaIngresoTrabajo',
-                    'sueldo',
-                    'jornadaLaboral',
                     #'empresa',
+            ),
+            Fieldset(
+                    "Datos Laborales",
+                HTML('<hr/>'),
+                'fechaIngresoTrabajo',
+                'sueldo',
+                'jornadaLaboral',
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
         
-AfiliadoForm.base_fields.update(AfiliadoForm.base_fields)    
+AfiliadoForm.base_fields.update(PersonaForm.base_fields)    

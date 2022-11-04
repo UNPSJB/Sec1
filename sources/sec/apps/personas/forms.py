@@ -30,4 +30,3 @@ class PersonaForm(ModelForm):
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
-PersonaForm.base_fields.update(PersonaForm.base_fields)
