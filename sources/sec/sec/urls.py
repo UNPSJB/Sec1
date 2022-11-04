@@ -44,5 +44,6 @@ urlpatterns = [
     path('login/', login, name= 'login'),
     path('usuario/', usuario),
     path('admin/', admin.site.urls),
-    path('registro/', registro, name= 'registro')
+    path('registro/', registro, name= 'registro'),
+    path('afiliados/', include('apps.afiliados.urls'))
 ]

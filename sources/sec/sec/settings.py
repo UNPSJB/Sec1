@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'apps.cursos',
     'apps.afiliados',
     'apps.salones',
-    'django_extensions', #Para el diagrama de clases
+    'django_extensions',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
