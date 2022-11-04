@@ -1,4 +1,4 @@
-from apps.personas.models import Persona
+from .models import Persona
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML

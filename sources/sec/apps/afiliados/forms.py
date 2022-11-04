@@ -15,7 +15,7 @@ class AfiliadoForm(forms.ModelForm):
     class Meta:
         model = Afiliado
         fields = "__all__"
-        exclude = ['tipo']
+        exclude = ['persona','tipo']
 
         #widgets = {
          #   "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
@@ -54,9 +54,6 @@ class AfiliadoForm(forms.ModelForm):
                    "Datos Personales",
                 HTML(
                     '<hr/>'),
-                    'dni', 
-                    'nombre',
-                    'apellido',
                     'cuil',
                     'nacionalidad',
                     'estadoCivil',
@@ -66,7 +63,7 @@ class AfiliadoForm(forms.ModelForm):
                     'fechaIngresoTrabajo',
                     'sueldo',
                     'jornadaLaboral',
-                    'empresa',
+                    #'empresa',
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
         

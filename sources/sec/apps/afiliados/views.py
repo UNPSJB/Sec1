@@ -10,7 +10,7 @@ from django.shortcuts import redirect
 def listadoAfiliados(request):
     return render(request, 'listadoAfiliados.html', {})
 
-# ---------------------------- Cliente View ------------------------------------ #
+# ---------------------------- Afiliado View ------------------------------------ #
 
 class AfiliadoCreateView(CreateView):
 
@@ -36,7 +36,7 @@ class AfiliadoCreateView(CreateView):
             afiliado = afiliado_form.save()
             #messages.add_message(self.request, messages.SUCCESS, 'Afiliado registrado con éxito')
             if 'guardar' in self.request.POST:
-                return redirect('listarAfiliados')
-            return redirect('crearAfiliado')
+                return redirect('')
+            return redirect('')
         #messages.add_message(self.request, messages.ERROR, afiliado_form.errors)
         return self.form_invalid(form=afiliado_form)
