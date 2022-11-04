@@ -64,61 +64,62 @@
 </li>
 {% endblock %}
 {% block container %}
-<div>
-    <div class="container-listados my-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-              <div class="table-responsive card shadow p-3"> 
-                    <h3>Listado de Cursos</h3>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th> Nombre </th>
-                                <th> Fecha Desde </th>
-                                <th> Fecha Hasta </th>
-                                <th> Descuento </th>
-                                <th> Profesor </th>
-                                <th> Precio </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <div>
-                                <tr>
-                                    <td> Desarrollo de software</td>
-                                    <td> 01/08/21 </td>
-                                    <td> 21/11/12 </td>
-                                    <td> 15% </td>
-                                    <td> Diego </td>
-                                    <td> 15000$ </td>
-                                    <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
-                                </tr>
-                            </div>
-                            <div>
-                                <tr>
-                                    <td> Desarrollo de software</td>
-                                    <td> 01/08/21 </td>
-                                    <td> 21/11/12 </td>
-                                    <td> 15% </td>
-                                    <td> Diego </td>
-                                    <td> 15000$ </td>
-                                    <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
-                                </tr>
-                            </div>
-                            <div>
-                                <tr>
-                                    <td> Desarrollo de software</td>
-                                    <td> 01/08/21 </td>
-                                    <td> 21/11/12 </td>
-                                    <td> 15% </td>
-                                    <td> Diego </td>
-                                    <td> 15000$ </td>
-                                    <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
-                                </tr>
-                            </div>
-                        </tbody>
-                    </table>
+<div style="background-color:#0f66c3">
+  <div class="container">
+    <header> Agregar Alquiler </header>
+    <form action="#">
+        <div class="form first">
+            <div class="datos curso">
+                <span class="title"> Datos de alquiler </span>
+
+                <div class="fields">
+                    <div class="input-field">
+                      <label> Número de alquiler </label>
+                      <input type="numer" placeholder="Ingrese número de alquiler" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Fecha de reserva </label>
+                        <input type="date" placeholder="Ingrese fecha de reserva" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Fecha inicio </label>
+                      <input type="date" placeholder="Ingrese fecha inicio" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Monto </label>
+                      <input type="number" placeholder="Ingrese monto" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Afiliado </label>
+                        <select> 
+                            <option value="disable selected"></option>
+                            <option value="#">  </option>
+                          </select>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Salón </label>
+                        <select> 
+                            <option value="disable selected"></option>
+                            <option value="#">  </option>
+                          </select>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Seña </label>
+                        <input type="number" placeholder="Ingrese seña" required>
+                    </div>
                 </div>
-              </div>
+            </div>
+            <button>
+              <span> Crear </span>
+            </button>
         </div>
-    </div>
+    </form>
+  </div>       
 </div>
 {% endblock %}

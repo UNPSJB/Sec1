@@ -1,17 +1,25 @@
-/** body {
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  background-color:#0f66c3;
+}
+
+/* Contacto */
+
+/*body {
     background: #064080;
     border-top: 4px solid #064080;
-    margin: 0;
-    
-}
+    margin: 0;   
+}*/
 
 form {
     margin: auto;
     background: white;
     max-width: 1000px;
-    padding: 30px;
     margin-top: 20px;
-    box-shadow: 0px 0px 3px gray;
     border-radius: 6px;
     box-sizing: border-box;
 }
@@ -56,4 +64,115 @@ textarea {
 
 #mapa {
     width: 100%;
-} **/
+}
+
+/* Estilos formularios */
+
+    body {
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 15px;   
+    }
+    .container {
+        background-color: #fff;
+        position: relative;
+        max-width: 900px;
+        width: 100%;
+        border-radius: 6px;
+        padding: 30px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+
+    .container-listados {
+        position: relative;
+        width: 100%;
+        border-radius: 6px;
+        padding: 30px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .container-home {
+        position: relative;
+        width: 100%;
+        border-radius: 6px;
+        padding: 30px;
+        padding-left: 300px;
+        padding-right: 300px;
+    }
+    
+    .container header {
+        position: relative;
+        font-size: 20px;
+        font-weight: 600;
+        color: black;
+    }
+    .container form{
+        position: relative;
+        margin-top: 16px;
+        background-color: #fff;
+    }
+    .container form .datos {
+        margin-top: 30px;
+    }
+    .container form .title {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        color: black;
+    }
+    .container form .fields {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    form .fields .input-field{
+        display: flex;
+        width: calc(100% / 3 - 15px);
+        flex-direction: column;
+        margin: 4px 0;
+    }
+    .input-field label {
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .input-field input {
+        outline: none;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+        padding: 0 15px;
+        height: 42px;
+        margin: 8px 0;
+    }
+    .input-field select {
+        outline: none;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+        padding: 0 15px;
+        height: 42px;
+        margin: 8px 0;
+    }
+    .container form button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 45px;
+        max-width: 200px;
+        width: 100%;
+        border: none;
+        outline: none;
+        color:#fff;
+        border-radius: 5px;
+        margin: 25px 0;
+        background-color:  rgb(5, 134, 5);
+        cursor: pointer;
+    }

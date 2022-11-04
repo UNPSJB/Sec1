@@ -54,7 +54,6 @@ class AfiliadoForm(forms.ModelForm):
                    "Datos Personales",
                 HTML(
                     '<hr/>'),
-
                     'dni', 
                     'nombre',
                     'apellido',
@@ -65,23 +64,6 @@ class AfiliadoForm(forms.ModelForm):
                     'estado_civil',
                     'cuil',
                     'celular',
-
-            ),
-            Fieldset(
-                   "Datos Laborales",
-                HTML(
-                    '<hr/>'),
-                 HTML("""
-            <p>Datos del empleador que te va a dar latigo</p>
-        """),
-                    'razon_social',
-                    'cuit_empleador',
-                    'domicilio_empresa',
-                    'localidad_empresa',
-                    'fechaIngresoTrabajo',
-                    'sueldo',
-                    'persona'
-                   # 'fecha_afiliacion',
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
         

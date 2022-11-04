@@ -24,16 +24,9 @@ class PersonaForm(ModelForm):
                 HTML(
                     '<hr/>'),
                     'dni', 
-                    'fechaNacimiento',
                     'nombre',
                     'apellido',
-                    'direccion',
-                    'mail',
-                    'nacionalidad',
-                    'estado_civil',
-                    'cuil',
-                    'celular',      
-            
+                    'fechaNacimiento'      
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 

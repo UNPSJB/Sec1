@@ -6,7 +6,7 @@
     Gestión Afiliados
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
     <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
     <li class="dropdown-divider"></li>
@@ -57,7 +57,7 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
     <li class="dropdown-divider"></li>
   </ul>
@@ -65,59 +65,82 @@
 {% endblock %}
 {% block container %}
 <div style="background-color:#0f66c3">
-  <br>
-    <div class="d-flex justify-content-center align-items-center">
-        <div class="bg-white p-5 rounded-5 shadow" style="width: 25rem">
-            <div class="text-center fs-3">Agregar Alumno</div>  
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese DNI del alumno">
+  <div class="container">
+    <header> Registrar Alumno </header>
+    <form action="#">
+        <div class="form first">
+            <div class="datos personales">
+                <span class="title"> Datos Personales </span>
+
+                <div class="fields">
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                        <label> DNI Alumno </label>
+                        <input type="text" placeholder="Ingrese el dni" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Nombre completo </label>
+                      <input type="text" placeholder="Ingrese el nombre" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Apellido completo </label>
+                        <input type="text" placeholder="Ingrese el apellido" required>
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Fecha de nacimiento </label>
+                      <input type="date" placeholder="Ingrese fecha de nacimiento" required>
+                    </div>
+
+                    <div class="input-field">
+                      <label> Dirección </label>
+                      <input type="text" placeholder="Ingrese dirección" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Curso al que desea inscribirse </label>
+                        <select> 
+                          <option value="disable selected"></option>
+                          <option value="#">  </option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese nombre">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese apellido">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Fecha de nacimiento">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese dirección">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Curso al que se desea inscribir">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="number" placeholder="Años de experiencia">
-            </div>
-            <br>
-            <div class="input-group">
-                <input class="form-control bg-light" type="text" placeholder="Ingrese CBU">
-            </div>
-            <br>
-            <div class="text-center fs-3"> Responsable a Cargo</div>
-            <br>
-            <div class="input-group">
-              <input class="form-control bg-light" type="text" placeholder="Ingrese el nombre del responsable">
-            </div>
-            <br>
-            <div class="input-group">
-              <input class="form-control bg-light" type="text" placeholder="Ingrese el apellido del responsable">
-            </div>
-            <br>
-            <div class="input-group">
-              <input class="form-control bg-light" type="text" placeholder="DNI del responsable">
-            </div>
-            <br>
-            <a class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color:#064080"> Agregar </a>
+
+            <div class="datos personales">
+              <span class="title"> Responsable a cargo </span>
+
+              <div class="fields">
+                  <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> DNI Alumno </label>
+                      <input type="text" placeholder="Ingrese el dni" required>
+                  </div>
+
+                  <div class="input-field">
+                    <label> Nombre completo </label>
+                    <input type="text" placeholder="Ingrese el nombre" required>
+                  </div>
+
+                  <div class="input-field">
+                      <label> Apellido completo </label>
+                      <input type="text" placeholder="Ingrese el apellido" required>
+                  </div>
+
+                  <div class="input-field">
+                    <label> Tipo de Responsable </label>
+                    <select> 
+                      <option value="disable selected"></option>
+                      <option value="#">  </option>
+                    </select>
+                </div>
+              </div>
+          </div>
+          <button>
+            <span> Crear </span>
+          </button>
         </div>
-    </div>         
+    </form>
+  </div>       
 </div>
 {% endblock %}

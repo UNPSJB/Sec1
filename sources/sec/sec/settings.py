@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     'apps.cursos',
     'apps.afiliados',
     'apps.salones',
+<<<<<<< HEAD
     'django_extensions',
+=======
+    'django_extensions', #Para el diagrama de clases
+>>>>>>> 02a1b23849bbfacd16958d25522f0b7e4affce13
     'crispy_forms',
 ]
 

@@ -29,8 +29,8 @@ class Rol(models.Model):
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    desde = models.DateTimeField(auto_now_add=True)
-    hasta = models.DateTimeField(null=True, blank=True)
+    fechaDesde = models.DateTimeField(auto_now_add=True)
+    fechaHasta = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.persona} es {self.get_tipo_display()}"

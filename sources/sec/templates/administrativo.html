@@ -6,7 +6,7 @@
     Gestión Afiliados
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAfiliado' %}">Agregar afiliado</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
     <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
     <li class="dropdown-divider"></li>
@@ -57,7 +57,7 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
     <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
     <li class="dropdown-divider"></li>
   </ul>
@@ -65,7 +65,7 @@
 {% endblock %}
 {% block container %}
 <div style="background-color:#0f66c3">
-    <div class="container text-center">
+    <div class="container-home text-center">
         <div class="row mt-4">
             <!-- tarjeta 1 -->
             <div class="col-sm-12 col-md-4 col-lg-4 py-3">
@@ -73,8 +73,8 @@
                     <div class="card-body">
                         <h4> Gestión de Afiliados </h4>
                         <img src="{% static 'img/persona.png' %}" class="card-img-top" alt="persona">
-                        <a href="{% url 'administrativo' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Cargar Afiliado </a>
-                        <a href="{% url 'listadoSalones' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Listados de Afiliados </a>
+                        <a href="{% url 'agregarAfiliado' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Afiliado </a>
+                        <a href="{% url 'listadoAfiliados' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Afiliados </a>
                         
                       </div>
                 </div>
@@ -85,8 +85,8 @@
                     <div class="card-body">
                         <h4> Gestión de Cursos </h4>
                         <img src="{% static 'img/curso.png' %}" class="card-img-top" alt="curso">
-                        <a href="{% url 'agregarCurso' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Cargar Curso </a>
-                        <a href="{% url 'listadoCursos' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Listados de Cursos </a>
+                        <a href="{% url 'agregarCurso' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Curso </a>
+                        <a href="{% url 'listadoCursos' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Cursos </a>
                     </div>
                 </div>
             </div>
@@ -96,8 +96,8 @@
                     <div class="card-body">
                         <h4> Gestión de Alquileres </h4>
                         <img src="{% static 'img/salon.png' %}" class="card-img-top" alt="salon">
-                        <a href="#" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Cargar Alquiler </a>
-                        <a href="{% url 'listadoAlquileres' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Listados de Alquileres </a>
+                        <a href="{% url 'agregarAlquiler' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Alquiler </a>
+                        <a href="{% url 'listadoAlquileres' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Alquileres </a>
                     </div>
                 </div>
             </div>
