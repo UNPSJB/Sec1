@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}
+
+{% endblock %}
+
+{% block itemNavbar %}
+    {% include 'nav_administrativo.html' %}
+{% endblock %}
+
+{% block container %}
+<div class="container">
+  <div class="d-flex justify-content-center ">
+      {% block main %}
+
+      {% endblock %}
+  </div>
+</div>
+{% endblock %}
+
+{% block modals %} {% endblock %}

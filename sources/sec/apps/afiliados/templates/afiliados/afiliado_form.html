@@ -1,15 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'main.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
 {% block container %}
 
 <div class="row">
-    <div class="offset-md-1 col-10">
-        <div class="nuestro-container ">
-        <h3>{{ titulo }}</h3>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         {% crispy form form.helper %}
-        </div>
     </div>
 </div>
 {% endblock %}

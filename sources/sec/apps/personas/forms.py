@@ -10,9 +10,13 @@ class PersonaForm(ModelForm):
         model = Persona
         fields = '__all__'
         exclude=['persona', 'tipo']
-        #Widgets ={
-         #   'fechaNacimiento': forms.DateInput(attrs={'type':'datetime-local'}),
-          #  }
+        widgets = {
+            "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
+            "fechaNacimiento": forms.TextInput(attrs={'type': 'date'})
+        }
+        #labels = {
+        #        "fechaNacimiento": "Fecha de Nacimiento",
+        #}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

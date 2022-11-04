@@ -1,4 +1,5 @@
 from dataclasses import fields
+from sqlite3 import Row
 from django import forms 
 
 from apps.personas.models import Persona
@@ -6,7 +7,12 @@ from apps.personas.forms import PersonaForm
 from django.forms import ValidationError
 from .models import Afiliado, Empresa
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML
+from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
+
+class EmpresaForm(forms.ModelForm):
+    class Meta:
+        model = Empresa
+        fields = "__all__"
 
 class AfiliadoForm(forms.ModelForm):
     
@@ -14,9 +20,8 @@ class AfiliadoForm(forms.ModelForm):
         model = Afiliado
         fields = "__all__"
         exclude = ['persona','tipo']
-
         #widgets = {
-         #   "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
+        #    "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
         #}
 
     def clean_dni(self):
@@ -45,32 +50,57 @@ class AfiliadoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_action = 'afiliados:index'
-        self.helper.layout = Layout(
+        self.helper.layout = Layout( 
             HTML(
-                    '<h2><center>Formulario de Afiliación</center></h2>'),
+                    '<h2><center>Registrar Afiliado</center></h2>'),
+            HTML(
+                    '<hr/>'),
             Fieldset(
                    "Datos Personales",
-                HTML(
-                    '<hr/>'),
-                    'dni',
-                    'nombre',
-                    'apellido',
-                    'fechaNacimiento',
-                    'cuil',
-                    'nacionalidad',
-                    'estadoCivil',
-                    'domicilio',
-                    'teléfono',
-                    'email',
-                    #'empresa',
+            Row(
+                Column('dni', css_class='form-group col-md-4 mb-0'),
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('apellido', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
             ),
+            Row(
+                Column('fechaNacimiento', css_class='form-group col-md-4 mb-0'),
+                Column('cuil', css_class='form-group col-md-4 mb-0'),
+                Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
+                Column('teléfono', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('email', css_class='form-group col-md-4 mb-0'),
+                Column('jornadaLaboral', css_class='form-group col-md-4 mb-0'),
+                Column('sueldo', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('fechaIngresoTrabajo', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            HTML('<hr/>'),   
             Fieldset(
-                    "Datos Laborales",
-                HTML('<hr/>'),
-                'fechaIngresoTrabajo',
-                'sueldo',
-                'jornadaLaboral',
+                    "Datos de Empresa",
+            Row(
+                Column('cuit', css_class='form-group col-md-4 mb-0'),
+                Column('razonSocial', css_class='form-group col-md-4 mb-0'),
+                Column('domicilioEmpresa', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('rama', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
         
-AfiliadoForm.base_fields.update(PersonaForm.base_fields)    
+AfiliadoForm.base_fields.update(PersonaForm.base_fields)
+AfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
