@@ -7,11 +7,12 @@ from apps.afiliados.models import Afiliado
 class Salon(models.Model):
     nombre = models.CharField(max_length=30)
     direccion = models.CharField(max_length=30)
-    capacidad = models.PositiveIntegerField(max_length=3)
-    montoSalon = models.FloatField(max_length=5)
+    capacidad = models.PositiveIntegerField(max_length=4)
+    montoSalon = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 
+    #Revisar
     def agregarSalon (self, nombre, direccion, capacidad, monto, encargado, afiliado): 
         self.nombre = nombre 
         self.direccion = direccion 
@@ -27,9 +28,10 @@ class Salon(models.Model):
 class Servicio(models.Model): 
     nombre = models.CharField(max_length=20)
     descripcion = models.CharField(max_length=120)
-    obligatorio = models.BooleanField()
+    obligatorio = models.BooleanField(default = False)
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)
 
+    #Revisar
     def agregarServicio (self, nombre, descripcion, obligatorio, salon): 
         self.nombre = nombre 
         self.descripcion = descripcion 
@@ -47,12 +49,13 @@ class Alquiler (models.Model):
     reserva = models.DateField() 
     inicio = models.DateField( null = True, blank = True) 
 
+    #Revisar
     def agregarAlquiler (self, salon, seña, reserva, inicio, afiliado): 
         self.salon = salon 
         self.afiliado = afiliado 
         self.seña = seña 
         self.reserva = reserva 
-        if (inicio.len != 0): 
+        if (inicio): 
             self.inicio = inicio
         self.save()
 
@@ -60,10 +63,10 @@ class PagoAlquiler (models.Model):
     TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
     pago = models.DateField() 
-    monto = models.FloatField(max_length = 6)
-    formaPago = models.PositiveBigIntegerField(choices = TIPOPAGO)
+    monto = models.FloatField(max_length = 8)
+    formaPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
     
-    
+    #Revisar
     def agregarPago (self, alquiler, pago, monto, formaPago):
         self.alquiler = alquiler 
         self.pago = pago 

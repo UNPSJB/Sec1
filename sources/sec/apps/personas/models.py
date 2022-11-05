@@ -34,7 +34,7 @@ class Persona(models.Model):
         assert alumno.curso == curso, "Alumno ya inscripto en el curso"
         alumno.persona = self
         alumno.save()
-        curso.alumnos.add(alumno)
+        curso.alumnos.add(alumno) #Revisar
         self.es_alumno=True
         self.save()
 
@@ -50,7 +50,7 @@ class Persona(models.Model):
         assert profesor.persona == self, "Profesor ya existente en el curso" 
         profesor.persona = self 
         profesor.save() 
-        curso.profesores.add(profesor)
+        curso.profesores.add(profesor) #Revisar
         self.es_profesor = True
         self.save() 
 
@@ -94,8 +94,8 @@ class Rol(models.Model):
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    desde = models.DateTimeField(auto_now_add=True)
-    hasta = models.DateTimeField(null=True, blank=True)
+    desde = models.DateField(auto_now_add=True)
+    hasta = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.persona} es {self.get_tipo_display()}"
