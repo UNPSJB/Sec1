@@ -24,10 +24,99 @@ class ProfesorForm(forms.ModelForm):
         model = Profesor
         fields = "__all__"
 
+    def clean_dni(self):
+        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
+        if self.persona is not None and self.persona.es_profesor:
+            raise ValidationError("Ya existe un profesor con ese DNI")
+        return self.cleaned_data['dni']
+
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        personaForm = PersonaForm(data=self.cleaned_data)
+        profesorForm = ProfesorForm(data=self.cleaned_data)
+        return valid and personaForm.is_valid() and profesorForm.is_valid()
+
+    def save(self, commit=False):
+        print(self.cleaned_data)
+        if self.persona is None:
+            personaForm = PersonaForm(data=self.cleaned_data)
+            self.persona = personaForm.save()
+        profesorForm = ProfesorForm(data=self.cleaned_data)
+        profesor = profesorForm.save(commit=False)
+        self.persona.inscribirProfesor(profesor, self.cleaned_data['fecha_inscripcion'])
+        return profesor
+        #super().save(commit=commit)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'profesor:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Profesor</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Personales",
+            Row(
+                Column('dni', css_class='form-group col-md-4 mb-0'),
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('apellido', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('direccion', css_class='form-group col-md-4 mb-0'),
+                Column('telefono', css_class='form-group col-md-4 mb-0'),
+                Column('especializacion', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('añosExperiencia', css_class='form-group col-md-4 mb-0'),
+                Column('cbu', css_class='form-group col-md-4 mb-0'),
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
+
 class CursoForm(forms.ModelForm):
     class Meta:
         model = Curso
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'curso:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Curso</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Curso",
+            Row(
+                Column('TIPO', css_class='form-group col-md-4 mb-0'),
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('desde', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('hasta', css_class='form-group col-md-4 mb-0'),
+                Column('cupo', css_class='form-group col-md-4 mb-0'),
+                Column('modulos', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                #Column('profesor', css_class='form-group col-md-4 mb-0'),
+                Column('descuento', css_class='form-group col-md-4 mb-0'),
+                Column('precio', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('formaPago', css_class='form-group col-md-4 mb-0'),
+                #Column('especialidad', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
 
 class DictadoForm(forms.ModelForm):
     class Meta:
@@ -38,6 +127,34 @@ class ClaseForm(forms.ModelForm):
     class Meta:
         model = Clase
         fields = "__all__"
+    
+    widgets = {
+            "dia": forms.TextInput(attrs={'type': 'date'}),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'curso:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Curso</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Curso",
+            Row(
+                Column('dia', css_class='form-group col-md-4 mb-0'),
+                Column('inicio', css_class='form-group col-md-4 mb-0'),
+                Column('fin', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                #Column('dictado', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
 
 class PagoDictadoForm(forms.ModelForm):
     class Meta:
@@ -64,6 +181,14 @@ class AlumnoForm(forms.ModelForm):
         model = Alumno
         fields = "__all__"
         exclude = ['persona','tipo']
+
+        widgets = {
+            "fechaNacimiento": forms.TextInput(attrs={'type': 'date'}),
+        }
+
+        label = {
+            "fechaNacimiento" : 'Fecha De Nacimiento'
+        }
         
     def clean_dni(self):
         self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
