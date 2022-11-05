@@ -34,7 +34,7 @@ class Servicio(models.Model):
     def agregarServicio (self, nombre, descripcion, obligatorio, salon): 
         self.nombre = nombre 
         self.descripcion = descripcion 
-        self. obligatorio = obligatorio 
+        self.obligatorio = obligatorio 
         self.salon = salon 
         self.save() 
 

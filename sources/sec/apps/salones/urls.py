@@ -9,9 +9,13 @@ urlpatterns = [
     # ----------------- Salones -----------------
     
     path('', views.listadoSalones, name='listadoSalones'),
-    path('crear/', SalonCreateView.as_view(), name='crearSalon'),
+    path('crearSalon/', SalonCreateView.as_view(), name='crearSalon'),
 
     # ----------------- Alquileres -----------------
 
     path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
+
+    # ----------------- Servicios -----------------
+
+    path('crearServicio/', ServicioCreateView.as_view(), name='crearServicio'),
 ]

@@ -16,6 +16,35 @@ class ServicioForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['salon']
 
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        servicioForm = ServicioForm(data=self.cleaned_data)
+        return valid and servicioForm.is_valid()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'servicio:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Servicio</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos del Servicio",
+            Row(
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                Column('obligatorio', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                #Column('salon', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            
+            Submit('submit', 'Guardar', css_class='button white'),)
 class AlquilerForm(forms.ModelForm):
     
     class Meta:
