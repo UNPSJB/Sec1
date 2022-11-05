@@ -12,7 +12,6 @@ class Salon(models.Model):
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 
-
     def agregarSalon (self, nombre, direccion, capacidad, monto, encargado, afiliado): 
         self.nombre = nombre 
         self.direccion = direccion 

@@ -46,6 +46,21 @@ class Persona(models.Model):
         self.save()
     
 
+    def inscribirProfesor (self, profesor, curso): 
+        assert profesor.persona == self, "Profesor ya existente en el curso" 
+        profesor.persona = self 
+        profesor.save() 
+        curso.profesores.add(profesor)
+        self.es_profesor = True
+        self.save() 
+
+    def desinscribirProfesor (self, profesor, fecha): 
+        assert profesor.persona == self, "Profesor no existe o profesor equivocado" 
+        profesor.hasta = self 
+        profesor.save() 
+        self.es_profesor = False
+        self.save() 
+
     def serEncargado (self, fecha):
         assert not self.es_encargado, "Ya soy encargado" 
         self.desde = fecha
