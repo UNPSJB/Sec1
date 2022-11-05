@@ -9,3 +9,4 @@ urlpatterns = [
 
     path('crear/', PersonaCreateView.as_view(), name='crearPersona'),
 ]
+
