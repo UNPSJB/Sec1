@@ -31,9 +31,12 @@ class Profesor(Rol):
     añosExperiencia = models.IntegerField(max_length=2)
     cbu: models.IntegerField(max_length=20)
 
+
+
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.añosExperiencia}, cbu={self.cbu}'
 
+Rol.register(Profesor)
 
 class Curso(models.Model):
     TIPO = [(0, "Clase"), (1, "Mensual")]
@@ -77,7 +80,7 @@ class Clase (models.Model):
 
 class Alumno (Rol): 
     TIPO = 3
-    curso= models.ForeignKey(Curso, on_delete = models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, through = "PagoDictado")
 
 
@@ -86,6 +89,7 @@ class Alumno (Rol):
         vinculo = self.persona.vinculantes.filter(tipo=Vinculo.TUTOR).first()
         return vinculo.vinculante if vinculo is not None else None
 
+Rol.register(Alumno)
 
 class PagoDictado (models.Model): 
     TIPO = [(0, "Debito"), (1, "Credito"), (2, "Efectivo")]

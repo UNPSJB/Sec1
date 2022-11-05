@@ -42,10 +42,25 @@ class Persona(models.Model):
         assert alumno.persona == self, "Alumno equivocado o inexistente"
         alumno.hasta = fecha
         alumno.save()
-        
         self.es_alumno = False
         self.save()
     
+
+    def serEncargado (self, fecha):
+        assert not self.es_encargado, "Ya soy encargado" 
+        self.desde = fecha
+        self = self
+        self.save()
+        self.es_encargado = True
+        self.save()
+
+
+    def desinscribirEncargado (self, fecha): 
+        assert self == self, "Encargado equivocado"
+        self.hasta = fecha
+        self.save() 
+        self.es_encargado = False 
+        self.save() 
 
     def __str__(self):
         return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
@@ -75,6 +90,18 @@ class Rol(models.Model):
             self.tipo = self.__class__.TIPO
         super(Rol, self).save(*args, **kwargs)
 
+    def agregar_rol(self, rol):
+        if not self.sos(rol.__class__):
+            rol.persona = self
+            rol.save()
+    
+    def sos(self, Klass):
+        return any([isinstance(rol, Klass) for rol in self.roles_related()])
+
+    def roles_related(self):
+        return [rol.related() for rol in self.roles.all()]
+
+    
     def related(self):
         return self.__class__ != Rol and self or getattr(self, self.get_tipo_display())
 
