@@ -54,4 +54,5 @@ urlpatterns = [
     path('verCurso/', verCurso, name='verCurso'),
     path('verSalon/', verSalon, name='verSalon'),
     path('verAfiliado/', verAfiliado, name='verAfiliado'),
+    path('salones/', include('apps.salones.urls')),
 ]

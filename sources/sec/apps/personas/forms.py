@@ -15,7 +15,8 @@ class PersonaForm(ModelForm):
             "fechaNacimiento": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {
-            'fechaNacimiento': 'Fecha de nacimiento'
+            'fechaNacimiento': 'Fecha de nacimiento',
+            
         }
 
     def __init__(self, *args, **kwargs):
