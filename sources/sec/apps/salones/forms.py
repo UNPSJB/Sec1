@@ -21,8 +21,47 @@ class AlquilerForm(forms.ModelForm):
     class Meta:
         model = Alquiler
         fields = "__all__"
-        exclude = ['salon']
+        #exclude = ['salon']
+        widgets = {
+           "fechaReserva": forms.TextInput(attrs={'type': 'date'}),
+           "fechaInicio": forms.TextInput(attrs={'type': 'date'})
+        }
+        labels = {
+            'seña': 'Seña',
+            'fechaReserva' : 'Fecha Reserva',
+            'fechaInicio' : 'Fecha Inicio'
+        }
 
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        alquilerForm = AlquilerForm(data=self.cleaned_data)
+        return valid and alquilerForm.is_valid()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'salones:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Alquiler</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos del alquiler",
+            Row(
+                #Column('afiliado', css_class='form-group col-md-4 mb-0'),
+                #Column('salon', css_class='form-group col-md-4 mb-0'),
+                Column('seña', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('fechaReserva', css_class='form-group col-md-4 mb-0'),
+                Column('fechaInicio', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            
+            Submit('submit', 'Guardar', css_class='button white'),)
 class PagoAlquilerForm(forms.ModelForm):
     
     class Meta:
@@ -53,7 +92,7 @@ class SalonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'cursos:index'
+        self.helper.form_action = 'salones:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Salon</center></h2>'),

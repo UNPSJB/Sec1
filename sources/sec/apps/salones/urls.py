@@ -5,8 +5,13 @@ from .views import *
 
 urlpatterns = [
 
-    path('', views.listadoSalones, name='listadoSalones'),
+    
     # ----------------- Salones -----------------
-
+    
+    path('', views.listadoSalones, name='listadoSalones'),
     path('crear/', SalonCreateView.as_view(), name='crearSalon'),
+
+    # ----------------- Alquileres -----------------
+
+    path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
 ]

@@ -33,7 +33,6 @@ class Alquiler (models.Model):
     fechaReserva = models.DateField() 
     fechaInicio = models.DateField( null = True, blank = True) 
 
-
 class PagoAlquiler (models.Model): 
     TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
