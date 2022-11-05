@@ -57,8 +57,8 @@ class AlquilerForm(forms.ModelForm):
         fields = "__all__"
         #exclude = ['salon']
         widgets = {
-           "fechaReserva": forms.TextInput(attrs={'type': 'date'}),
-           "fechaInicio": forms.TextInput(attrs={'type': 'date'}),
+           "reserva": forms.TextInput(attrs={'type': 'date'}),
+           "inicio": forms.TextInput(attrs={'type': 'date'}),
            "seña": forms.TextInput(attrs={'placeholder': 'Ingrese monto de la seña'}),
         }
         labels = {
@@ -90,8 +90,8 @@ class AlquilerForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Column('fechaReserva', css_class='form-group col-md-4 mb-0'),
-                Column('fechaInicio', css_class='form-group col-md-4 mb-0'),
+                Column('reserva', css_class='form-group col-md-4 mb-0'),
+                Column('inicio', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
