@@ -16,6 +16,11 @@ class ServicioForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['salon']
 
+        widgets = {
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
+            "descripcion": forms.TextInput(attrs={'placeholder': 'Ingrese descripción'}),
+        }
+
     def is_valid(self) -> bool:
         valid = super().is_valid()
         servicioForm = ServicioForm(data=self.cleaned_data)
@@ -53,7 +58,8 @@ class AlquilerForm(forms.ModelForm):
         #exclude = ['salon']
         widgets = {
            "fechaReserva": forms.TextInput(attrs={'type': 'date'}),
-           "fechaInicio": forms.TextInput(attrs={'type': 'date'})
+           "fechaInicio": forms.TextInput(attrs={'type': 'date'}),
+           "seña": forms.TextInput(attrs={'placeholder': 'Ingrese monto de la seña'}),
         }
         labels = {
             'seña': 'Seña',

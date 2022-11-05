@@ -12,6 +12,8 @@ class PersonaForm(ModelForm):
         exclude=['persona', 'tipo']
         widgets = {
             "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre completo'}),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellido completo'}),
             "fechaNacimiento": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {

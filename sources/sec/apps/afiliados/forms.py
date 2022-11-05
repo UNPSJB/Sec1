@@ -14,6 +14,12 @@ class EmpresaForm(forms.ModelForm):
         model = Empresa
         fields = "__all__"
 
+        widgets = {
+            "cuit": forms.TextInput(attrs={'placeholder': 'Ingrese cuit'}),
+            "razonSocial": forms.TextInput(attrs={'placeholder': 'Ingrese razón social'}),
+            "domicilioEmpresa": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
+            "rama": forms.TextInput(attrs={'placeholder': 'Ingrese rama de la empresa'}),
+        }
         labels = {
             'razonSocial': 'Razon social',
             'domicilioEmpresa': 'Domicilio de la empresa',
@@ -27,7 +33,15 @@ class AfiliadoForm(forms.ModelForm):
         exclude = ['persona','tipo']
         
         widgets = {
-            "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'})
+            "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
+            "cuil": forms.TextInput(attrs={'placeholder': 'Ingrese cuil'}),
+            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            "estadoCivil": forms.TextInput(attrs={'placeholder': 'Ingrese estado civil'}),
+            "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
+            "teléfono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
+            "email": forms.TextInput(attrs={'placeholder': 'Ingrese E-mail'}),
+            "jornadaLaboral": forms.TextInput(attrs={'placeholder': 'Ingrese jornada laboral'}),
+            "sueldo": forms.TextInput(attrs={'placeholder': 'Ingrese sueldo'}),
         }
         labels = {
             'fechaIngresoTrabajo': 'Fecha de ingreso al trabajo',
