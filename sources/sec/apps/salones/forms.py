@@ -63,8 +63,8 @@ class AlquilerForm(forms.ModelForm):
         }
         labels = {
             'seña': 'Seña',
-            'fechaReserva' : 'Fecha Reserva',
-            'fechaInicio' : 'Fecha Inicio'
+            'reserva' : 'Fecha Reserva',
+            'inicio' : 'Fecha Inicio'
         }
 
     def is_valid(self) -> bool:
