@@ -1,7 +1,6 @@
 from django.shortcuts import render
 
 def administrativo(request):
-    
 #    print (request.user.persona)
     return render(request,"administrativo.html")
 
@@ -11,34 +10,14 @@ def beneficios(request):
 def contacto(request):
     return render(request,"contacto.html")
 
-#def cursos(request):
-#    return render(request,"cursos.html")
-
 def gimnasio(request):
     return render(request,"gimnasio.html")
 
 def home(request):
     return render(request,"home.html")
 
-#def listadoAfiliados(request):
-#    return render(request,"listadoAfiliados.html")
-
-def agregarCurso(request):
-    return render(request,"agregarCurso.html")
-
 def listadoCursos(request):
     return render(request,"listadoCursos.html")
-#def listadoCursos(request):
-#    return render(request,"listadoCursos.html")
-
-#def listadoProfesores(request):
-#    return render(request,"listadoProfesores.html")
-
-def agregarProfesor(request):
-    return render(request,"agregarProfesor.html")
-
-def agregarSalon(request):
-    return render(request,"agregarSalon.html")
 
 def listadoSalones(request):
     return render(request,"listadoSalones.html")
@@ -55,20 +34,11 @@ def registro(request):
 def listadoAlquileres(request):
     return render(request,"listadoAlquileres.html")
 
-def agregarAlumno(request):
-    return render(request,"agregarAlumno.html")
-
 def listadoAlumnos(request):
     return render(request,"listadoAlumnos.html")
 
 def listadoDePendientes(request):
     return render(request,"listadoPendientes.html")
-
-def agregarAfiliado(request):
-    return render(request,"agregarAfiliado.html")
-
-def agregarAlquiler(request):
-    return render(request,"agregarAlquiler.html")
 
 def verAlumno(request):
     return render(request,"verAlumno.html")

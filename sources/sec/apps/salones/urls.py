@@ -8,7 +8,7 @@ urlpatterns = [
     
     # ----------------- Salones -----------------
     
-    path('', views.listadoSalones, name='listadoSalones'),
+    path('listadoSalones/', views.listadoSalones, name='listadoSalones'),
     path('crearSalon/', SalonCreateView.as_view(), name='crearSalon'),
 
     # ----------------- Alquileres -----------------

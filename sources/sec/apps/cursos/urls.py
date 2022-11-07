@@ -8,7 +8,7 @@ urlpatterns = [
     #path('index', cursos.cursosIndex, name='cursosIndex'),
     path('crearProfesor/', ProfesorCreateView.as_view(), name='crearProfesor'),
 
-    #path('', views.listadoCursos, name='listadoCursos'),
+    path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     #path('index', cursos.cursosIndex, name='cursosIndex'),
     path('crearCurso/', CursoCreateView.as_view(), name='crearCurso'),
     
@@ -20,7 +20,7 @@ urlpatterns = [
     #path('index', clases.clasesIndex, name='clasesIndex'),
     path('crearClase/', ClaseCreateView.as_view(), name='crearClase'),
 
-    #path('', views.listadoAulas, name='listadoAulas'),
+    path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     #path('index', clases.clasesIndex, name='clasesIndex'),
     path('crearAula/', AulaCreateView.as_view(), name='crearAula'),
 
