@@ -1,10 +1,9 @@
 from dataclasses import fields
 from sqlite3 import Row
 from django import forms 
-
 from apps.personas.models import Persona
 from apps.personas.forms import PersonaForm
-from django.forms import ValidationError
+from django.forms import ValidationError, ModelForm, Textarea
 from .models import Especialidad, Aula, Profesor, Curso, Dictado, Clase, Alumno, PagoDictado, Titularidad, Liquidacion, AsistenciaProfesor 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
@@ -13,6 +12,43 @@ class EspecialidadForm(forms.ModelForm):
     class Meta:
         model = Especialidad
         fields = "__all__"
+
+        labels = {
+            'TIPOAREA': 'Area',
+        }
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        nombre = nombre.lower()
+        return nombre
+
+    def clean(self):
+        pass
+
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        return valid
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'especialidad:index'
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Especialidad</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                "Datos de Especialidad",
+            Row(
+                Column('area', css_class='form-group col-md-4 mb-0'),
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+
+            Submit('submit', 'Guardar', css_class='button white'),)
 
 class AulaForm(forms.ModelForm):
     class Meta:

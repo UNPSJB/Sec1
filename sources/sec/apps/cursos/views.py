@@ -3,6 +3,7 @@ from .forms import *
 from .models import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
@@ -160,3 +161,61 @@ class AulaCreateView(CreateView):
             return redirect('')
         #messages.add_message(self.request, messages.ERROR, aula_form.errors)
         return self.form_invalid(form=aula_form)
+
+#--------------------------------ESPECIALIDAD---------------------------------------------
+
+class EspecialidadCreateView(CreateView):
+
+    model = Especialidad
+    form_class = EspecialidadForm
+    # template_name = 'especialidades/especialidad_form.html' # template del form
+    success_url = reverse_lazy('crearEspecialidad')
+
+    """
+    def post(self, *args, **kwargs):
+        self.object = None
+        especialidad_form = self.get_form()
+        
+
+        if especialidad_form.is_valid():
+            especialidad = especialidad_form.save()
+            messages.add_message(self.request, messages.SUCCESS, 'Especialidad registrada con éxito')
+            if 'guardar' in self.request.POST:
+                return redirect('crearEspecialidad')
+            return redirect('crearEspecialidad')
+        #messages.add_message(self.request, messages.ERROR, 'Error al registrar especialidad ')
+        return self.form_invalid(form=especialidad_form)
+    """
+class EspecialidadUpdateView(UpdateView):
+    model = Especialidad
+    form_class = EspecialidadForm
+    success_url = reverse_lazy("listarEspecialidades")
+"""
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = "Modificar Especialidad"
+        return context
+    
+    def form_valid(self, form):
+        #messages.add_message(self.request, messages.SUCCESS, 'Persona modificada con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        #messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
+"""
+def especialidad_eliminar(request, pk):
+    a = Especialidad.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarEspecialidades') 
+
+#class EspecialidadDeleteView(DeleteView):
+#    model = Especialidad
+#    success_url = reverse_lazy('')
+
+class EspecialidadDetailView(DetailView):
+    model = Especialidad
+
+class EspecialidadListView(ListView):
+    model = Especialidad
+    paginate_by = 100 

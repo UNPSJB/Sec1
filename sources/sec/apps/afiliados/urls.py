@@ -8,6 +8,10 @@ urlpatterns = [
 
     # ----------------- AFILIADOS -----------------
 
-    #path('clientes/listar', AfiliadoListView.as_view(), name='listarClientes'),
-    path('crear/', AfiliadoCreateView.as_view(), name='crearAfiliado')
+    path('crearAfiliado/', AfiliadoCreateView.as_view(), name='crearAfiliado'),
+    path('modificarAfiliado/', AfiliadoUpdateView.as_view(), name='modificarAfiliado'),
+    #path('borrarAfiliado/', AfiliadoDeleteView.as_view(), name='borrarAfiliado'),
+    path('eliminarAfiliado/', afiliado_eliminar, name='eliminarAfiliado'),
+    path('detallarAfiliado/', AfiliadoDetailView.as_view(), name='detallarAfiliado'),
+    path('listarAfiliados/', AfiliadoListView.as_view(), name='listarAfiliados'),
 ]
