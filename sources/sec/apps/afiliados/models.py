@@ -19,7 +19,7 @@ class Afiliado(Rol):
     nacionalidad = models.CharField(max_length=50)
     estadoCivil = models.CharField(max_length=50)
     domicilio = models.CharField(max_length=50)
-    teléfono = models.CharField(max_length=50)
+    telefono = models.CharField(max_length=50)
     email = models.EmailField(max_length = 254) 
     fechaIngresoTrabajo = models.DateField()
     sueldo = models.FloatField(max_length=50)
@@ -29,7 +29,7 @@ class Afiliado(Rol):
     
 
     def __str__(self):
-        return f'tipo={self.TIPO}, cuil={self.cuil}, nacionalidad={self.nacionalidad}, estadoCivil={self.estadoCivil}, domicilio={self.domicilio}, telefono={self.telefono}, email={self.email}, fechaIngresoTrabajo={self.fechaIngresoTrabajo}, sueldo={self.sueldo}, JornadaLaboral={self.JornadaLaboral}'
+        return f'tipo={self.TIPO}, cuil={self.cuil}, nacionalidad={self.nacionalidad}, estadoCivil={self.estadoCivil}, domicilio={self.domicilio}, telefono={self.telefono}, email={self.email}, fechaIngresoTrabajo={self.fechaIngresoTrabajo}, sueldo={self.sueldo}, JornadaLaboral={self.jornadaLaboral}'
 
 Rol.register(Afiliado)
 
