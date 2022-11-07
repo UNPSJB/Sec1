@@ -99,6 +99,8 @@ class CursoCreateView(CreateView):
         #messages.add_message(self.request, messages.ERROR, curso_form.errors)
         return self.form_invalid(form=curso_form)
 
+def listadoCursos(request):
+    return render(request, 'listadoCursos.html', {})
 #--------------------------------CLASE---------------------------------------------
 
 class ClaseCreateView(CreateView):

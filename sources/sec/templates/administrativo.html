@@ -1,68 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'main.html' %}
 {% load static %}
-{% block itemNavbar %}
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Afiliados
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'crearAfiliado' %}">Agregar afiliado</a></li>
-    <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
-    <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Alumnos
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'agregarAlumno' %}">Agregar alumno</a></li>
-    <li><a class="dropdown-item" href="{% url 'listadoAlumnos' %}">Listado de alumnos</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Cursos
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'agregarCurso' %}">Agregar curso</a></li>
-    <li><a class="dropdown-item" href="#">Listado de cursos</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Profesores
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'agregarProfesor' %}">Agregar profesor</a></li>
-    <li><a class="dropdown-item" href="#">Listado de profesores</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Salones
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'crearSalon' %}">Agregar salón</a></li>
-    <li><a class="dropdown-item" href="{% url 'listadoSalones' %}">Listado de salones</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Gestión Alquileres
-  </a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'agregarAlquiler' %}">Agregar alquiler</a></li>
-    <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
-    <li class="dropdown-divider"></li>
-  </ul>
-</li>
-{% endblock %}
+
 {% block container %}
 <div style="background-color:#0f66c3">
     <div class="container-home text-center">
@@ -73,7 +11,7 @@
                     <div class="card-body">
                         <h4> Gestión de Afiliados </h4>
                         <img src="{% static 'img/persona.png' %}" class="card-img-top" alt="persona">
-                        <a href="{% url 'agregarAfiliado' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Afiliado </a>
+                        <a href="{% url 'crearAfiliado' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Afiliado </a>
                         <a href="{% url 'listadoAfiliados' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Afiliados </a>
                         
                       </div>
@@ -85,7 +23,7 @@
                     <div class="card-body">
                         <h4> Gestión de Cursos </h4>
                         <img src="{% static 'img/curso.png' %}" class="card-img-top" alt="curso">
-                        <a href="{% url 'agregarCurso' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Curso </a>
+                        <a href="{% url 'crearCurso' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Curso </a>
                         <a href="{% url 'listadoCursos' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Cursos </a>
                     </div>
                 </div>
@@ -96,7 +34,7 @@
                     <div class="card-body">
                         <h4> Gestión de Alquileres </h4>
                         <img src="{% static 'img/salon.png' %}" class="card-img-top" alt="salon">
-                        <a href="{% url 'agregarAlquiler' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Alquiler </a>
+                        <a href="{% url 'crearAlquiler' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Alquiler </a>
                         <a href="{% url 'listadoAlquileres' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Alquileres </a>
                     </div>
                 </div>
