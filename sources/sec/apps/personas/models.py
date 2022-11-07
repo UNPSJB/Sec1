@@ -1,9 +1,25 @@
 
-import this
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
 
+class PersonaRolManager(models.Manager):
+    def __init__(self, tipo):
+        super().__init__()
+        self.tipo = tipo
+
+    def get_queryset(self):
+        return super().get_queryset().filter(roles__tipo=self.tipo)
+
+class PersonaRolQuerySet(models.QuerySet):
+    def en_fecha(self, fecha):
+        return self.filter(models.Q(roles__desde__lte=fecha) & (models.Q(roles__hasta__gte=fecha) | models.Q(roles__hasta__isnull=True)))
+
+class EncargadoManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(es_encargado=True)
+
+#class PersonaRolQuerySet
 class Persona(models.Model):
     dni = models.CharField(max_length=8)
     nombre = models.CharField(max_length= 30)
@@ -14,6 +30,12 @@ class Persona(models.Model):
     es_alumno = models.BooleanField(default = False) 
     es_profesor=models.BooleanField(default=False)
     es_encargado=models.BooleanField(default=False)
+
+    objects = models.Manager()
+    afiliados = PersonaRolManager.from_queryset(PersonaRolQuerySet)(1)
+    profesores = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
+    alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(3)
+    encargados = EncargadoManager()
 
     def afiliar(self, afiliado, fecha):
         assert not self.es_afiliado, "Ya soy afiliado" 

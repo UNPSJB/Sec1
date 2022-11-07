@@ -40,21 +40,21 @@ class Profesor(Rol):
     domicilio = models.CharField(max_length=50)
     telefono = models.CharField(max_length=13)
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
-    añosExperiencia = models.PositiveIntegerField(max_length=2)
-    cbu: models.PositiveIntegerField(max_length=22)
+    aniosExperiencia = models.PositiveIntegerField(max_length=2)
+    cbu = models.PositiveIntegerField(max_length=22)
 
     #Revisar
     def agregarProfesor (self, domicilio, telefono, especializacion, aniosExperiencia, cbu): 
         self.domicilio = domicilio
         self.telefono = telefono 
         self.especializacion = especializacion
-        self.añosExperiencia = aniosExperiencia
+        self.aniosExperiencia = aniosExperiencia
         self.cbu = cbu
         self.save()
 
 
     def __str__(self):
-        return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.añosExperiencia}, cbu={self.cbu}'
+        return f'id={self.id}, nombre={self.persona.nombre}, apellido={self.persona.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.aniosExperiencia}, cbu={self.cbu}'
 
 Rol.register(Profesor)
 
@@ -85,7 +85,7 @@ class Curso(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'fechaDesde={self.fechaDesde}, fechaHasta={self.fechaHasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
+        return f'fechaDesde={self.desde}, fechaHasta={self.hasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
 
 
 
