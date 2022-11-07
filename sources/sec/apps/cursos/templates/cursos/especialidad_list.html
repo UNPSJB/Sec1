@@ -2,33 +2,37 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-
 {% block container %}
-
-<table  class="table table-dark table-striped">
-    <thead>
-        <tr>
-          <th scope="col">nombre</th>
-          <th scope="col">area</th>
-          <th scope="col">opcion1</th>
-          <th scope="col">opcion2</th>                 
-          
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          {% for actividad in object_list %}
-          <tr class="bg-transition">
-            <td>{{ actividad.nombre }}</td>
-            <td>{{ actividad.area }}</td>
-            <td><a href="#"class="btn btn-primary">Editar</a></td>
-            <td><a href="#"class="btn btn-primary">Eliminar</a></td>             
-                                                       
-          </tr>
-          {% endfor %}  
-      </tbody>
-      
-  </table>
-
-  <a href="#">Nueva</a>
+<div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">  
+    <div class="container-listados my-3"> 
+              <div class="table-responsive card shadow p-3"> 
+                <h3>Listado de Especialidades</h3>
+                  <table class="table table-striped table-responsive">
+                      <thead>
+                          <tr>
+                            <th scope="col">nombre</th>
+                            <th scope="col">area</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>  
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% for actividad in object_list %}
+                          <tr class="bg-transition">
+                            <td>{{ actividad.nombre }}</td>
+                            <td>{{ actividad.area }}</td>
+                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="#"class="btn btn-primary">Eliminar</a></td>             
+                                                                       
+                          </tr>
+                          {% endfor %}  
+                      </tbody>
+                  </table>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
