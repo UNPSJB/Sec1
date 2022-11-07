@@ -33,7 +33,7 @@ class EspecialidadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'especialidad:index'
+        #self.helper.form_action = 'especialidad:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Especialidad</center></h2>'),

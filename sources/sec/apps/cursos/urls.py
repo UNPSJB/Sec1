@@ -21,7 +21,7 @@ urlpatterns = [
     path('crearClase/', ClaseCreateView.as_view(), name='crearClase'),
 
     path('listadoCursos', views.listadoCursos, name='listadoCursos'),
-    #path('index', clases.clasesIndex, name='clasesIndex'),
+    #path('index', views.EspecialidadListView.as_view(), name=''),
     path('crearAula/', AulaCreateView.as_view(), name='crearAula'),
 
     path('crearEspecialidad/', EspecialidadCreateView.as_view(), name='crearEspecialidad'),

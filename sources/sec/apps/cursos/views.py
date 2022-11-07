@@ -171,7 +171,7 @@ class EspecialidadCreateView(CreateView):
     model = Especialidad
     form_class = EspecialidadForm
     # template_name = 'especialidades/especialidad_form.html' # template del form
-    success_url = reverse_lazy('crearEspecialidad')
+    success_url = reverse_lazy('listarEspecialidades')
 
     """
     def post(self, *args, **kwargs):
