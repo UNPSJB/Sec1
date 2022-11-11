@@ -30,6 +30,7 @@ class Persona(models.Model):
     es_alumno = models.BooleanField(default = False) 
     es_profesor=models.BooleanField(default=False)
     es_encargado=models.BooleanField(default=False)
+    familia = models.ManyToManyField('self', through='Vinculo')
 
     objects = models.Manager()
     afiliados = PersonaRolManager.from_queryset(PersonaRolQuerySet)(1)
@@ -104,12 +105,16 @@ class Persona(models.Model):
 
 
 class Vinculo (models.Model): 
+    CONYUGE=0
+    HIJO=1
+    TUTOR=2
     TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor")] 
     tipoVinculo = models.PositiveSmallIntegerField(choices = TIPO)
-    vinculante = models.ForeignKey(Persona, related_name = "vinculantes", on_delete = models.CASCADE) 
-    vinculado = models.ForeignKey(Persona, related_name = "vinculados",  on_delete = models.CASCADE) 
+    vinculante = models.ForeignKey(Persona, related_name = "vinculados", on_delete = models.CASCADE) 
+    vinculado = models.ForeignKey(Persona, related_name = "vinculantes",  on_delete = models.CASCADE) 
 
-
+    def __str__(self):
+        return f"{self.vinculado} es {self.get_tipoVinculo_display()}"
 
 class Rol(models.Model):
     TIPO = 0
