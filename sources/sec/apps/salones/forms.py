@@ -50,6 +50,7 @@ class ServicioForm(forms.ModelForm):
             ),
             
             Submit('submit', 'Guardar', css_class='button white'),)
+
 class AlquilerForm(forms.ModelForm):
     
     class Meta:
@@ -63,19 +64,20 @@ class AlquilerForm(forms.ModelForm):
         }
         labels = {
             'seña': 'Seña',
-            'reserva' : 'Fecha Reserva',
-            'inicio' : 'Fecha Inicio'
+            'reserva' : 'Fecha de reserva',
+            'inicio' : 'Fecha  de inicio'
         }
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
-        alquilerForm = AlquilerForm(data=self.cleaned_data)
-        return valid and alquilerForm.is_valid()
+        return valid
+
+    def clean(self):
+        pass    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'salones:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Alquiler</center></h2>'),
@@ -97,6 +99,7 @@ class AlquilerForm(forms.ModelForm):
             ),
             
             Submit('submit', 'Guardar', css_class='button white'),)
+
 class PagoAlquilerForm(forms.ModelForm):
     
     class Meta:
@@ -118,16 +121,17 @@ class SalonForm(forms.ModelForm):
             'montoSalon': 'Monto',
         }
 
+    def clean(self):
+        pass 
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
-        salonForm = SalonForm(data=self.cleaned_data)
-        return valid and salonForm.is_valid()
+        return valid
+   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'salones:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Salon</center></h2>'),
@@ -143,7 +147,7 @@ class SalonForm(forms.ModelForm):
             ),
             Row(
                 Column('montoSalon', css_class='form-group col-md-4 mb-0'),
-                #Column('encargado', css_class='form-group col-md-4 mb-0'),
+                Column('encargado', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
@@ -151,4 +155,4 @@ class SalonForm(forms.ModelForm):
             Submit('submit', 'Guardar', css_class='button white'),)
         
 #SalonForm.base_fields.update(PersonaForm.base_fields)
-#SalonForm.base_fields.update(EmpresaForm.base_fields)     
+     

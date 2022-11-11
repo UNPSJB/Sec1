@@ -76,7 +76,8 @@ class CursoCreateView(CreateView):
     model = Curso
     form_class = CursoForm
     # template_name = 'cursos/curso_form.html' # template del form
-    success_url = reverse_lazy('crearCurso')
+    success_url = reverse_lazy('listarCursos')
+"""
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,6 +100,28 @@ class CursoCreateView(CreateView):
             return redirect('')
         #messages.add_message(self.request, messages.ERROR, curso_form.errors)
         return self.form_invalid(form=curso_form)
+"""
+
+class CursoUpdateView(UpdateView):
+    model = Curso
+    form_class = CursoForm
+    success_url = reverse_lazy("listarCursos")
+
+def curso_eliminar(request, pk):
+    a = Curso.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarCursos') 
+
+#class CursoDeleteView(DeleteView):
+#    model = Curso
+#    success_url = reverse_lazy('listarCursos')
+
+class CursoDetailView(DetailView):
+    model = Curso
+
+class CursoListView(ListView):
+    model = Curso
+    paginate_by = 100 
 
 def listadoCursos(request):
     return render(request, 'listadoCursos.html', {})
@@ -140,8 +163,8 @@ class AulaCreateView(CreateView):
     model = Aula
     form_class = AulaForm
     # template_name = 'aulas/aula_form.html' # template del form
-    success_url = reverse_lazy('crearAula')
-
+    success_url = reverse_lazy('listarAulas')
+"""
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -163,6 +186,29 @@ class AulaCreateView(CreateView):
             return redirect('')
         #messages.add_message(self.request, messages.ERROR, aula_form.errors)
         return self.form_invalid(form=aula_form)
+
+"""
+
+class AulaUpdateView(UpdateView):
+    model = Aula
+    form_class = AulaForm
+    success_url = reverse_lazy("listarAulas")
+
+def aula_eliminar(request, pk):
+    a = Aula.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarAulas') 
+
+#class AulaDeleteView(DeleteView):
+#    model = Aula
+#    success_url = reverse_lazy('listarAulas')
+
+class AulaDetailView(DetailView):
+    model = Aula
+
+class AulaListView(ListView):
+    model = Aula
+    paginate_by = 100 
 
 #--------------------------------ESPECIALIDAD---------------------------------------------
 

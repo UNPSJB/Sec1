@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xl-12 col-xl-12">  
+    <div class="container-listados my-3"> 
+              <div class="table-responsive card shadow p-3"> 
+                <h3>Listado de Cursos</h3>
+                  <table class="table table-striped table-responsive">
+                      <thead>
+                          <tr>
+                            <th scope="col">nombre</th>
+                            <th scope="col">fecha desde</th>
+                            <th scope="col">fecha hasta</th>
+                            <th scope="col">cupo</th> 
+                            <th scope="col">precio</th> 
+                            <th scope="col">especialidad</th>   
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% for curso in object_list %}
+                          <tr class="bg-transition">
+                            <td>{{ curso.nombre }}</td>
+                            <td>{{ curso.desde }}</td>
+                            <td>{{ curso.hasta }}</td>
+                            <td>{{ curso.cupo }}</td>
+                            <td>{{ curso.precio }}</td>
+                            <td>{{ curso.especialidad }}</td>
+                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="{% url 'eliminarCurso' curso.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                                                                       
+                          </tr>
+                          {% endfor %}  
+                      </tbody>
+                  </table>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
