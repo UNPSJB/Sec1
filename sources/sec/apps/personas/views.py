@@ -72,3 +72,15 @@ class PersonaListView(ListView):
     model = Persona
     paginate_by = 100 
 
+def FamiliaCreateView(request, pk):
+    persona = Persona.objects.get(pk=pk)
+    vinculos = list([{'tipoVinculo': v.tipoVinculo, 'vinculado': v.vinculado} for v in persona.vinculados.all()])
+    if request.method == 'POST':
+        formset = VinculoFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            for f in formset.forms:
+                print(f)
+    else:
+        formset = VinculoFormSet(initial=vinculos)
+    return render(request, 'personas/vinculo_form.html', {
+        'formset': formset, 'persona': persona})
