@@ -33,7 +33,6 @@ class EspecialidadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        #self.helper.form_action = 'especialidad:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Especialidad</center></h2>'),
@@ -54,6 +53,38 @@ class AulaForm(forms.ModelForm):
     class Meta:
         model = Aula
         fields = "__all__"
+
+        labels = {
+            'nroAula': 'Numero',
+            'capacidad': 'Capacidad',
+        }
+
+    def clean(self):
+        pass
+
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        return valid
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Aula</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                "Datos de Aula",
+            Row(
+                Column('nroAula', css_class='form-group col-md-4 mb-0'),
+                Column('capacidad', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+
+            Submit('submit', 'Guardar', css_class='button white'),)
 
 class ProfesorForm(forms.ModelForm):
     class Meta:
@@ -117,10 +148,22 @@ class CursoForm(forms.ModelForm):
         model = Curso
         fields = "__all__"
 
+        widgets = {
+            "desde": forms.TextInput(attrs={'type': 'date'}),
+            "hasta": forms.TextInput(attrs={'type': 'date'}),
+        }
+
+        labels = {
+            'TIPO': 'Tipo',
+            'desde': 'Fecha desde',
+            'hasta': 'Fecha hasta',
+            'formaPago': 'Forma de pago',
+            'especialidad': 'Especialidad',
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'curso:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Curso</center></h2>'),
@@ -129,7 +172,7 @@ class CursoForm(forms.ModelForm):
             Fieldset(
                    "Datos Curso",
             Row(
-                Column('TIPO', css_class='form-group col-md-4 mb-0'),
+                Column('especialidad', css_class='form-group col-md-4 mb-0'),
                 Column('nombre', css_class='form-group col-md-4 mb-0'),
                 Column('desde', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
@@ -148,7 +191,6 @@ class CursoForm(forms.ModelForm):
             ),
             Row(
                 Column('formaPago', css_class='form-group col-md-4 mb-0'),
-                #Column('especialidad', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),

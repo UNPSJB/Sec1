@@ -9,8 +9,13 @@ urlpatterns = [
     path('crearProfesor/', ProfesorCreateView.as_view(), name='crearProfesor'),
 
     path('listadoCursos', views.listadoCursos, name='listadoCursos'),
-    #path('index', cursos.cursosIndex, name='cursosIndex'),
+
     path('crearCurso/', CursoCreateView.as_view(), name='crearCurso'),
+    path('modificarCurso/<int:pk>', CursoUpdateView.as_view(), name='modificarCurso'),
+    #path('eliminarCurso/', CursoDeleteView.as_view(), name='eliminarCurso'),
+    path('eliminarCurso/<int:pk>', curso_eliminar, name='eliminarCurso'),
+    path('detallarCurso/<int:pk>', CursoDetailView.as_view(), name='detallarCurso'),
+    path('listarCursos/', CursoListView.as_view(), name='listarCursos'),
     
     #path('', views.listadoAlumnos, name='listadoAlumnos'),
     #path('index', cursos.cursosIndex, name='cursosIndex'),
@@ -21,13 +26,18 @@ urlpatterns = [
     path('crearClase/', ClaseCreateView.as_view(), name='crearClase'),
 
     path('listadoCursos', views.listadoCursos, name='listadoCursos'),
-    #path('index', views.EspecialidadListView.as_view(), name=''),
+    
     path('crearAula/', AulaCreateView.as_view(), name='crearAula'),
+    path('modificarAula/<int:pk>', AulaUpdateView.as_view(), name='modificarAula'),
+    #path('eliminarAula/', AulaDeleteView.as_view(), name='eliminarAula'),
+    path('eliminarAula/<int:pk>', aula_eliminar, name='eliminarAula'),
+    path('detallarAula/<int:pk>', AulaDetailView.as_view(), name='detallarAula'),
+    path('listarAulas/', AulaListView.as_view(), name='listarAulas'), 
 
     path('crearEspecialidad/', EspecialidadCreateView.as_view(), name='crearEspecialidad'),
     path('modificarEspecialidad/<int:pk>', EspecialidadUpdateView.as_view(), name='modificarEspecialidad'),
     #path('eliminarEspecialidad/', EspecialidadDeleteView.as_view(), name='eliminarEspecialidad'),
     path('eliminarEspecialidad/<int:pk>', especialidad_eliminar, name='eliminarEspecialidad'),
-    path('detallarEspecialidad/', EspecialidadDetailView.as_view(), name='detallarEspecialidad'),
+    path('detallarEspecialidad/<int:pk>', EspecialidadDetailView.as_view(), name='detallarEspecialidad'),
     path('listarEspecialidades/', EspecialidadListView.as_view(), name='listarEspecialidades'),           
 ]
