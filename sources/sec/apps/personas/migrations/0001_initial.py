@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('dni', models.CharField(max_length=8)),
                 ('nombre', models.CharField(max_length=30)),
                 ('apellido', models.CharField(max_length=30)),
-                ('fechaNacimiento', models.DateField()),
+                ('nacimiento', models.DateField()),
                 ('es_afiliado', models.BooleanField(default=False)),
                 ('es_alumno', models.BooleanField(default=False)),
                 ('es_profesor', models.BooleanField(default=False)),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             name='Vinculo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tipoVinculo', models.PositiveSmallIntegerField(choices=[(0, 'Conyuge'), (1, 'Hijo'), (2, 'Tutor')])),
+                ('tipo', models.PositiveSmallIntegerField(choices=[(0, 'Conyuge'), (1, 'Hijo'), (2, 'Tutor'), (3, 'Padre'), (4, 'Madre')])),
                 ('vinculado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vinculantes', to='personas.persona')),
                 ('vinculante', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vinculados', to='personas.persona')),
             ],

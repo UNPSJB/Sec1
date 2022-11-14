@@ -12,3 +12,4 @@ pyparsing==3.0.9
 sqlparse==0.4.3
 django-crispy-forms==1.14.0
 crispy-bootstrap5==0.7
+django-select2==8.0.0

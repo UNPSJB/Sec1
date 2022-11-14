@@ -90,6 +90,7 @@ class ProfesorForm(forms.ModelForm):
     class Meta:
         model = Profesor
         fields = "__all__"
+        
 
     def clean(self):
         pass
@@ -272,7 +273,7 @@ class AlumnoForm(forms.ModelForm):
         alumno = alumnoForm.save(commit=False)
         self.persona.inscribir(alumno, self.cleaned_data['fecha_inscripcion'])
         return alumno
-        #super().save(commit=commit)
+        super().save(commit=commit)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

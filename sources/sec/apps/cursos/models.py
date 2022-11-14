@@ -5,10 +5,10 @@ from apps.personas.models import Vinculo
 
 
 class Especialidad (models.Model): 
-    TIPOAREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
+    AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
     
     nombre = models.CharField(max_length = 20)
-    area = models.PositiveSmallIntegerField(choices = TIPOAREA)
+    area = models.PositiveSmallIntegerField(choices = AREA)
 
     #Revisar
     def agregarEspecialidad (self, nombre, area): 
@@ -18,21 +18,21 @@ class Especialidad (models.Model):
 
 
     def __str__ (self): 
-        return f'id={self.id}, nombre={self.nombre}'
+        return f'nombre={self.nombre}, area = {self.area}'
 
 class Aula(models.Model): 
-    nroAula = models.PositiveIntegerField(max_length=2)
+    numero = models.PositiveIntegerField(max_length=2)
     capacidad = models.PositiveIntegerField(max_length=3)
 
     #Revisar
-    def agregarAula (self, nro, capacidad): 
-        self.nroAula = nro 
+    def agregarAula (self, numero, capacidad): 
+        self.numero = numero 
         self.capacidad = capacidad 
         self.save() 
 
 
     def __str__ (self): 
-        return f'id={self.id}, nroAula={self.nroAula}, capacidad={self.capacidad}'
+        return f'numero={self.numero}, capacidad={self.capacidad}'
 
 
 class Profesor(Rol):
@@ -43,6 +43,7 @@ class Profesor(Rol):
     aniosExperiencia = models.PositiveIntegerField(max_length=2)
     cbu = models.PositiveIntegerField(max_length=22)
 
+
     #Revisar
     def agregarProfesor (self, domicilio, telefono, especializacion, aniosExperiencia, cbu): 
         self.domicilio = domicilio
@@ -52,9 +53,12 @@ class Profesor(Rol):
         self.cbu = cbu
         self.save()
 
+    def como (self): 
+        if (Rol.TIPO == 2): 
+            return ("Es profesor")
 
     def __str__(self):
-        return f'id={self.id}, nombre={self.persona.nombre}, apellido={self.persona.apellido}, domicilio={self.domicilio}, telefono={self.telefono}, especializacion={self.especializacion}, añosExperiencia={self.aniosExperiencia}, cbu={self.cbu}'
+        return f'nombre={self.persona.nombre}, apellido={self.persona.apellido}'
 
 Rol.register(Profesor)
 
@@ -64,19 +68,19 @@ class Curso(models.Model):
     desde = models.DateField()
     hasta = models.DateField()
     cupo = models.PositiveIntegerField(max_length = 20)
-    modulos = models.PositiveIntegerField( max_length = 20) 
+    cantModulos = models.PositiveIntegerField( max_length = 20)
     descuento = models.PositiveIntegerField(max_length = 2)
     precio = models.PositiveIntegerField(max_length = 4)
     formaPago = models.PositiveSmallIntegerField(choices = TIPO)
     especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
 
     #Revisar
-    def agregarCurso (self, nombre, desde, hasta, cupo, modulos, descuento, precio, formaPago, especialidad): 
+    def agregarCurso (self, nombre, desde, hasta, cupo, cantModulos, descuento, precio, formaPago, especialidad): 
         self.nombre = nombre 
         self.desde = desde 
         self.hasta = hasta 
         self.cupo = cupo 
-        self.modulos = modulos 
+        self.cantModulos = cantModulos 
         self.descuento = descuento 
         self.precio = precio 
         self.formaPago = formaPago
@@ -84,7 +88,7 @@ class Curso(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'fechaDesde={self.desde}, fechaHasta={self.hasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
+        return f' nombre = {self.nombre}, fechaDesde={self.desde}, fechaHasta={self.hasta}, descuento={self.descuento}, precio={self.precio}'
 
 
 class Dictado(models.Model): 
@@ -134,6 +138,10 @@ class Alumno (Rol):
         self.curso = curso 
         self.dictado = dictado
         self.save() 
+
+    def como (self): 
+        if (Rol.TIPO == 3): 
+            return ("Es alumno") 
 
 
     @property

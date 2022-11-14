@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='Alquiler',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('seña', models.FloatField(max_length=8)),
+                ('senia', models.FloatField(max_length=8)),
                 ('reserva', models.DateField()),
                 ('inicio', models.DateField(blank=True, null=True)),
                 ('afiliado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afiliados.afiliado')),
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('nombre', models.CharField(max_length=30)),
                 ('direccion', models.CharField(max_length=30)),
                 ('capacidad', models.PositiveIntegerField(max_length=4)),
-                ('montoSalon', models.FloatField(max_length=9)),
+                ('monto', models.FloatField(max_length=9)),
                 ('afiliado', models.ManyToManyField(through='salones.Alquiler', to='afiliados.afiliado')),
                 ('encargado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='personas.persona')),
             ],

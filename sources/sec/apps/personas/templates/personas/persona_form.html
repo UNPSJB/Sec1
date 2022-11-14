@@ -3,6 +3,12 @@
 {% load static %}
 
 {% block main %}
+{%if form.errors%}
+   <div class="alert alert-danger" role="alert">
+    No es posible cargar el formulario
+    <p>{{form.errors}}</p>
+  </div>
+{% endif %}
 <div class="col-5">
     <h3>{{ titulo }}</h3>
     {% crispy form form.helper %}

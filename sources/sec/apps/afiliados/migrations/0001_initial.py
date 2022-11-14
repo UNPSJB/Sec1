@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('cuit', models.CharField(max_length=13)),
                 ('razonSocial', models.CharField(max_length=50)),
                 ('rama', models.CharField(max_length=50)),
-                ('domicilioEmpresa', models.CharField(max_length=50)),
+                ('domicilio', models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('domicilio', models.CharField(max_length=50)),
                 ('telefono', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=254)),
-                ('fechaIngresoTrabajo', models.DateField()),
+                ('ingresoTrabajo', models.DateField()),
                 ('sueldo', models.FloatField(max_length=50)),
                 ('jornadaLaboral', models.CharField(max_length=50)),
                 ('empresa', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afiliados.empresa')),

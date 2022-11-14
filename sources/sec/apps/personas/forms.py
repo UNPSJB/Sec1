@@ -36,11 +36,23 @@ class PersonaForm(ModelForm):
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
+from django_select2 import forms as s2forms
+
+class PersonaWidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        "dni__icontains",
+        "nombre__icontains",
+        "apellido__icontains",
+    ]
+
 class VinculoForm(forms.ModelForm):
     class Meta:
         model = Vinculo
-        fields = ("tipoVinculo",
+        fields = ("tipo",
                   "vinculado")
+        widgets = {
+            'vinculado': PersonaWidget
+        }
 
 class BaseVinculoFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):

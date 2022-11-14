@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions', #Para el diagrama de clases
     'crispy_forms',
     "crispy_bootstrap5",
+    'django_select2',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

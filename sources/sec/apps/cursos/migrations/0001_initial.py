@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name='Aula',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nroAula', models.PositiveIntegerField(max_length=2)),
+                ('numero', models.PositiveIntegerField(max_length=2)),
                 ('capacidad', models.PositiveIntegerField(max_length=3)),
             ],
         ),
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('desde', models.DateField()),
                 ('hasta', models.DateField()),
                 ('cupo', models.PositiveIntegerField(max_length=20)),
-                ('modulos', models.PositiveIntegerField(max_length=20)),
+                ('cantModulos', models.PositiveIntegerField(max_length=20)),
                 ('descuento', models.PositiveIntegerField(max_length=2)),
                 ('precio', models.PositiveIntegerField(max_length=4)),
                 ('formaPago', models.PositiveSmallIntegerField(choices=[(0, 'Clase'), (1, 'Mensual')])),
