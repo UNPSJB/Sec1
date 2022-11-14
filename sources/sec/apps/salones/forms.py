@@ -112,13 +112,14 @@ class SalonForm(forms.ModelForm):
     class Meta:
         model = Salon
         fields = "__all__"
-        #exclude = ['persona','tipo']
+        exclude = ['afiliado']
         
         #widgets = {
          #   "fechaIngresoTrabajo": forms.TextInput(attrs={'type': 'date'})
         #}
         labels = {
-            'montoSalon': 'Monto',
+            'monto': 'Monto',
+            
         }
 
     def clean(self):
@@ -146,7 +147,7 @@ class SalonForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Column('montoSalon', css_class='form-group col-md-4 mb-0'),
+                Column('monto', css_class='form-group col-md-4 mb-0'),
                 Column('encargado', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),

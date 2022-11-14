@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from apps.afiliados import views
 from .views import *
 
+app_name = "personas"
 urlpatterns = [
 
     # ----------------- PERSONAS -----------------

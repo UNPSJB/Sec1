@@ -1,0 +1,62 @@
+{% load static %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Afiliados
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">Agregar afiliado</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
+    <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alumnos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarAlumno' %}">Agregar alumno</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlumnos' %}">Listado de alumnos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Cursos
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarCurso' %}">Agregar curso</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoCursos' %}">Listado de cursos</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Profesores
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarProfesor' %}">Agregar profesor</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoProfesores' %}">Listado de profesores</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Salones
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'agregarSalon' %}">Agregar salón</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoSalones' %}">Listado de salones</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Gestión Alquileres
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">Agregar alquiler</a></li>
+    <li><a class="dropdown-item" href="{% url 'listadoAlquileres' %}">Listado de alquileres</a></li>
+    <li class="dropdown-divider"></li>
+  </ul>
+</li>
