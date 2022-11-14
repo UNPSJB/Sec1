@@ -45,4 +45,5 @@ urlpatterns = [
     path('salones/', include('apps.salones.urls')),
     path('afiliados/', include('apps.afiliados.urls')),
     path('cursos/', include('apps.cursos.urls')),
+    path("select2/", include("django_select2.urls")),
 ]

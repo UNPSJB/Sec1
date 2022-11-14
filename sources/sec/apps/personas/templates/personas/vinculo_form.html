@@ -3,9 +3,12 @@
 {% load static %}
 
 {% block main %}
+{{ formset.media.css }}
 <div class="col-5">
     <h3>Familiares de {{ persona.nombre }}</h3>
     {% crispy formset formset.helper %}
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{{ formset.media.js }}
 {% endblock %}
