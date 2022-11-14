@@ -24,12 +24,15 @@ class Persona(models.Model):
     dni = models.CharField(max_length=8)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
-    fechaNacimiento = models.DateField()
+    nacimiento = models.DateField()
+    familia = models.ManyToManyField('self', through = 'Vinculo')
     usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
     es_afiliado = models.BooleanField(default = False) 
     es_alumno = models.BooleanField(default = False) 
     es_profesor=models.BooleanField(default=False)
     es_encargado=models.BooleanField(default=False)
+
+
 
     objects = models.Manager()
     afiliados = PersonaRolManager.from_queryset(PersonaRolQuerySet)(1)
@@ -100,15 +103,22 @@ class Persona(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'id={self.id}, dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
+        return f'dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
 
-
+    def como (self): 
+        if (Rol.TIPO == 0): 
+            return ("Es encargado") 
+        
 class Vinculo (models.Model): 
-    TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor")] 
-    tipoVinculo = models.PositiveSmallIntegerField(choices = TIPO)
-    vinculante = models.ForeignKey(Persona, related_name = "vinculantes", on_delete = models.CASCADE) 
-    vinculado = models.ForeignKey(Persona, related_name = "vinculados",  on_delete = models.CASCADE) 
-
+    TUTOR = 2
+    HIJO = 1 
+    CONYUGE = 0
+    PADRE = 3 
+    MADRE = 4
+    TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor"), (3, "Padre"), (4, "Madre")] 
+    tipo = models.PositiveSmallIntegerField(choices = TIPO)
+    vinculante = models.ForeignKey(Persona, related_name = "vinculados", on_delete = models.CASCADE) 
+    vinculado = models.ForeignKey(Persona, related_name = "vinculantes",  on_delete = models.CASCADE) 
 
 
 class Rol(models.Model):

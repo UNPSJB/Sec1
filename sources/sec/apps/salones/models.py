@@ -4,13 +4,16 @@ from django.db import models
 from apps.personas.models import Persona
 from apps.afiliados.models import Afiliado
 
+
 class Salon(models.Model):
     nombre = models.CharField(max_length=30)
     direccion = models.CharField(max_length=30)
     capacidad = models.PositiveIntegerField(max_length=4)
-    montoSalon = models.FloatField(max_length=9)
+    monto = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
+
+
 
     #Revisar
     def agregarSalon (self, nombre, direccion, capacidad, monto, encargado, afiliado): 
@@ -45,7 +48,7 @@ class Servicio(models.Model):
 class Alquiler (models.Model): 
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)
     afiliado = models.ForeignKey(Afiliado, on_delete = models.CASCADE)
-    seña = models.FloatField(max_length = 8)
+    senia = models.FloatField(max_length = 8)
     reserva = models.DateField() 
     inicio = models.DateField( null = True, blank = True) 
 
@@ -53,7 +56,7 @@ class Alquiler (models.Model):
     def agregarAlquiler (self, salon, seña, reserva, inicio, afiliado): 
         self.salon = salon 
         self.afiliado = afiliado 
-        self.seña = seña 
+        self.senia = seña 
         self.reserva = reserva 
         if (inicio): 
             self.inicio = inicio
