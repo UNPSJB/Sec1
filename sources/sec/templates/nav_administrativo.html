@@ -4,7 +4,7 @@
     </a>
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'crearAfiliado' %}">Agregar afiliado</a></li>
-      <li><a class="dropdown-item" href="{% url 'listadoAfiliados' %}">Listado de afiliados</a></li>
+      <li><a class="dropdown-item" href="{% url 'listarAfiliados' %}">Listado de afiliados</a></li>
       <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
       <li class="dropdown-divider"></li>
     </ul>
@@ -26,6 +26,12 @@
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'crearCurso' %}">Agregar curso</a></li>
       <li><a class="dropdown-item" href="{% url 'listadoCursos' %}">Listado de cursos</a></li>
+      <li><a class="dropdown-item" href="{% url 'crearAula' %}">Agregar aula</a></li>
+      <li><a class="dropdown-item" href="{% url 'listarAulas' %}">Listado de aulas</a></li>
+      <li><a class="dropdown-item" href="">Agregar dictado</a></li>     
+      <li><a class="dropdown-item" href="#">Listado de dictados</a></li>
+      <li><a class="dropdown-item" href="{% url 'crearEspecialidad' %}">Agregar especialidad</a></li>     
+      <li><a class="dropdown-item" href="{% url 'listarEspecialidades' %}">Listado de especialidades</a></li>
       <li class="dropdown-divider"></li>
     </ul>
   </li>

@@ -149,7 +149,10 @@ class Alumno (Rol):
 
     @property
     def responsable(self):
-        vinculo = self.persona.vinculantes.filter(tipo=Vinculo.TUTOR).first()
+        # Un Responsables de alumno es su padre, su madre o un tutor
+        esTutor = models.Q(tipoVinculo=Vinculo.TUTOR)
+        esHijo = models.Q(tipoVinculo=Vinculo.HIJO)
+        vinculo = self.persona.vinculantes.filter(esTutor | esHijo).first()
         return vinculo.vinculante if vinculo is not None else None
 
 Rol.register(Alumno)

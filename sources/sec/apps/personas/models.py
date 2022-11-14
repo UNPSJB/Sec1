@@ -32,8 +32,6 @@ class Persona(models.Model):
     es_profesor=models.BooleanField(default=False)
     es_encargado=models.BooleanField(default=False)
 
-
-
     objects = models.Manager()
     afiliados = PersonaRolManager.from_queryset(PersonaRolQuerySet)(1)
     profesores = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
@@ -120,6 +118,9 @@ class Vinculo (models.Model):
     vinculante = models.ForeignKey(Persona, related_name = "vinculados", on_delete = models.CASCADE) 
     vinculado = models.ForeignKey(Persona, related_name = "vinculantes",  on_delete = models.CASCADE) 
 
+
+    def __str__(self):
+        return f"{self.vinculado} es {self.get_tipoVinculo_display()}"
 
 class Rol(models.Model):
     TIPO = 0

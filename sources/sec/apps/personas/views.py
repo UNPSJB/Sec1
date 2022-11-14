@@ -14,14 +14,7 @@ class PersonaCreateView(CreateView):
     model = Persona
     form_class = PersonaForm
     # template_name = 'afiliados/afiliado_form.html' # template del form
-    success_url = reverse_lazy('crearPersona')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar persona"
-        context['ayuda'] = 'crear_persona.html'
-        return context
+    success_url = reverse_lazy('listarPersonas')
 
 
     def post(self, *args, **kwargs):
@@ -43,10 +36,6 @@ class PersonaUpdateView(UpdateView):
     form_class = PersonaForm
     success_url = reverse_lazy("listarPersonas")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo'] = "Modificar Persona"
-        return context
     
     def form_valid(self, form):
         #messages.add_message(self.request, messages.SUCCESS, 'Persona modificada con éxito')
@@ -72,3 +61,18 @@ class PersonaListView(ListView):
     model = Persona
     paginate_by = 100 
 
+def FamiliaCreateView(request, pk):
+    persona = Persona.objects.get(pk=pk)
+    if request.method == 'POST':
+        formset = VinculoFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            vinculos = formset.save(commit=False)
+            for v in vinculos:
+                v.vinculante = persona
+                v.save()
+            for d in formset.deleted_objects:
+                d.delete()
+        print(formset.errors)
+    formset = VinculoFormSet(queryset=persona.vinculados.all())
+    return render(request, 'personas/vinculo_form.html', {
+        'formset': formset, 'persona': persona})

@@ -3,10 +3,40 @@
 {% load static %}
 
 {% block container %}
-
-<div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        {% crispy form form.helper %}
+<div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">  
+    <div class="container-listados my-3"> 
+              <div class="table-responsive card shadow p-3"> 
+                <h3>Listado de Afiliados</h3>
+                  <table class="table table-striped table-responsive">
+                      <thead>
+                          <tr>
+                            <th scope="col">nroAfiliado</th>
+                            <th scope="col">nombre</th>
+                            <th scope="col">apellido</th>
+                            <th scope="col">cuil</th>
+                            <th scope="col">telefono</th>  
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% for afiliado in object_list %}
+                          <tr class="bg-transition">
+                            <td>{{ afiliado.nroAfiliado }}</td>
+                            <td>{{ afiliado.nombre }}</td>
+                            <td>{{ afiliado.apellido }}</td>
+                            <td>{{ afiliado.cuil }}</td>
+                            <td>{{ afiliado.telefono }}</td>
+                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="{% url 'eliminarAfiliado' afiliado.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                                                                       
+                          </tr>
+                          {% endfor %}  
+                      </tbody>
+                  </table>
+                </div> 
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
