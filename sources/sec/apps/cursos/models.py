@@ -64,8 +64,7 @@ class Curso(models.Model):
     desde = models.DateField()
     hasta = models.DateField()
     cupo = models.PositiveIntegerField(max_length = 20)
-    modulos = models.PositiveIntegerField( max_length = 20)
-    profesor = models.ManyToManyField(Profesor, through = 'Titularidad') 
+    modulos = models.PositiveIntegerField( max_length = 20) 
     descuento = models.PositiveIntegerField(max_length = 2)
     precio = models.PositiveIntegerField(max_length = 4)
     formaPago = models.PositiveSmallIntegerField(choices = TIPO)
@@ -88,12 +87,10 @@ class Curso(models.Model):
         return f'fechaDesde={self.desde}, fechaHasta={self.hasta}, cupo={self.cupo}, modulos={self.modulos}, descuento={self.descuento}, precio={self.precio}'
 
 
-
-
-
 class Dictado(models.Model): 
     aula = models.ManyToManyField(Aula)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
+    profesor = models.ManyToManyField(Profesor, through = 'Titularidad')
     costo = models.FloatField(max_length=10)
     inicio = models.DateField()
     fin = models.DateField() 
@@ -169,7 +166,7 @@ class PagoDictado (models.Model):
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
-    curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
+    dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
     desde = models.DateField() 
     hasta = models.DateField(null = True, blank = True) 
 
