@@ -7,11 +7,12 @@ urlpatterns = [
 
     # ----------------- PERSONAS -----------------
 
-    path('crearPersona/', PersonaCreateView.as_view(), name='crearPersona'),
-    path('modificarPersona/', PersonaUpdateView.as_view(), name='modificarPersona'),
+    #path('crearPersona/', PersonaCreateView.as_view(), name='crearPersona'),
+    #path('modificarPersona/', PersonaUpdateView.as_view(), name='modificarPersona'),
     #path('borrarPersona/', PersonaDeleteView.as_view(), name='borrarPersona'),
-    path('eliminarPersona/', persona_eliminar, name='eliminarPersona'),
-    path('detallarPersona/', PersonaDetailView.as_view(), name='detallarPersona'),
-    path('listarPersonas/', PersonaListView.as_view(), name='listarPersonas'),
+    #path('eliminarPersona/', persona_eliminar, name='eliminarPersona'),
+    #path('detallarPersona/', PersonaDetailView.as_view(), name='detallarPersona'),
+    #path('listarPersonas/', PersonaListView.as_view(), name='listarPersonas'),
+    path('<int:pk>/familia', FamiliaCreateView, name='familiaPersona'),
 ]
 

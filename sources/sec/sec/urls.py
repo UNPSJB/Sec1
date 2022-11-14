@@ -25,6 +25,7 @@ urlpatterns = [
     path('contacto/', contacto, name= 'contacto'),
     path('gimnasio/', gimnasio),
     path('', home, name= 'home'),
+    path('personas/', include('apps.personas.urls')),
     path('listadoPendientes/', listadoDePendientes, name='pendientes'),
     path('listadoAfiliados/', include('apps.afiliados.urls')),
     path('listadoSalones/', listadoSalones, name='listadoSalones'),
