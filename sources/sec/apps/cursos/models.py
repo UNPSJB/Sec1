@@ -3,7 +3,6 @@ from apps.personas.models import Rol
 from apps.personas.models import Vinculo
 
 
-
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
     
@@ -127,6 +126,8 @@ class Clase (models.Model):
         self.dictado = dictado
         self.save() 
 
+    def __str__(self): 
+        return f'{self.dia}, {self.inicio}, {self.fin}'
 
 class Alumno (Rol): 
     TIPO = 3
@@ -147,9 +148,11 @@ class Alumno (Rol):
     @property
     def responsable(self):
         # Un Responsables de alumno es su padre, su madre o un tutor
-        esTutor = models.Q(tipoVinculo=Vinculo.TUTOR)
-        esHijo = models.Q(tipoVinculo=Vinculo.HIJO)
-        vinculo = self.persona.vinculantes.filter(esTutor | esHijo).first()
+        esTutor = models.Q(tipo=Vinculo.TUTOR)
+        esPadre = models.Q(tipo = Vinculo.PADRE) 
+        esMadre = models.Q(tipo = Vinculo.MADRE)
+        esHijo = models.Q(tipo=Vinculo.HIJO)
+        vinculo = self.persona.vinculantes.filter(esPadre | esMadre | esTutor | esHijo).first()
         return vinculo.vinculante if vinculo is not None else None
 
 Rol.register(Alumno)
@@ -171,6 +174,8 @@ class PagoDictado (models.Model):
         self.tipoPago = tipo
         self.save() 
 
+    def __str__(self): 
+        return f'{self.pago}, ${self.monto}'
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
@@ -186,6 +191,8 @@ class Titularidad (models.Model):
         self.hasta = hasta
         self.save() 
 
+    def __str__ (self): 
+        return f'Desde= {self.desde}, Hasta= {self.hasta}'
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()
@@ -199,6 +206,9 @@ class Liquidacion (models.Model):
         self.titular = titular
         self.save() 
 
+    def __str__(self): 
+        return f'{self.liquidacion}, ${self.monto}'
+
 class AsistenciaProfesor (models.Model): 
     asistencia = models.DateField()
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
@@ -209,3 +219,5 @@ class AsistenciaProfesor (models.Model):
         self.titular = titular
         self.save()
 
+    def __str__(self): 
+        return f'{self.asistencia}'

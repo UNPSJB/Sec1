@@ -91,6 +91,9 @@ class ProfesorForm(forms.ModelForm):
         model = Profesor
         fields = "__all__"
         
+        labels = {
+            'aniosExperiencia': 'Años de experiencia',   
+        }
 
     def clean(self):
         pass

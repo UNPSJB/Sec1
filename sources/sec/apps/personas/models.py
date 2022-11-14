@@ -108,9 +108,9 @@ class Persona(models.Model):
             return ("Es encargado") 
         
 class Vinculo (models.Model): 
-    TUTOR = 2
-    HIJO = 1 
     CONYUGE = 0
+    HIJO = 1 
+    TUTOR = 2
     PADRE = 3 
     MADRE = 4
     TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor"), (3, "Padre"), (4, "Madre")] 
