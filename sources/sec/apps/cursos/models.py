@@ -88,7 +88,7 @@ class Curso(models.Model):
         self.save() 
 
     def __str__(self):
-        return f' nombre = {self.nombre}, fechaDesde={self.desde}, fechaHasta={self.hasta}, descuento={self.descuento}, precio={self.precio}'
+        return f' nombre = {self.nombre}'
 
 
 class Dictado(models.Model): 
@@ -109,7 +109,7 @@ class Dictado(models.Model):
 
 
     def __str__(self):
-        return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
+        return f'aula={self.aula},  fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
 
 
 class Clase (models.Model): 
@@ -127,6 +127,8 @@ class Clase (models.Model):
         self.dictado = dictado
         self.save() 
 
+    def __str__(self): 
+        return f'dia = {self.dia}, horaInicio = {self.inicio}, horaFin = {self.fin}'
 
 class Alumno (Rol): 
     TIPO = 3
@@ -147,9 +149,11 @@ class Alumno (Rol):
     @property
     def responsable(self):
         # Un Responsables de alumno es su padre, su madre o un tutor
-        esTutor = models.Q(tipoVinculo=Vinculo.TUTOR)
-        esHijo = models.Q(tipoVinculo=Vinculo.HIJO)
-        vinculo = self.persona.vinculantes.filter(esTutor | esHijo).first()
+        esTutor = models.Q(tipo=Vinculo.TUTOR)
+        esPadre = models.Q(tipo = Vinculo.PADRE) 
+        esMadre = models.Q(tipo = Vinculo.MADRE)
+        esHijo = models.Q(tipo=Vinculo.HIJO)
+        vinculo = self.persona.vinculantes.filter(esPadre | esMadre | esTutor | esHijo).first()
         return vinculo.vinculante if vinculo is not None else None
 
 Rol.register(Alumno)
@@ -171,6 +175,8 @@ class PagoDictado (models.Model):
         self.tipoPago = tipo
         self.save() 
 
+    def __str__(self): 
+        return f'fechaPago = {self.pago}, monto = {self.monto}, tipoPago = {self.tipoPago}'
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
@@ -186,6 +192,8 @@ class Titularidad (models.Model):
         self.hasta = hasta
         self.save() 
 
+    def __str__ (self): 
+        return f' fechaDesde = {self.desde}, fechaHasta = {self.hasta}'
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()
@@ -199,6 +207,9 @@ class Liquidacion (models.Model):
         self.titular = titular
         self.save() 
 
+    def __str__(self): 
+        return f'fechaLiquidacion = {self.liquidacion}, monto = {self.monto}'
+
 class AsistenciaProfesor (models.Model): 
     asistencia = models.DateField()
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
@@ -209,3 +220,5 @@ class AsistenciaProfesor (models.Model):
         self.titular = titular
         self.save()
 
+    def __str__(self): 
+        return f'fechaAsistencia = {self.asistencia}'
