@@ -18,7 +18,7 @@ class Especialidad (models.Model):
 
 
     def __str__ (self): 
-        return f'nombre={self.nombre}, area = {self.area}'
+        return f'{self.nombre}, {self.area}'
 
 class Aula(models.Model): 
     numero = models.PositiveIntegerField(max_length=2)
@@ -32,7 +32,7 @@ class Aula(models.Model):
 
 
     def __str__ (self): 
-        return f'numero={self.numero}, capacidad={self.capacidad}'
+        return f'{self.numero}'
 
 
 class Profesor(Rol):
@@ -58,7 +58,7 @@ class Profesor(Rol):
             return ("Es profesor")
 
     def __str__(self):
-        return f'nombre={self.persona.nombre}, apellido={self.persona.apellido}'
+        return f'{self.persona.nombre} {self.persona.apellido} {self.persona.dni}'
 
 Rol.register(Profesor)
 
@@ -88,7 +88,7 @@ class Curso(models.Model):
         self.save() 
 
     def __str__(self):
-        return f' nombre = {self.nombre}, fechaDesde={self.desde}, fechaHasta={self.hasta}, descuento={self.descuento}, precio={self.precio}'
+        return f'{self.nombre}, ${self.precio}'
 
 
 class Dictado(models.Model): 
@@ -109,7 +109,7 @@ class Dictado(models.Model):
 
 
     def __str__(self):
-        return f'id={self.id}, aula={self.aula}, cursos={self.cursos}, profesores={self.profesores}, costo={self.costo}, fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
+        return f'{self.cursos}, {self.profesor}'
 
 
 class Clase (models.Model): 

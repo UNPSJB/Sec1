@@ -31,7 +31,7 @@ class Afiliado(Rol):
             return ("Es afiliado")
 
     def __str__(self):
-        return f'tipo={self.TIPO}, cuil={self.cuil}, nacionalidad={self.nacionalidad}, estadoCivil={self.estadoCivil}, domicilio={self.domicilio}, telefono={self.telefono}, email={self.email}, fechaIngresoTrabajo={self.fechaIngresoTrabajo}, sueldo={self.sueldo}, JornadaLaboral={self.jornadaLaboral}'
+        return f'cuil={self.cuil}'
 
 Rol.register(Afiliado)
 
