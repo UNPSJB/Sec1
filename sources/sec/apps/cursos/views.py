@@ -14,14 +14,7 @@ class ProfesorCreateView(CreateView):
     model = Profesor
     form_class = ProfesorForm
     # template_name = 'profesores/profesor_form.html' # template del form
-    success_url = reverse_lazy('crearProfesor')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar profesor"
-        context['ayuda'] = 'crear_profesor.html'
-        return context
+    success_url = reverse_lazy('listarProfesores')
 
 
     def post(self, *args, **kwargs):
@@ -38,6 +31,35 @@ class ProfesorCreateView(CreateView):
         #messages.add_message(self.request, messages.ERROR, profesor_form.errors)
         return self.form_invalid(form=profesor_form)
 
+class ProfesorUpdateView(UpdateView):
+    model = Profesor
+    form_class = Profesor
+    success_url = reverse_lazy("listarProfesores")
+"""
+    def form_valid(self, form):
+        #messages.add_message(self.request, messages.SUCCESS, 'Profesor modificado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        #messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
+"""
+def profesor_eliminar(request, pk):
+    a = Profesor.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarProfesores') 
+
+#class ProfesorDeleteView(DeleteView):
+#    model = Profesor
+#    success_url = reverse_lazy('listarProfesores')
+
+class ProfesorDetailView(DetailView):
+    model = Profesor
+
+class ProfesorListView(ListView):
+    model = Profesor
+    paginate_by = 100 
+
 #--------------------------------ALUMNO-----------------------------------------------
 
 class AlumnoCreateView(CreateView):
@@ -45,14 +67,7 @@ class AlumnoCreateView(CreateView):
     model = Alumno
     form_class = AlumnoForm
     # template_name = 'alumnos/alumno_form.html' # template del form
-    success_url = reverse_lazy('crearAlumno')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar alumno"
-        context['ayuda'] = 'crear_alumno.html'
-        return context
+    success_url = reverse_lazy('listarAlumnos')
 
 
     def post(self, *args, **kwargs):
@@ -132,14 +147,7 @@ class ClaseCreateView(CreateView):
     model = Clase
     form_class = ClaseForm
     # template_name = 'clases/clase_form.html' # template del form
-    success_url = reverse_lazy('crearClase')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar clase"
-        context['ayuda'] = 'crear_clase.html'
-        return context
+    success_url = reverse_lazy('listarClases')
 
 
     def post(self, *args, **kwargs):

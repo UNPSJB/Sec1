@@ -19,14 +19,8 @@ class SalonCreateView(CreateView):
     form_class = SalonForm
     # template_name = 'salones/salon_form.html' # template del form
     success_url = reverse_lazy('listarSalones')
-"""
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        context['titulo'] = "Registrar salon"
-        context['ayuda'] = 'crear_salon.html'
-        return context
-
+    
 
     def post(self, *args, **kwargs):
         self.object = None
@@ -35,13 +29,13 @@ class SalonCreateView(CreateView):
 
         if salon_form.is_valid():
             salon = salon_form.save()
-            #messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
+            messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
             if 'guardar' in self.request.POST:
-                return redirect('')
-            return redirect('')
-        #messages.add_message(self.request, messages.ERROR, salon_form.errors)
+                return redirect('listarSalones')
+            return redirect('listarSalones')
+        messages.add_message(self.request, messages.ERROR, salon_form.errors)
         return self.form_invalid(form=salon_form)
-"""
+
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
@@ -135,7 +129,7 @@ class ServicioCreateView(CreateView):
     model = Servicio
     form_class = ServicioForm
     # template_name = 'servicios/servicio_form.html' # template del form
-    success_url = reverse_lazy('crearServicio')
+    success_url = reverse_lazy('listarServicios')
 """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -91,32 +91,16 @@ class ProfesorForm(forms.ModelForm):
         model = Profesor
         fields = "__all__"
 
-    def clean_dni(self):
-        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
-        if self.persona is not None and self.persona.es_profesor:
-            raise ValidationError("Ya existe un profesor con ese DNI")
-        return self.cleaned_data['dni']
+    def clean(self):
+        pass
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
-        personaForm = PersonaForm(data=self.cleaned_data)
-        profesorForm = ProfesorForm(data=self.cleaned_data)
-        return valid and personaForm.is_valid() and profesorForm.is_valid()
+        return valid
 
-    def save(self, commit=False):
-        print(self.cleaned_data)
-        if self.persona is None:
-            personaForm = PersonaForm(data=self.cleaned_data)
-            self.persona = personaForm.save()
-        profesorForm = ProfesorForm(data=self.cleaned_data)
-        profesor = profesorForm.save(commit=False)
-        self.persona.inscribirProfesor(profesor, self.cleaned_data['fecha_inscripcion'])
-        return profesor
-        #super().save(commit=commit)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'profesor:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Profesor</center></h2>'),
@@ -131,13 +115,13 @@ class ProfesorForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Column('direccion', css_class='form-group col-md-4 mb-0'),
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
                 Column('telefono', css_class='form-group col-md-4 mb-0'),
                 Column('especializacion', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('añosExperiencia', css_class='form-group col-md-4 mb-0'),
+                Column('aniosExperiencia', css_class='form-group col-md-4 mb-0'),
                 Column('cbu', css_class='form-group col-md-4 mb-0'),
             ),
             ),
@@ -184,7 +168,7 @@ class CursoForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                #Column('profesor', css_class='form-group col-md-4 mb-0'),
+                Column('profesor', css_class='form-group col-md-4 mb-0'),
                 Column('descuento', css_class='form-group col-md-4 mb-0'),
                 Column('precio', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
@@ -213,7 +197,6 @@ class ClaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'curso:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Curso</center></h2>'),
@@ -293,7 +276,6 @@ class AlumnoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = 'alumnos:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Alumno</center></h2>'),
@@ -331,3 +313,4 @@ class AlumnoForm(forms.ModelForm):
             Submit('submit', 'Guardar', css_class='button white'),)
         
 AlumnoForm.base_fields.update(PersonaForm.base_fields)
+ProfesorForm.base_fields.update(PersonaForm.base_fields)
