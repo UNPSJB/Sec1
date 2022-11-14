@@ -69,12 +69,16 @@ class AlumnoCreateView(CreateView):
     # template_name = 'alumnos/alumno_form.html' # template del form
     success_url = reverse_lazy('listarAlumnos')
 
-
+    def get_initial(self):
+        # Validar dni de entrada
+        p = Persona.objects.filter(dni=self.request.GET["dni"]).first()
+        return {"dni": p.dni}
+        
     def post(self, *args, **kwargs):
         self.object = None
         alumno_form = self.get_form()
         
-
+        #form.set_persona()
         if alumno_form.is_valid():
             alumno = alumno_form.save()
             #messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
