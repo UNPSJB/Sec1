@@ -48,7 +48,7 @@ class PersonaWidget(s2forms.ModelSelect2Widget):
 class VinculoForm(forms.ModelForm):
     class Meta:
         model = Vinculo
-        fields = ("tipoVinculo",
+        fields = ("tipo",
                   "vinculado")
         widgets = {
             'vinculado': PersonaWidget
