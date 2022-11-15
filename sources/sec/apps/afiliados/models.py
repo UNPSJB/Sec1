@@ -1,5 +1,5 @@
 from django.db import models
-from apps.personas.models import Rol
+from apps.personas.models import Rol, Persona
 
 
 class Empresa(models.Model):
@@ -14,7 +14,7 @@ class Empresa(models.Model):
 
 
 class Afiliado(Rol):
-    TIPO = 1
+    TIPO = Persona.ROL_AFILIADO
     cuil = models.CharField(max_length=13)
     nacionalidad = models.CharField(max_length=50)
     estadoCivil = models.CharField(max_length=50)

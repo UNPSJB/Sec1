@@ -1,5 +1,5 @@
 from django.db import models
-from apps.personas.models import Rol 
+from apps.personas.models import Rol, Persona
 from apps.personas.models import Vinculo
 
 
@@ -36,7 +36,7 @@ class Aula(models.Model):
 
 
 class Profesor(Rol):
-    TIPO = 2
+    TIPO = Persona.ROL_PROFESOR
     domicilio = models.CharField(max_length=50)
     telefono = models.CharField(max_length=13)
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
@@ -52,10 +52,6 @@ class Profesor(Rol):
         self.aniosExperiencia = aniosExperiencia
         self.cbu = cbu
         self.save()
-
-    def como (self): 
-        if (Rol.TIPO == 2): 
-            return ("Es profesor")
 
     def __str__(self):
         return f'nombre={self.persona.nombre}, apellido={self.persona.apellido}'
@@ -131,7 +127,7 @@ class Clase (models.Model):
         return f'dia = {self.dia}, horaInicio = {self.inicio}, horaFin = {self.fin}'
 
 class Alumno (Rol): 
-    TIPO = 3
+    TIPO = Persona.ROL_ALUMNO
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, through = "PagoDictado")
 
@@ -141,10 +137,6 @@ class Alumno (Rol):
         self.dictado = dictado
         self.save() 
 
-    def como (self): 
-        if (Rol.TIPO == 3): 
-            return ("Es alumno") 
-
 
     @property
     def responsable(self):
@@ -152,8 +144,7 @@ class Alumno (Rol):
         esTutor = models.Q(tipo=Vinculo.TUTOR)
         esPadre = models.Q(tipo = Vinculo.PADRE) 
         esMadre = models.Q(tipo = Vinculo.MADRE)
-        esHijo = models.Q(tipo=Vinculo.HIJO)
-        vinculo = self.persona.vinculantes.filter(esPadre | esMadre | esTutor | esHijo).first()
+        vinculo = self.persona.vinculantes.filter(esPadre | esMadre | esTutor).first()
         return vinculo.vinculante if vinculo is not None else None
 
 Rol.register(Alumno)

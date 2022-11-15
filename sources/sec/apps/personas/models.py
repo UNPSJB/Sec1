@@ -21,6 +21,10 @@ class EncargadoManager(models.Manager):
 
 #class PersonaRolQuerySet
 class Persona(models.Model):
+    ROL_AFILIADO = 1
+    ROL_ALUMNO=2
+    ROL_PROFESOR=3
+    ROL_ENCARGADO=4
     dni = models.CharField(max_length=8)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
@@ -103,10 +107,18 @@ class Persona(models.Model):
     def __str__(self):
         return f'dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
 
-    def como (self): 
-        if (Rol.TIPO == 0): 
-            return ("Es encargado") 
-        
+    def como(self, ROL):
+        if ROL == self.ROL_ENCARGADO and self.es_encargado:
+            return self
+        roles = self.roles.filter(tipo=ROL)
+        if roles.exists() and ((ROL == self.ROL_AFILIADO or ROL == self.ROL_PROFESOR) or (ROL == self.ROL_ALUMNO and len(roles) == 1)):
+            return roles.first().related()
+        if roles.exists():
+            return [rol.related() for rol in roles]
+
+    def es(self, ROL):
+        return self.como(ROL) is not None
+
 class Vinculo (models.Model): 
     CONYUGE = 0
     HIJO = 1 
