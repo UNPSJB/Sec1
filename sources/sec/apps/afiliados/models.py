@@ -26,9 +26,6 @@ class Afiliado(Rol):
     jornadaLaboral = models.CharField(max_length=50) 
     empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
 
-    def como (self): 
-        if (Rol.TIPO == 1): 
-            return ("Es afiliado")
 
     def __str__(self):
         return f'cuil={self.cuil}'
