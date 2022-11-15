@@ -105,7 +105,7 @@ class Persona(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'dni={self.dni}, nombre={self.nombre}, apellido={self.apellido}'
+        return f'{self.nombre} {self.apellido} {self.dni}'
 
     def como(self, ROL):
         if ROL == self.ROL_ENCARGADO and self.es_encargado:

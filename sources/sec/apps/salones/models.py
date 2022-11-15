@@ -26,7 +26,7 @@ class Salon(models.Model):
         self.save()
 
     def __str__(self):
-        return f'id={self.id}, nombre={self.nombre}, direccion={self.direccion}, capacidad={self.capacidad}, montoSalon={self.montoSalon}, encargado={self.encargado}'
+        return f'{self.nombre} {self.direccion}'
 
 class Servicio(models.Model): 
     nombre = models.CharField(max_length=20)
@@ -43,7 +43,7 @@ class Servicio(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'id={self.id}, nombre={self.nombre}, descripcion={self.descripcion}, obligatorio={self.obligatorio}'
+        return f'{self.nombre}'
 
 class Alquiler (models.Model): 
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)

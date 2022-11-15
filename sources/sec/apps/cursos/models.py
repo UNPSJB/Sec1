@@ -3,7 +3,6 @@ from apps.personas.models import Rol, Persona
 from apps.personas.models import Vinculo
 
 
-
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
     
@@ -18,7 +17,7 @@ class Especialidad (models.Model):
 
 
     def __str__ (self): 
-        return f'nombre={self.nombre}, area = {self.area}'
+        return f'{self.nombre}, {self.area}'
 
 class Aula(models.Model): 
     numero = models.PositiveIntegerField(max_length=2)
@@ -32,7 +31,7 @@ class Aula(models.Model):
 
 
     def __str__ (self): 
-        return f'numero={self.numero}, capacidad={self.capacidad}'
+        return f'{self.numero}'
 
 
 class Profesor(Rol):
@@ -54,7 +53,7 @@ class Profesor(Rol):
         self.save()
 
     def __str__(self):
-        return f'nombre={self.persona.nombre}, apellido={self.persona.apellido}'
+        return f'{self.persona.nombre} {self.persona.apellido} {self.persona.dni}'
 
 Rol.register(Profesor)
 
@@ -84,7 +83,7 @@ class Curso(models.Model):
         self.save() 
 
     def __str__(self):
-        return f' nombre = {self.nombre}'
+        return f'{self.nombre}, ${self.precio}'
 
 
 class Dictado(models.Model): 
@@ -105,7 +104,7 @@ class Dictado(models.Model):
 
 
     def __str__(self):
-        return f'aula={self.aula},  fechaInicio={self.fechaInicio}, fechaFin = {self.fechaFin}'
+        return f'{self.cursos}, {self.profesor}'
 
 
 class Clase (models.Model): 
@@ -124,7 +123,7 @@ class Clase (models.Model):
         self.save() 
 
     def __str__(self): 
-        return f'dia = {self.dia}, horaInicio = {self.inicio}, horaFin = {self.fin}'
+        return f'{self.dia}, {self.inicio}, {self.fin}'
 
 class Alumno (Rol): 
     TIPO = Persona.ROL_ALUMNO
@@ -167,7 +166,7 @@ class PagoDictado (models.Model):
         self.save() 
 
     def __str__(self): 
-        return f'fechaPago = {self.pago}, monto = {self.monto}, tipoPago = {self.tipoPago}'
+        return f'{self.pago}, ${self.monto}'
 
 class Titularidad (models.Model): 
     profesor = models.ForeignKey(Profesor, on_delete = models.CASCADE)
@@ -184,7 +183,7 @@ class Titularidad (models.Model):
         self.save() 
 
     def __str__ (self): 
-        return f' fechaDesde = {self.desde}, fechaHasta = {self.hasta}'
+        return f'Desde= {self.desde}, Hasta= {self.hasta}'
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()
@@ -199,7 +198,7 @@ class Liquidacion (models.Model):
         self.save() 
 
     def __str__(self): 
-        return f'fechaLiquidacion = {self.liquidacion}, monto = {self.monto}'
+        return f'{self.liquidacion}, ${self.monto}'
 
 class AsistenciaProfesor (models.Model): 
     asistencia = models.DateField()
@@ -212,4 +211,4 @@ class AsistenciaProfesor (models.Model):
         self.save()
 
     def __str__(self): 
-        return f'fechaAsistencia = {self.asistencia}'
+        return f'{self.asistencia}'
