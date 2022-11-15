@@ -11,20 +11,21 @@
                   <table class="table table-striped table-responsive">
                       <thead>
                           <tr>
-                            <th scope="col">numero</th>
-                            <th scope="col">capacidad</th>
-                            <th scope="col"></th>
+                            <th scope="col">Comienza</th>
+                            <th scope="col">Termina</th>
+                            <th scope="col">Dia</th>
                             <th scope="col"></th>  
                           </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          {% for aula in object_list %}
+                          {% for clase in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ aula.numero }}</td>
-                            <td>{{ aula.capacidad }}</td>
+                            <td>{{ clase.inicio }}</td>
+                            <td>{{ clase.fin }}</td>
+                            <td>{{ clase.dia }}</td>
                             <td><a href="#"class="btn btn-primary">Editar</a></td>
-                            <td><a href="{% url 'eliminarAula' aula.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                            <td><a href="{% url 'eliminarClase' clase.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

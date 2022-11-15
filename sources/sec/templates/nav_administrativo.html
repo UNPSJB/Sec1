@@ -25,7 +25,7 @@
     </a>
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'crearCurso' %}">Agregar curso</a></li>
-      <li><a class="dropdown-item" href="{% url 'listadoCursos' %}">Listado de cursos</a></li>
+      <li><a class="dropdown-item" href="{% url 'listarCursos' %}">Listado de cursos</a></li>
       <li><a class="dropdown-item" href="{% url 'crearAula' %}">Agregar aula</a></li>
       <li><a class="dropdown-item" href="{% url 'listarAulas' %}">Listado de aulas</a></li>
       <li><a class="dropdown-item" href="">Agregar dictado</a></li>     
@@ -41,7 +41,7 @@
     </a>
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'crearProfesor' %}">Agregar profesor</a></li>
-      <li><a class="dropdown-item" href="#">Listado de profesores</a></li>
+      <li><a class="dropdown-item" href="{% url 'listarProfesores' %}">Listado de profesores</a></li>
       <li class="dropdown-divider"></li>
     </ul>
   </li>

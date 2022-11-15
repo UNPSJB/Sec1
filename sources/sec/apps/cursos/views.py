@@ -15,7 +15,7 @@ class ProfesorCreateView(CreateView):
     form_class = ProfesorForm
     # template_name = 'profesores/profesor_form.html' # template del form
     success_url = reverse_lazy('listarProfesores')
-
+"""
 
     def post(self, *args, **kwargs):
         self.object = None
@@ -30,7 +30,7 @@ class ProfesorCreateView(CreateView):
             return redirect('')
         #messages.add_message(self.request, messages.ERROR, profesor_form.errors)
         return self.form_invalid(form=profesor_form)
-
+"""
 class ProfesorUpdateView(UpdateView):
     model = Profesor
     form_class = Profesor

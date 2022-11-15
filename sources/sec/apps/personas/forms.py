@@ -11,12 +11,12 @@ class PersonaForm(ModelForm):
         exclude=['persona', 'tipo']
         widgets = {
             "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
-            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre completo'}),
-            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellido completo'}),
-            "fechaNacimiento": forms.TextInput(attrs={'type': 'date'})
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
+            "nacimiento": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {
-            'fechaNacimiento': 'Fecha de nacimiento',
+            'nacimiento': 'Fecha de nacimiento',
             
         }
 
@@ -32,7 +32,7 @@ class PersonaForm(ModelForm):
                     'dni', 
                     'nombre',
                     'apellido',
-                    'fechaNacimiento',    
+                    'nacimiento',    
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 

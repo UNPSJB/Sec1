@@ -13,10 +13,6 @@ class EspecialidadForm(forms.ModelForm):
         model = Especialidad
         fields = "__all__"
 
-        labels = {
-            'TIPOAREA': 'Area',
-        }
-
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
         nombre = nombre.lower()
@@ -55,7 +51,7 @@ class AulaForm(forms.ModelForm):
         fields = "__all__"
 
         labels = {
-            'nroAula': 'Numero',
+            'numero': 'Numero',
             'capacidad': 'Capacidad',
         }
 
@@ -78,7 +74,7 @@ class AulaForm(forms.ModelForm):
             Fieldset(
                 "Datos de Aula",
             Row(
-                Column('nroAula', css_class='form-group col-md-4 mb-0'),
+                Column('numero', css_class='form-group col-md-4 mb-0'),
                 Column('capacidad', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
@@ -90,9 +86,9 @@ class ProfesorForm(forms.ModelForm):
     class Meta:
         model = Profesor
         fields = "__all__"
-        
+        exclude = ['tipo','persona','familia']
         labels = {
-            'aniosExperiencia': 'Años de experiencia',   
+            'aniosExperiencia': 'Años de experiencia',     
         }
 
     def clean(self):
@@ -127,6 +123,7 @@ class ProfesorForm(forms.ModelForm):
             Row(
                 Column('aniosExperiencia', css_class='form-group col-md-4 mb-0'),
                 Column('cbu', css_class='form-group col-md-4 mb-0'),
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
             ),
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
@@ -142,7 +139,6 @@ class CursoForm(forms.ModelForm):
         }
 
         labels = {
-            'TIPO': 'Tipo',
             'desde': 'Fecha desde',
             'hasta': 'Fecha hasta',
             'formaPago': 'Forma de pago',
@@ -168,17 +164,13 @@ class CursoForm(forms.ModelForm):
             Row(
                 Column('hasta', css_class='form-group col-md-4 mb-0'),
                 Column('cupo', css_class='form-group col-md-4 mb-0'),
-                Column('modulos', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('profesor', css_class='form-group col-md-4 mb-0'),
-                Column('descuento', css_class='form-group col-md-4 mb-0'),
-                Column('precio', css_class='form-group col-md-4 mb-0'),
+                Column('cantModulos', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
                 Column('formaPago', css_class='form-group col-md-4 mb-0'),
+                Column('descuento', css_class='form-group col-md-4 mb-0'),
+                Column('precio', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
