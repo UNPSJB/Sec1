@@ -2,6 +2,7 @@
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class PersonaRolManager(models.Manager):
     def __init__(self, tipo):
@@ -42,9 +43,11 @@ class Persona(models.Model):
     alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(3)
     encargados = EncargadoManager()
 
-    def afiliar(self, afiliado, fecha):
+    def afiliar(self, afiliado, fecha=None):
         assert not self.es_afiliado, "Ya soy afiliado" 
-        afiliado.desde = fecha
+        #if  fecha is None:
+        #    fecha= datetime.now()
+        #afiliado.desde = fecha
         afiliado.persona = self
         afiliado.save()
         self.es_afiliado=True
@@ -145,7 +148,7 @@ class Rol(models.Model):
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    desde = models.DateField(auto_now_add=True)
+    desde = models.DateField(auto_now_add=True, null= True, blank= True)
     hasta = models.DateField(null=True, blank=True)
 
     def __str__(self):

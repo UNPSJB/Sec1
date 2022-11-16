@@ -30,7 +30,7 @@ class AfiliadoForm(forms.ModelForm):
     class Meta:
         model = Afiliado
         fields = "__all__"
-        exclude = ['persona','tipo', 'familia']
+        exclude = ['persona','tipo', 'familia', 'empresa']
         
         widgets = {
             "ingresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
@@ -59,20 +59,22 @@ class AfiliadoForm(forms.ModelForm):
     def is_valid(self) -> bool:
         valid = super().is_valid()
         personaForm = PersonaForm(data=self.cleaned_data)
-        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        return valid and personaForm.is_valid() and afiliadoForm.is_valid() 
+        #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
+        
+        return valid and personaForm.is_valid()
 
     def save(self, commit=False):
         print(self.cleaned_data)
         if self.persona is None:
             personaForm = PersonaForm(data=self.cleaned_data)
             self.persona = personaForm.save()
-        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
+        #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
+        afiliado = super().save(commit=False)
+        #afiliado = afiliadoForm.save(commit=False)
         empresaForm = EmpresaForm(data=self.cleaned_data)
-        self.empresa = empresaForm.save(commit=False)
-        afiliado = afiliadoForm.save(commit=False)
-        self.persona.afiliar(afiliado, self.cleaned_data['fecha_afiliacion'])
-        super().save(commit=commit)
+        #TODO: clean empresa  para garantizzar la referancia 
+        afiliado.empresa = empresaForm.save(commit=True)
+        self.persona.afiliar(afiliado, self.cleaned_data.get('fecha_afiliacion'))
         return afiliado
         
     def __init__(self, *args, **kwargs):
