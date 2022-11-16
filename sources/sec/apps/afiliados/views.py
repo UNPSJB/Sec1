@@ -19,7 +19,7 @@ class AfiliadoCreateView(CreateView):
     form_class = AfiliadoForm
     # template_name = 'afiliados/afiliado_form.html' # template del form
     success_url = reverse_lazy('crearAfiliado')
-
+"""
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -41,6 +41,7 @@ class AfiliadoCreateView(CreateView):
             return redirect('')
         #messages.add_message(self.request, messages.ERROR, afiliado_form.errors)
         return self.form_invalid(form=afiliado_form)
+"""
 
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
@@ -63,7 +64,7 @@ class AfiliadoUpdateView(UpdateView):
 def afiliado_eliminar(request, pk):
     a = Afiliado.objects.get(pk=pk)
     a.delete()
-    return redirect('') 
+    return redirect('listarAfiliados') 
 
 #class AfiliadoDeleteView(DeleteView):
 #    model = Afiliado

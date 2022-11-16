@@ -29,7 +29,7 @@ class Persona(models.Model):
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
-    familia = models.ManyToManyField('self', through = 'Vinculo')
+    familia = models.ManyToManyField('self', blank=True, through = 'Vinculo')
     usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
     es_afiliado = models.BooleanField(default = False) 
     es_alumno = models.BooleanField(default = False) 
@@ -72,6 +72,12 @@ class Persona(models.Model):
         self.es_alumno = False
         self.save()
     
+    def serProfesor(self, profesor):
+        assert not self.es_profesor, "ya soy Profesor" 
+        profesor.persona = self
+        profesor.save()
+        self.es_profesor=True
+        self.save()
 
     def inscribirProfesor (self, profesor, curso): 
         assert profesor.persona == self, "Profesor ya existente en el curso" 

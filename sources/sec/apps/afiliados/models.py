@@ -9,7 +9,7 @@ class Empresa(models.Model):
     domicilio = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'cuit={self.cuit}, razonSocial={self.razonSocial}, rama={self.rama}, domicilioEmpresa={self.domicilioEmpresa}'
+        return f'cuit={self.cuit}, razonSocial={self.razonSocial}, rama={self.rama}, domicilioEmpresa={self.domicilio}'
 
 
 

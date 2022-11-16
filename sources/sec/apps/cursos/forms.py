@@ -86,7 +86,7 @@ class ProfesorForm(forms.ModelForm):
     class Meta:
         model = Profesor
         fields = "__all__"
-        exclude = ['tipo','persona','familia']
+        exclude = ['tipo','persona']
         labels = {
             'aniosExperiencia': 'Años de experiencia',     
         }
@@ -96,7 +96,19 @@ class ProfesorForm(forms.ModelForm):
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
-        return valid
+        personaForm = PersonaForm(data=self.cleaned_data)
+        profesorForm = ProfesorForm(data=self.cleaned_data)
+        return valid 
+
+    def save(self, commit=False):
+        print(self.cleaned_data)
+        if self.persona is None:
+            personaForm = PersonaForm(data=self.cleaned_data)
+            self.persona = personaForm.save()
+        profesorForm = ProfesorForm(data=self.cleaned_data)
+        profesor = profesorForm.save(commit=False)
+        self.persona.hacerProfesor(profesor)
+        return profesor
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
