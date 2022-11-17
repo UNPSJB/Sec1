@@ -23,9 +23,9 @@ class EncargadoManager(models.Manager):
 #class PersonaRolQuerySet
 class Persona(models.Model):
     ROL_AFILIADO = 1
-    ROL_ALUMNO=2
-    ROL_PROFESOR=3
-    ROL_ENCARGADO=4
+    ROL_ALUMNO= 2
+    ROL_PROFESOR= 3
+    ROL_ENCARGADO= 4
     dni = models.CharField(max_length=8)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
@@ -114,16 +114,20 @@ class Persona(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'{self.nombre} {self.apellido} {self.dni}'
+        return f'{self.nombre} {self.apellido}'
 
-    def como(self, ROL):
+    def como(self, ROL, fecha=None, curso = None):
+        if fecha == None:
+            fecha = datetime.now()
+        params = models.Q(tipo=ROL) & (models.Q(hasta__isnull=True) | models.Q(hasta__gte=fecha))
+        roles = self.roles.filter(params)
         if ROL == self.ROL_ENCARGADO and self.es_encargado:
             return self
-        roles = self.roles.filter(tipo=ROL)
         if roles.exists() and ((ROL == self.ROL_AFILIADO or ROL == self.ROL_PROFESOR) or (ROL == self.ROL_ALUMNO and len(roles) == 1)):
             return roles.first().related()
         if roles.exists():
-            return [rol.related() for rol in roles]
+            alumnos = list(filter(lambda a: a.curso == curso, [rol.related() for rol in roles]))
+            return alumnos[0] if len(alumnos) == 1 else None
 
     def es(self, ROL):
         return self.como(ROL) is not None
@@ -141,7 +145,7 @@ class Vinculo (models.Model):
 
 
     def __str__(self):
-        return f"{self.vinculado} es {self.get_tipoVinculo_display()}"
+        return f"{self.vinculado} es {self.get_tipo_display()}"
 
 class Rol(models.Model):
     TIPO = 0
