@@ -127,8 +127,8 @@ class Clase (models.Model):
 
 class Alumno (Rol): 
     TIPO = Persona.ROL_ALUMNO
-    curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
-    dictado = models.ManyToManyField(Dictado, through = "PagoDictado")
+    curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
+    dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
     #Revisar
     def agregarAlumno (self, curso, dictado): 

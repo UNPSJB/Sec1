@@ -26,6 +26,7 @@ urlpatterns = [
     #path('', views.listadoAlumnos, name='listadoAlumnos'),
     #path('index', cursos.cursosIndex, name='cursosIndex'),
     path('crearAlumno/', AlumnoCreateView.as_view(), name='crearAlumno'), 
+    path('listarAlumnos/', AlumnoListView.as_view(), name='listarAlumnos'),
 
     #path('', views.listadoClases, name='listadoClases'),
     #path('index', clases.clasesIndex, name='clasesIndex'),
