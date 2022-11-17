@@ -22,7 +22,7 @@
                           {% for especialidad in object_list %}
                           <tr class="bg-transition">
                             <td>{{ especialidad.nombre }}</td>
-                            <td>{{ especialidad.area }}</td>
+                            <td>{{ especialidad.get_area_display }}</td>
                             <td><a href="#"class="btn btn-primary">Editar</a></td>
                             <td><a href="{% url 'eliminarEspecialidad' especialidad.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        
