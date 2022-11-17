@@ -16,9 +16,9 @@ def listadoAfiliados(request):
 class AfiliadoCreateView(CreateView):
 
     model = Afiliado
-    form_class = AfiliadoForm
+    form_class = CrearAfiliadoForm
     # template_name = 'afiliados/afiliado_form.html' # template del form
-    success_url = reverse_lazy('crearAfiliado')
+    success_url = reverse_lazy('listarAfiliados')
 """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,8 +45,8 @@ class AfiliadoCreateView(CreateView):
 
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
-    form_class = AfiliadoForm
-    success_url = reverse_lazy("listarAfiliado")
+    form_class = CrearAfiliadoForm
+    success_url = reverse_lazy("detallarAfiliado")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

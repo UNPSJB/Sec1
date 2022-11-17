@@ -26,10 +26,8 @@
                             <td>{{ afiliado.persona.nombre }}</td>
                             <td>{{ afiliado.persona.apellido }}</td>
                             <td>{{ afiliado.cuil }}</td>
-                            <td>{{ afiliado.telefono }}</td>
-                            <td><a href="#"class="btn btn-primary">Editar</a></td>
-                            <td><a href="{% url 'eliminarAfiliado' afiliado.pk %}"class="btn btn-primary">Eliminar</a></td>      
-                                                                       
+                            <td>{{ afiliado.telefono }}</td>    
+                            <td><a href="{% url 'detallarAfiliado' afiliado.pk %}" class="btn btn-success"> Ver </a></td>                                        
                           </tr>
                           {% endfor %}  
                       </tbody>

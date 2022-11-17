@@ -1,0 +1,92 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div style="background-color: #0f66c3">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/persona.png' %}" class="img-thumbnail" alt="persona">
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b>DATOS PERSONALES</b></label>
+          <div class="input-group">
+            {{object.persona.nombre}}
+          </div>
+          <div class="input-group">
+            {{object.persona.apellido}}
+          </div>
+          <div class="input-group">
+            {{object.persona.dni}}
+          </div>
+          <div class="input-group">
+            {{object.persona.nacimiento}}
+          </div>
+          <div class="input-group">
+            {{object.domicilio}}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <label><b>DATOS EMPRESA</b></label>
+          <div class="input-group">
+            {{object.empresa.domicilio}}
+          </div>
+          <div class="input-group">
+            {{object.empresa.cuit}}
+          </div>
+          <div class="input-group">
+            {{object.empresa.rama}}
+          </div>
+          <div class="input-group">
+            {{object.empresa.razonSocial}}
+          </div>
+        </div>
+        <td><a href="{% url 'modificarAfiliado' object.pk %}"class="btn btn-primary">Editar</a></td>
+        <td><a href="{% url 'eliminarAfiliado' object.pk %}"class="btn btn-primary">Eliminar</a></td>
+      </div>
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3">
+            <div class="row">
+              <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                <h3> Cursos vigentes </h3>
+              </div>
+              <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="#" class="btn btn-success"> + </a>
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th> Nombre </th>
+                      <th> Fecha Desde </th>
+                      <th> Fecha Hasta </th>
+                      <th> Descuento </th>
+                      <th> Profesor </th>
+                      <th> Precio </th>
+                      <th> Acciones </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                        <tr>
+                          <td> Desarrollo de software</td>
+                          <td> 01/08/21 </td>
+                          <td> 21/11/12 </td>
+                          <td> 15% </td>
+                          <td> Diego </td>
+                          <td> 15000$ </td>
+                          <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

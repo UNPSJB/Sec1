@@ -50,6 +50,8 @@ class AfiliadoForm(forms.ModelForm):
             'jornadaLaboral': 'Jornada laboral',
         }
 
+class CrearAfiliadoForm(forms.Form):
+
     def clean_dni(self):
         self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
         if self.persona is not None and self.persona.es_afiliado:
@@ -57,30 +59,28 @@ class AfiliadoForm(forms.ModelForm):
         return self.cleaned_data['dni']
 
     def is_valid(self) -> bool:
-        valid = super().is_valid()
-        personaForm = PersonaForm(data=self.cleaned_data)
-        #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        
-        return valid and personaForm.is_valid()
+        personaForm = PersonaForm(self.data)
+        afiliadoForm = AfiliadoForm(self.data)
+        valid = super().is_valid() and personaForm.is_valid() and afiliadoForm.is_valid()
+        return valid 
 
     def save(self, commit=False):
         print(self.cleaned_data)
         if self.persona is None:
             personaForm = PersonaForm(data=self.cleaned_data)
             self.persona = personaForm.save()
-        #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        afiliado = super().save(commit=False)
-        #afiliado = afiliadoForm.save(commit=False)
+        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
+        #afiliado = super().save(commit=False)
+        afiliado = afiliadoForm.save(commit=False)
         empresaForm = EmpresaForm(data=self.cleaned_data)
         #TODO: clean empresa  para garantizzar la referancia 
         afiliado.empresa = empresaForm.save(commit=True)
         self.persona.afiliar(afiliado, self.cleaned_data.get('fecha_afiliacion'))
         return afiliado
         
-    def __init__(self, *args, **kwargs):
+    def __init__(self, instance=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        #self.helper.form_action = 'afiliados:index'
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Afiliado</center></h2>'),
@@ -132,6 +132,7 @@ class AfiliadoForm(forms.ModelForm):
             ),
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
-        
-AfiliadoForm.base_fields.update(PersonaForm.base_fields)
-AfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
+
+CrearAfiliadoForm.base_fields.update(PersonaForm.base_fields)
+CrearAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)
+CrearAfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
