@@ -25,9 +25,9 @@
                         <tr>
                           {% for profesor in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ profesor.nombre }}</td>
-                            <td>{{ profesor.apellido }}</td>
-                            <td>{{ profesor.dni }}</td>
+                            <td>{{ profesor.persona.nombre }}</td>
+                            <td>{{ profesor.persona.apellido }}</td>
+                            <td>{{ profesor.persona.dni }}</td>
                             <td>{{ profesor.especializacion }}</td>
                             <td>{{ profesor.telefono }}</td>
                             <td>{{ profesor.domicilio }}</td>

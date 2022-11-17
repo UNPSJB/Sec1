@@ -22,17 +22,17 @@ urlpatterns = [
 
     path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
     path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
-    #path('eliminarAlquiler/', DeleteCreateView.as_view(), name='eliminarAlquiler'),
-    path('eliminarAlquiler/<int:pk>', salon_eliminar, name='eliminarAlquiler'),
-    path('detallarAlquiler/<int:pk>', SalonDetailView.as_view(), name='detallarAlquiler'),
-    path('listarAlquileres/', SalonListView.as_view(), name='listarAlquileres'),
+    #path('eliminarAlquiler/', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
+    path('eliminarAlquiler/<int:pk>', alquiler_eliminar, name='eliminarAlquiler'),
+    path('detallarAlquiler/<int:pk>', AlquilerDetailView.as_view(), name='detallarAlquiler'),
+    path('listarAlquileres/', AlquilerListView.as_view(), name='listarAlquileres'),
 
     # ----------------- Servicios -----------------
 
     path('crearServicio/', ServicioCreateView.as_view(), name='crearServicio'),
-    #path('modificarServicio/<int:pk>', SalonCreateView.as_view(), name='modificarServicio'),
-    #path('eliminarServicio/', DeleteCreateView.as_view(), name='eliminarServicio'),
-    #path('eliminarServicio/<int:pk>', salon_eliminar, name='eliminarServicio'),
-    #path('detallarServicio/<int:pk>', SalonDetailView.as_view(), name='detallarServicio'),
-    #path('listarServicios/', SalonListView.as_view(), name='listarServicios'),
+    path('modificarServicio/<int:pk>', ServicioCreateView.as_view(), name='modificarServicio'),
+    path('eliminarServicio/', ServicioCreateView.as_view(), name='eliminarServicio'),
+    path('eliminarServicio/<int:pk>', servicio_eliminar, name='eliminarServicio'),
+    path('detallarServicio/<int:pk>', ServicioDetailView.as_view(), name='detallarServicio'),
+    path('listarServicios/', ServicioListView.as_view(), name='listarServicios'),
 ]

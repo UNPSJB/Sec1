@@ -97,21 +97,21 @@ class ProfesorForm(forms.ModelForm):
 
 class CrearProfesorForm(forms.Form):
 
-    especialidad = forms.ModelChoiceField(queryset= Especialidad.objects.all())
-
-
-
-    def clean(self):
-        pass
+    def clean_dni(self):
+        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
+        if self.persona is not None and self.persona.es_profesor:
+            raise ValidationError("Ya existe un profesor con ese DNI")
+        return self.cleaned_data['dni']
 
     def is_valid(self) -> bool:
-        valid = super().is_valid()
-        personaForm = PersonaForm(data=self.cleaned_data)
-        profesorForm = ProfesorForm(data=self.cleaned_data)
-        especialidadForm = EspecialidadForm(data=self.cleaned_data)
-        print(valid)
-        return valid 
-
+        personaForm = PersonaForm(self.data)
+        profesorForm = ProfesorForm(self.data)
+        valid = super().is_valid() and personaForm.is_valid() and profesorForm.is_valid()
+        #self.cleaned_data.update(personaForm.cleaned_data)
+        #self.cleaned_data.update(alumnoForm.cleaned_data)
+        print(self.cleaned_data)
+        return valid
+    
     def save(self, commit=False):
         print(self.cleaned_data)
         if self.persona is None:
@@ -122,8 +122,8 @@ class CrearProfesorForm(forms.Form):
         self.persona.serProfesor(profesor)
         return profesor
 
-    def __init__(self, prefix = None, initial = None, *args, **kwargs):
-        super().__init__(prefix=prefix,initial=initial)
+    def __init__(self, instance=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(

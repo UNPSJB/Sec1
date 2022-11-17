@@ -17,7 +17,7 @@ class Especialidad (models.Model):
 
 
     def __str__ (self): 
-        return f'{self.nombre}, {self.area}'
+        return f'{self.nombre}'
 
 class Aula(models.Model): 
     numero = models.PositiveIntegerField(max_length=2)

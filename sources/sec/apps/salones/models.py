@@ -53,10 +53,10 @@ class Alquiler (models.Model):
     inicio = models.DateField( null = True, blank = True) 
 
     #Revisar
-    def agregarAlquiler (self, salon, seña, reserva, inicio, afiliado): 
+    def agregarAlquiler (self, salon, senia, reserva, inicio, afiliado): 
         self.salon = salon 
         self.afiliado = afiliado 
-        self.senia = seña 
+        self.senia = senia 
         self.reserva = reserva 
         if (inicio): 
             self.inicio = inicio
