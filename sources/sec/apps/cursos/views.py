@@ -65,28 +65,34 @@ class ProfesorListView(ListView):
 class AlumnoCreateView(CreateView):
 
     model = Alumno
-    form_class = AlumnoForm
+    form_class = CrearAlumnoForm
     # template_name = 'alumnos/alumno_form.html' # template del form
     success_url = reverse_lazy('listarAlumnos')
 
-    def get_initial(self):
+    #def get_initial(self):
         # Validar dni de entrada
-        p = Persona.objects.filter(dni=self.request.GET["dni"]).first()
-        return {"dni": p.dni}
-        
+    #    p = Persona.objects.filter(dni=self.request.GET["dni"]).first()
+    #    return {"dni": p.dni}
+"""     
     def post(self, *args, **kwargs):
         self.object = None
+        #print (args, kwargs)
         alumno_form = self.get_form()
         
         #form.set_persona()
         if alumno_form.is_valid():
+            print ("es valido")
             alumno = alumno_form.save()
             #messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
             if 'guardar' in self.request.POST:
-                return redirect('')
-            return redirect('')
+                return redirect('listarAlumnos')
+            return redirect('ListarAlumnos')
         #messages.add_message(self.request, messages.ERROR, alumno_form.errors)
         return self.form_invalid(form=alumno_form)
+"""
+class AlumnoListView(ListView):
+    model = Alumno
+    paginate_by = 100 
 
 #--------------------------------CURSO---------------------------------------------
 

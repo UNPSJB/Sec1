@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div>
+    <div class="container-listados my-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <div class="table-responsive card shadow p-3"> 
+                    <h3>Listado de Alumnos</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> DNI </th>
+                                <th> Nombre </th>
+                                <th> Apellido </th>
+                                <th> Cursos </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <div>
+                                <tr>
+                                    {% for alumno in object_list %}
+                                    <tr class="bg-transition">
+                                        <td>{{ alumno.persona.dni }}</td>
+                                        <td>{{ alumno.persona.nombre }}</td>
+                                        <td>{{ alumno.persona.apellido }}</td>
+                                        <td>{{ alumno.curso.nombre }}</td>
+                                        <td><a href="#"class="btn btn-primary">Editar</a></td>
+                                        <td><a href="#" class="btn btn-success"> Ver </a></td>  
+                                    </tr>
+                                    {% endfor %}             
+                                </tr>
+                            </div>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
