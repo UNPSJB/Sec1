@@ -91,6 +91,16 @@ class ProfesorForm(forms.ModelForm):
             'aniosExperiencia': 'Años de experiencia',     
         }
 
+    
+
+    
+
+class CrearProfesorForm(forms.Form):
+
+    especialidad = forms.ModelChoiceField(queryset= Especialidad.objects.all())
+
+
+
     def clean(self):
         pass
 
@@ -98,6 +108,8 @@ class ProfesorForm(forms.ModelForm):
         valid = super().is_valid()
         personaForm = PersonaForm(data=self.cleaned_data)
         profesorForm = ProfesorForm(data=self.cleaned_data)
+        especialidadForm = EspecialidadForm(data=self.cleaned_data)
+        print(valid)
         return valid 
 
     def save(self, commit=False):
@@ -107,11 +119,11 @@ class ProfesorForm(forms.ModelForm):
             self.persona = personaForm.save()
         profesorForm = ProfesorForm(data=self.cleaned_data)
         profesor = profesorForm.save(commit=False)
-        self.persona.hacerProfesor(profesor)
+        self.persona.serProfesor(profesor)
         return profesor
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, prefix = None, initial = None, *args, **kwargs):
+        super().__init__(prefix=prefix,initial=initial)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(
@@ -321,4 +333,5 @@ class AlumnoForm(forms.ModelForm):
             Submit('submit', 'Guardar', css_class='button white'),)
         
 AlumnoForm.base_fields.update(PersonaForm.base_fields)
-ProfesorForm.base_fields.update(PersonaForm.base_fields)
+CrearProfesorForm.base_fields.update(PersonaForm.base_fields)
+CrearProfesorForm.base_fields.update(ProfesorForm.base_fields)

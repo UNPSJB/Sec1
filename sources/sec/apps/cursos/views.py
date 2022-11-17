@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 class ProfesorCreateView(CreateView):
 
     model = Profesor
-    form_class = ProfesorForm
+    form_class = CrearProfesorForm
     # template_name = 'profesores/profesor_form.html' # template del form
     success_url = reverse_lazy('listarProfesores')
 """
