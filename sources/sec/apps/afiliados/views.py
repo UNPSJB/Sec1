@@ -45,7 +45,7 @@ class AfiliadoCreateView(CreateView):
 
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
-    form_class = CrearAfiliadoForm
+    form_class = ModificarAfiliadoForm
     success_url = reverse_lazy("detallarAfiliado")
 
     def get_context_data(self, **kwargs):

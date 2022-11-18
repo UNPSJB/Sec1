@@ -57,7 +57,7 @@
                   </div>
                   <div class="col sm-12 col-md-8 col-lg-8 py-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <a href="#" class="btn btn-success"> + </a>
+                      <a href="{% url 'crearAlumno' %}" class="btn btn-success"> + </a>
                     </div>
                   </div>
                 </div>
@@ -72,13 +72,15 @@
                     </thead>
                     <tbody>
                         <div>
+                            {% for alumno in curso.alumnos.all %}
                             <tr>
-                                <td> 123 </td>
-                                <td> Joako </td>
-                                <td> Castro </td>
-                                <td> Programación </td>
-                                <td><a href="{% url 'verAlumno' %}" class="btn btn-success"> Ver </a></td>
+                                <td> {{alumno.persona.dni}} </td>
+                                <td> {{alumno.persona.nombre}} </td>
+                                <td> {{alumno.persona.apellido}} </td>
+                                <td> **¿esto va?** </td>
+                                <td><a href="{% url 'detallarAlumno' alumno.pk%}" class="btn btn-success"> Ver </a></td>
                             </tr>
+                            {% endfor %}
                         </div>
                     </tbody>
                 </table>

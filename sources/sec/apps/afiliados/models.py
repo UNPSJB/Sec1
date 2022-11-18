@@ -28,7 +28,7 @@ class Afiliado(Rol):
 
 
     def __str__(self):
-        return f'cuil={self.cuil}'
+        return f'{self.persona.nombre} {self.persona.apellido}'
 
 Rol.register(Afiliado)
 

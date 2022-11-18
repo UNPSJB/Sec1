@@ -1,0 +1,57 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div style="background-color:#0f66c3">
+  <div class="container">
+    <header> Datos Alquiler </header>
+    <form action="#">
+        <div class="form first">
+            <div class="datos curso">
+                <div class="fields">
+                    <div class="input-field">
+                      <label> Número de alquiler </label>
+                      {{alquiler.pk}}
+                    </div>
+
+                    <div class="input-field">
+                        <label> Fecha de reserva </label>
+                        {{alquiler.reserva}}
+                    </div>
+
+                    <div class="input-field" style="display: flex; flex-direction: colum ">
+                      <label> Fecha inicio </label>
+                      {{alquiler.inicio}}
+                    </div>
+
+                    <div class="input-field">
+                      <label> Monto </label>
+                      {{alquiler.salon.monto}} **revisar**
+                    </div>
+
+                    <div class="input-field">
+                        <label> Afiliado </label>
+                        <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Salón </label>
+                        <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
+                    </div>
+
+                    <div class="input-field">
+                        <label> Seña </label>
+                        {{alquiler.senia}}
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-primary me-md-2" type="button"> Editar </button>
+                <button class="btn btn-primary" type="button" style="background-color: red"> Dar de Baja</button>
+            </div>
+        </div>
+    </form>
+  </div>       
+</div>
+{% endblock %}
