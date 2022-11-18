@@ -5,50 +5,39 @@
 {% block container %}
 <div style="background-color:#0f66c3">
   <div class="container">
-    <header> Datos Alquiler </header>
     <form action="#">
         <div class="form first">
-            <div class="datos curso">
+        <header> Datos Alquiler </header>
                 <div class="fields">
-                    <div class="input-field">
-                      <label> Número de alquiler </label>
-                      {{alquiler.pk}}
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <div class="input-group py-2"> 
+                      <label><b> Número de alquiler: </b></label> {{alquiler.pk}}
                     </div>
-
-                    <div class="input-field">
-                        <label> Fecha de reserva </label>
-                        {{alquiler.reserva}}
+                    <div class="input-group py-2">
+                      <label><b> Fecha de reserva: </b></label> {{alquiler.reserva}}
                     </div>
-
-                    <div class="input-field" style="display: flex; flex-direction: colum ">
-                      <label> Fecha inicio </label>
-                      {{alquiler.inicio}}
+                    <div class="input-group py-2" style="display: flex; flex-direction: colum ">
+                      <label><b> Fecha inicio: </b></label> {{alquiler.inicio}}
                     </div>
-
-                    <div class="input-field">
-                      <label> Monto </label>
-                      {{alquiler.salon.monto}} **revisar**
+                    <div class="input-group py-2">
+                      <label><b> Monto: </b></label> {{alquiler.salon.monto}} **revisar**
                     </div>
-
-                    <div class="input-field">
-                        <label> Afiliado </label>
-                        <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
+                  </div>
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <div class="input-group py-2">
+                        <label><b> Afiliado: </b></label> <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
                     </div>
-
-                    <div class="input-field">
-                        <label> Salón </label>
-                        <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
+                    <div class="input-group py-2">
+                      <label><b> Salón: </b></label> <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
                     </div>
-
-                    <div class="input-field">
-                        <label> Seña </label>
-                        {{alquiler.senia}}
+                    <div class="input-group py-2">
+                      <label><b> Seña: </b></label> {{alquiler.senia}}
                     </div>
+                  </div>
                 </div>
-            </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary me-md-2" type="button"> Editar </button>
-                <button class="btn btn-primary" type="button" style="background-color: red"> Dar de Baja</button>
+              <td><a href="#"class="btn btn-success">Editar</a></td>
+              <td><a href="#"class="btn btn-danger">Eliminar</a></td>
             </div>
         </div>
     </form>

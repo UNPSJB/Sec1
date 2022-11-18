@@ -13,16 +13,16 @@ class Salon(models.Model):
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 
+    def alquilar(self, afiliado, senia, reserva, inicio):
+        alquiler = Alquiler.agregarAlquiler(alquiler, self, senia, reserva, inicio, afiliado)
+        self.save()
 
-
-    #Revisar
-    def agregarSalon (self, nombre, direccion, capacidad, monto, encargado, afiliado): 
+    def agregarSalon (self, nombre, direccion, capacidad, monto, encargado): 
         self.nombre = nombre 
         self.direccion = direccion 
         self.capacidad = capacidad 
         self.monto = monto 
         self.encargado = encargado
-        self.afiliado = afiliado
         self.save()
 
     def __str__(self):
@@ -52,7 +52,6 @@ class Alquiler (models.Model):
     reserva = models.DateField() 
     inicio = models.DateField( null = True, blank = True) 
 
-    #Revisar
     def agregarAlquiler (self, salon, senia, reserva, inicio, afiliado): 
         self.salon = salon 
         self.afiliado = afiliado 
