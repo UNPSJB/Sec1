@@ -7,6 +7,7 @@ from django.forms import ValidationError, ModelForm, Textarea
 from .models import Especialidad, Aula, Profesor, Curso, Dictado, Clase, Alumno, PagoDictado, Titularidad, Liquidacion, AsistenciaProfesor 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
+import ipdb
 
 class EspecialidadForm(forms.ModelForm):
     class Meta:
@@ -90,10 +91,6 @@ class ProfesorForm(forms.ModelForm):
         labels = {
             'aniosExperiencia': 'Años de experiencia',     
         }
-
-    
-
-    
 
 class CrearProfesorForm(forms.Form):
 
@@ -266,10 +263,14 @@ class AlumnoForm(forms.ModelForm):
         
 class CrearAlumnoForm(forms.Form):
     curso = forms.ModelChoiceField(queryset= Curso.objects.all())
-
+    
     def clean_dni(self):
-        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
-        if self.persona is not None and self.persona.es_alumno:
+        curso = self.cleaned_data['curso']
+        persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
+        print('---------------------------------------------------------')
+        alumno = Alumno.objects.filter(curso = self.cleaned_data['curso'], persona=persona)
+        print(alumno in curso.alumnos.all(), curso.alumnos.all())
+        if persona is not None and alumno in curso.alumnos.all():
             raise ValidationError("Ya existe un alumno con ese DNI")
         return self.cleaned_data['dni']
 
@@ -277,19 +278,23 @@ class CrearAlumnoForm(forms.Form):
         personaForm = PersonaForm(self.data)
         alumnoForm = AlumnoForm(self.data)
         valid = super().is_valid() and personaForm.is_valid() and alumnoForm.is_valid()
-        #self.cleaned_data.update(personaForm.cleaned_data)
-        #self.cleaned_data.update(alumnoForm.cleaned_data)
-        print(self.cleaned_data)
+        # personaForm.is_valid() retorna False porque existe una persona con el mismo dni.
+        # En el caso de crearAlumnoForm si la persona existe, solo requerimos verificar que el alumno 
+        # no está inscripto al curso al que lo queremos inscribir. Se puede capturar el caso de error particular y 
+        # "hacer de cuenta" que el form es valido de todas formas?
+        if not valid:
+            self.errors.update(personaForm.errors)
+            self.errors.update(alumnoForm.errors)
         return valid
 
-    def save(self, commit=False):
-        print(self.cleaned_data)
-        if self.persona is None:
+    def save(self, persona, commit=False):
+        if persona is None:
             personaForm = PersonaForm(data=self.cleaned_data)
-            self.persona = personaForm.save()
+            persona = personaForm.save()
         alumnoForm = AlumnoForm(data=self.cleaned_data)
         alumno = alumnoForm.save(commit=False)
-        self.persona.inscribir(alumno, self.cleaned_data['curso'])
+        curso = self.cleaned_data['curso']
+        persona.inscribir(alumno, self.cleaned_data['curso'])
         return alumno
         
     def __init__(self, instance=None, *args, **kwargs):

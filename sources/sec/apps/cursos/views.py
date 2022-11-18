@@ -73,23 +73,29 @@ class AlumnoCreateView(CreateView):
         # Validar dni de entrada
     #    p = Persona.objects.filter(dni=self.request.GET["dni"]).first()
     #    return {"dni": p.dni}
-"""     
+     
     def post(self, *args, **kwargs):
         self.object = None
         #print (args, kwargs)
-        alumno_form = self.get_form()
-        
+        crearAlumnoForm = self.get_form()        
+        #alumnoForm = AlumnoForm(self.request.POST)
         #form.set_persona()
-        if alumno_form.is_valid():
-            print ("es valido")
-            alumno = alumno_form.save()
+        if crearAlumnoForm.is_valid(): # and alumnoForm.is_valid():
+            try:
+                persona = Persona.objects.get(dni=crearAlumnoForm.cleaned_data['dni'])
+            except Persona.DoesNotExist:
+                persona = None
+            
+            alumno = crearAlumnoForm.save(persona)
             #messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
             if 'guardar' in self.request.POST:
                 return redirect('listarAlumnos')
-            return redirect('ListarAlumnos')
-        #messages.add_message(self.request, messages.ERROR, alumno_form.errors)
-        return self.form_invalid(form=alumno_form)
-"""
+            return redirect('listarAlumnos')
+        else:
+            print("Errores", crearAlumnoForm.errors)
+            messages.add_message(self.request, messages.ERROR, crearAlumnoForm.errors)
+        return super().form_invalid(form=crearAlumnoForm)
+
 class AlumnoListView(ListView):
     model = Alumno
     paginate_by = 100 
