@@ -22,11 +22,9 @@
                         <tr>
                           {% for alquiler in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ alquiler.seña }}</td>
+                            <td>{{ alquiler.senia }}</td>
                             <td>{{ alquiler.reserva }}</td>
                             <td>{{ alquiler.inicio }}</td>
-                            <td>{{  }}</td>
-                            <td>{{  }}</td>
                             <td><a href="#"class="btn btn-primary">Editar</a></td>
                             <td><a href="{% url 'eliminarAlquiler' alquiler.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        

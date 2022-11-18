@@ -10,12 +10,11 @@ urlpatterns = [
     path('modificarProfesor/<int:pk>', ProfesorUpdateView.as_view(), name='modificarProfesor'),
     #path('eliminarProfesor/<int:pk>', ProfesorDeleteView.as_view(), name='eliminarProfesor'),
     path('eliminarProfesor/<int:pk>', profesor_eliminar, name='eliminarProfesor'),
-    path('detallarProfesor/', ProfesorDetailView.as_view(), name='detallarProfesor'),
+    path('detallarProfesor/<int:pk>', ProfesorDetailView.as_view(), name='detallarProfesor'),
     path('listarProfesores/', ProfesorListView.as_view(), name='listarProfesores'),
     
 
-    path('listadoCursos', views.listadoCursos, name='listadoCursos'),
-
+    #path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     path('crearCurso/', CursoCreateView.as_view(), name='crearCurso'),
     path('modificarCurso/<int:pk>', CursoUpdateView.as_view(), name='modificarCurso'),
     #path('eliminarCurso/<int:pk>', CursoDeleteView.as_view(), name='eliminarCurso'),
@@ -27,6 +26,8 @@ urlpatterns = [
     #path('index', cursos.cursosIndex, name='cursosIndex'),
     path('crearAlumno/', AlumnoCreateView.as_view(), name='crearAlumno'), 
     path('listarAlumnos/', AlumnoListView.as_view(), name='listarAlumnos'),
+    path('detallarAlumno/<int:pk>', AlumnoDetailView.as_view(), name='detallarAlumno'),
+    path('modificarAlumno/<int:pk>', AlumnoUpdateView.as_view(), name='modificarAlumno'),
 
     #path('', views.listadoClases, name='listadoClases'),
     #path('index', clases.clasesIndex, name='clasesIndex'),

@@ -29,8 +29,7 @@
                             <td>{{ curso.cupo }}</td>
                             <td>{{ curso.precio }}</td>
                             <td>{{ curso.especialidad }}</td>
-                            <td><a href="#"class="btn btn-primary">Editar</a></td>
-                            <td><a href="{% url 'eliminarCurso' curso.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                            <td><a href="{% url 'detallarCurso' curso.pk %}" class="btn btn-success"> Ver </a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

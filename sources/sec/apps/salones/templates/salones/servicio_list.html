@@ -7,27 +7,26 @@
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xl-12">  
     <div class="container-listados my-3"> 
               <div class="table-responsive card shadow p-3"> 
-                <h3>Listado de Salones</h3>
+                <h3>Listado de Servicios</h3>
                   <table class="table table-striped table-responsive">
                       <thead>
                           <tr>
                             <th scope="col">nombre</th>
-                            <th scope="col">direccion</th>
-                            <th scope="col">capacidad</th>
-                            <th scope="col">monto</th>
-                            <th scope="col">encargado</th>  
+                            <th scope="col">descripcion</th>
+                            <th scope="col">obligatorio</th>
+                            <th scope="col">salon</th>
                           </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          {% for salon in object_list %}
+                          {% for servicio in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ salon.nombre }}</td>
-                            <td>{{ salon.direccion }}</td>
-                            <td>{{ salon.capacidad }}</td>
-                            <td>{{ salon.monto }}</td>
-                            <td>{{ salon.encargado }}</td>
-                            <td><a href="{% url 'detallarSalon' salon.pk %}" class="btn btn-success"> Ver </a></td>             
+                            <td>{{ servicio.nombre }}</td>
+                            <td>{{ servicio.descripcion }}</td>
+                            <td>{{ servicio.obligatorio }}</td>
+                            <td>{{ servicio.salon }}</td>
+                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="{% url 'eliminarServicio' servicio.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

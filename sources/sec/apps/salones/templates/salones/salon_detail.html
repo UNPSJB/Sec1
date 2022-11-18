@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div style="background-color: #0f66c3">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/curso.png' %}" class="img-thumbnail" alt="persona">
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b> DATOS SALÓN </b></label>
+          <div class="input-group">
+            {{salon.nombre}}
+          </div>
+          <div class="input-group">
+            {{salon.direccion}}
+          </div>
+          <div class="input-group">
+            {{salon.capacidad}}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <br>
+          <div class="input-group">
+            ${{salon.monto}}
+          </div>
+          <div class="input-group">
+            {{salon.encargado}}
+          </div>
+          <div class="input-group">
+            {{salon.servicios}}
+          </div>
+        </div>
+      </div>
+      <td><a href="{% url 'modificarSalon' salon.pk %}"class="btn btn-primary">Editar</a></td>
+      <td><a href="{% url 'eliminarSalon' salon.pk %}"class="btn btn-primary">Eliminar</a></td> 
+      <div class="container-listados my-3"> 
+        <div class="table-responsive card shadow p-3"> 
+            <div class="row">
+              <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                <h3> Listado Alquileres </h3>
+              </div>
+              <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{% url 'crearAlquiler' %}" class="btn btn-success"> + </a>
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th> Nro Alquiler </th>
+                        <th> Afiliado </th>
+                        <th> Salón </th>
+                        <th> Fecha Reserva </th>
+                        <th> Fecha Inicio </th>
+                        <th> Servicios </th>
+                        <th> Acciones </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                        <tr>
+                            <td> 123 </td>
+                            <td> Joako </td>
+                            <td> Salon 1 </td>
+                            <td> 12/12/21 </td>
+                            <td> 13/02/22 </td>
+                            <td> <div> <input type="checkbox"> </div></td>
+                            <td><a href="{% url 'verAlquiler' %}" class="btn btn-success"> Ver </a></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+          </div> 
+      </div>
+    </div>
+</div>
+{% endblock %}

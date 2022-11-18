@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 class ProfesorCreateView(CreateView):
 
     model = Profesor
-    form_class = ProfesorForm
+    form_class = CrearProfesorForm
     # template_name = 'profesores/profesor_form.html' # template del form
     success_url = reverse_lazy('listarProfesores')
 """
@@ -33,7 +33,7 @@ class ProfesorCreateView(CreateView):
 """
 class ProfesorUpdateView(UpdateView):
     model = Profesor
-    form_class = Profesor
+    form_class = CrearProfesorForm
     success_url = reverse_lazy("listarProfesores")
 """
     def form_valid(self, form):
@@ -93,6 +93,14 @@ class AlumnoCreateView(CreateView):
 class AlumnoListView(ListView):
     model = Alumno
     paginate_by = 100 
+
+class AlumnoDetailView(DetailView):
+    model = Alumno
+
+class AlumnoUpdateView(UpdateView):
+    model = Alumno
+    form_class = CrearAlumnoForm
+    success_url = reverse_lazy("listarAlumnos")
 
 #--------------------------------CURSO---------------------------------------------
 

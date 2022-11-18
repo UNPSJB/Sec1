@@ -75,7 +75,7 @@ class SalonListView(ListView):
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
-    form_class = AlquilerForm
+    form_class = CrearAlquilerForm
     # template_name = 'alquileres/alquiler_form.html' # template del form
     success_url = reverse_lazy('listarAlquileres')
 """
@@ -153,3 +153,24 @@ class ServicioCreateView(CreateView):
         #messages.add_message(self.request, messages.ERROR, servicio_form.errors)
         return self.form_invalid(form=servicio_form)
 """
+
+class ServicioUpdateView(UpdateView):
+    model = Servicio
+    form_class = ServicioForm
+    success_url = reverse_lazy("listarServicios")
+
+def servicio_eliminar(request, pk):
+    a = Servicio.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarServicios') 
+
+#class ServicioDeleteView(DeleteView):
+#    model = Servicio
+#    success_url = reverse_lazy('listarServicios')
+
+class ServicioDetailView(DetailView):
+    model = Servicio
+
+class ServicioListView(ListView):
+    model = Servicio
+    paginate_by = 100 

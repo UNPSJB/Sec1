@@ -26,8 +26,7 @@
                                         <td>{{ alumno.persona.nombre }}</td>
                                         <td>{{ alumno.persona.apellido }}</td>
                                         <td>{{ alumno.curso.nombre }}</td>
-                                        <td><a href="#"class="btn btn-primary">Editar</a></td>
-                                        <td><a href="#" class="btn btn-success"> Ver </a></td>  
+                                        <td><a href="{% url 'detallarAlumno' alumno.pk %}" class="btn btn-success"> Ver </a></td>  
                                     </tr>
                                     {% endfor %}             
                                 </tr>

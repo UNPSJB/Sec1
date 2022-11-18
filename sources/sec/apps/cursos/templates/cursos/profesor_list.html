@@ -25,17 +25,15 @@
                         <tr>
                           {% for profesor in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ profesor.nombre }}</td>
-                            <td>{{ profesor.apellido }}</td>
-                            <td>{{ profesor.dni }}</td>
+                            <td>{{ profesor.persona.nombre }}</td>
+                            <td>{{ profesor.persona.apellido }}</td>
+                            <td>{{ profesor.persona.dni }}</td>
                             <td>{{ profesor.especializacion }}</td>
                             <td>{{ profesor.telefono }}</td>
                             <td>{{ profesor.domicilio }}</td>
                             <td>{{ profesor.aniosExperiencia }}</td>
-                            <td>{{ profesor.cbu }}</td>
-                            <td><a href="#"class="btn btn-primary">Editar</a></td>
-                            <td><a href="{% url 'eliminarProfesor' profesor.pk %}"class="btn btn-primary">Eliminar</a></td>             
-                                                                       
+                            <td>{{ profesor.cbu }}</td>             
+                            <td><a href="{% url 'detallarProfesor' profesor.pk %}" class="btn btn-success"> Ver </a></td>                                        
                           </tr>
                           {% endfor %}  
                       </tbody>
