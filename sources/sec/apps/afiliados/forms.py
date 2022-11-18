@@ -8,6 +8,7 @@ from django.forms import ValidationError
 from .models import Afiliado, Empresa
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
+from django.forms.models import model_to_dict
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
@@ -136,3 +137,85 @@ class CrearAfiliadoForm(forms.Form):
 CrearAfiliadoForm.base_fields.update(PersonaForm.base_fields)
 CrearAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)
 CrearAfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
+
+class ModificarAfiliadoForm(forms.Form):
+
+    def clean_dni(self):
+        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
+        if self.persona is not None and self.persona.es_afiliado:
+            raise ValidationError("Ya existe un afiliado activo con ese DNI")
+        return self.cleaned_data['dni']
+
+    def is_valid(self) -> bool:
+        personaForm = PersonaForm(self.data)
+        afiliadoForm = AfiliadoForm(self.data)
+        valid = super().is_valid() and personaForm.is_valid() and afiliadoForm.is_valid()
+        return valid 
+
+    def save(self, commit=False):
+        print(self.cleaned_data)
+        if self.persona is None:
+            personaForm = PersonaForm(data=self.cleaned_data)
+            self.persona = personaForm.save()
+        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
+        #afiliado = super().save(commit=False)
+        afiliado = afiliadoForm.save(commit=False)
+        #empresaForm = EmpresaForm(data=self.cleaned_data)
+        #TODO: clean empresa  para garantizzar la referancia 
+        #afiliado.empresa = empresaForm.save(commit=True)
+        #self.persona.afiliar(afiliado, self.cleaned_data.get('fecha_afiliacion'))
+        return afiliado
+        
+    def __init__(self, instance=None, *args, **kwargs):
+        if instance is not None:
+            persona= instance.persona 
+            afiliado= instance.afiliado
+            datapersona = model_to_dict(persona) 
+            dataafiliado = model_to_dict(afiliado)
+            print(datapersona)
+            print(dataafiliado)
+           # datapersona.fecha_nacimiento
+            datapersona.update(dataafiliado)
+            kwargs["initial"]= datapersona
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Modificar Afiliado</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Personales",
+            Row(
+                Column('dni', css_class='form-group col-md-4 mb-0'),
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('apellido', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
+                Column('cuil', css_class='form-group col-md-4 mb-0'),
+                Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
+                Column('telefono', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('email', css_class='form-group col-md-4 mb-0'),
+                Column('jornadaLaboral', css_class='form-group col-md-4 mb-0'),
+                Column('sueldo', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('ingresoTrabajo', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
+
+ModificarAfiliadoForm.base_fields.update(PersonaForm.base_fields)
+ModificarAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)

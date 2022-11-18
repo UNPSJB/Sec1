@@ -54,7 +54,7 @@
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="#" class="btn btn-success"> + </a>
+                  <a href="{% url 'crearAlumno' %}" class="btn btn-success"> + </a>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@
                           <td> {{alumno.curso.descuento}}% </td>
                           <td> ***Revisar*** </td>
                           <td> {{alumno.curso.precio}}$ </td>
-                          <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
+                          <td><a href="{% url 'detallarCurso' alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
                         </tr>
                     </div>
                 </tbody>
