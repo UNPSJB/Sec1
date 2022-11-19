@@ -266,28 +266,33 @@ class CrearAlumnoForm(forms.Form):
     
     def clean_dni(self):
         curso = self.cleaned_data['curso']
-        persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
-        print('---------------------------------------------------------')
-        alumno = Alumno.objects.filter(curso = self.cleaned_data['curso'], persona=persona)
-        print(alumno in curso.alumnos.all(), curso.alumnos.all())
-        if persona is not None and alumno in curso.alumnos.all():
-            raise ValidationError("Ya existe un alumno con ese DNI")
-        return self.cleaned_data['dni']
+        try:
+            persona = Persona.objects.get(dni=self.cleaned_data['dni']) # para traer objetos específicos usamos .get() en lugar de .filter() que nos devolvería un queryset con 1 o más objetos.
+            alumno = Alumno.objects.get(curso=curso, persona=persona)
+        except Persona.DoesNotExist:
+            persona = None
+        except Alumno.DoesNotExist:
+            alumno = None
 
-    def is_valid(self) -> bool:
-        personaForm = PersonaForm(self.data)
+        if persona is not None and alumno is not None:
+            # en este caso sabemos que la persona existe en la bd y que además es alumno/a en el curso
+            raise ValidationError("Ya existe un alumno con ese DNI")
+        return self.cleaned_data['dni'] # todo marcha bien Milhouse (?, se devuelve el dni tal como ingresó.
+
+    def is_valid(self):
+        #personaForm = PersonaForm(self.data) # No es necesario. para validar el DNI en este caso usamos clean_dni() en este form. Podemos añadir mas clean_<campo> para validar los demás campos si fuera necesario
         alumnoForm = AlumnoForm(self.data)
-        valid = super().is_valid() and personaForm.is_valid() and alumnoForm.is_valid()
-        # personaForm.is_valid() retorna False porque existe una persona con el mismo dni.
-        # En el caso de crearAlumnoForm si la persona existe, solo requerimos verificar que el alumno 
-        # no está inscripto al curso al que lo queremos inscribir. Se puede capturar el caso de error particular y 
-        # "hacer de cuenta" que el form es valido de todas formas?
+        valid = super().is_valid() and alumnoForm.is_valid()
         if not valid:
-            self.errors.update(personaForm.errors)
             self.errors.update(alumnoForm.errors)
         return valid
 
-    def save(self, persona, commit=False):
+    def save(self, commit=False):
+        try:
+            persona = Persona.objects.get(dni=form.cleaned_data['dni'])
+        except Persona.DoesNotExist:
+            persona = None
+
         if persona is None:
             personaForm = PersonaForm(data=self.cleaned_data)
             persona = personaForm.save()
@@ -296,7 +301,7 @@ class CrearAlumnoForm(forms.Form):
         curso = self.cleaned_data['curso']
         persona.inscribir(alumno, self.cleaned_data['curso'])
         return alumno
-        
+
     def __init__(self, instance=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

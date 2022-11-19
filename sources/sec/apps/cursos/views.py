@@ -76,25 +76,17 @@ class AlumnoCreateView(CreateView):
      
     def post(self, *args, **kwargs):
         self.object = None
-        #print (args, kwargs)
-        crearAlumnoForm = self.get_form()        
-        #alumnoForm = AlumnoForm(self.request.POST)
-        #form.set_persona()
-        if crearAlumnoForm.is_valid(): # and alumnoForm.is_valid():
-            try:
-                persona = Persona.objects.get(dni=crearAlumnoForm.cleaned_data['dni'])
-            except Persona.DoesNotExist:
-                persona = None
-            
-            alumno = crearAlumnoForm.save(persona)
-            #messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
+        form = self.get_form() # equivalente a cargaAlumnoForm(self.request.POST)
+        if form.is_valid(): # este is_valid() llama internamente al is_valid() de los forms que lo componen.
+            alumno = form.save()
+            messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
             if 'guardar' in self.request.POST:
                 return redirect('listarAlumnos')
             return redirect('listarAlumnos')
         else:
-            print("Errores", crearAlumnoForm.errors)
-            messages.add_message(self.request, messages.ERROR, crearAlumnoForm.errors)
-        return super().form_invalid(form=crearAlumnoForm)
+            print("Errores", form.errors)
+            messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form=form)
 
 class AlumnoListView(ListView):
     model = Alumno
