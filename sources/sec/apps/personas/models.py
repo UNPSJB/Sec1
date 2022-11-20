@@ -3,6 +3,32 @@ from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.core.exceptions import ValidationError
+
+'''
+def validacion_dni_unico(models, field, value):
+    aux = dict([(f"{field}__iregex", f'^{value}$')])
+    if models.objects.filter(**aux).exists():
+        raise ValidationError({"dni": "DNI ya existe"}) 
+'''
+
+'''
+    def cambiarRol (self, rol): 
+            if (rol == self.ROL_AFILIADO): 
+                self = Afiliado().afiliar
+            else: 
+                if (rol == self.ROL_ALUMNO): 
+                    self = Alumno()
+                else: 
+                    if (rol == self.ROL_PROFESOR): 
+                        self = Profesor()
+                    else: 
+                        if (rol == self.ROL_ENCARGADO): 
+                            self.serEncargado()
+'''
+
+
+
 
 class PersonaRolManager(models.Manager):
     def __init__(self, tipo):
@@ -43,73 +69,16 @@ class Persona(models.Model):
     alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
     encargados = EncargadoManager()
 
-    def afiliar(self, afiliado, fecha=None):
-        assert not self.es_afiliado, "Ya soy afiliado" 
-        #if  fecha is None:
-        #    fecha= datetime.now()
-        #afiliado.desde = fecha
-        afiliado.persona = self
-        afiliado.save()
-        self.es_afiliado=True
-        self.save()
 
-    def desafiliar(self, afiliado, fecha):
-        assert afiliado.persona == self, "Afiliado no existe o es incorrecto"
-        afiliado.hasta = fecha
-        afiliado.save()
-        self.es_afiliado = False
-        self.save()
-        
-    def inscribir(self, alumno, curso):
-        assert alumno.curso == curso, "Alumno ya inscripto en el curso"
-        alumno.persona = self
-        alumno.save()
-        curso.alumnos.add(alumno) #Revisar
-        self.es_alumno=True
-        self.save()
-
-    def desinscribir(self, alumno, fecha):
-        assert alumno.persona == self, "Alumno equivocado o inexistente"
-        alumno.hasta = fecha
-        alumno.save()
-        self.es_alumno = False
-        self.save()
-    
-    def serProfesor(self, profesor):
-        assert not self.es_profesor, "ya soy Profesor" 
-        profesor.persona = self
-        profesor.save()
-        self.es_profesor=True
-        self.save()
-
-    def inscribirProfesor (self, profesor, curso): 
-        assert profesor.persona == self, "Profesor ya existente en el curso" 
-        profesor.persona = self 
-        profesor.save() 
-        curso.profesores.add(profesor) #Revisar
-        self.es_profesor = True
-        self.save() 
-
-    def desinscribirProfesor (self, profesor, fecha): 
-        assert profesor.persona == self, "Profesor no existe o profesor equivocado" 
-        profesor.hasta = self 
-        profesor.save() 
-        self.es_profesor = False
-        self.save() 
-
-    def serEncargado (self, fecha):
+    def serEncargado (self):
         assert not self.es_encargado, "Ya soy encargado" 
-        self.desde = fecha
-        self = self
-        self.save()
         self.es_encargado = True
         self.save()
 
 
     def desinscribirEncargado (self, fecha): 
-        assert self == self, "Encargado equivocado"
+        assert self == self, "Encargado equivocado o no existe"
         self.hasta = fecha
-        self.save() 
         self.es_encargado = False 
         self.save() 
 
@@ -119,8 +88,11 @@ class Persona(models.Model):
     def como(self, ROL, fecha=None, curso = None):
         if fecha == None:
             fecha = datetime.now()
-        params = models.Q(tipo=ROL) & (models.Q(hasta__isnull=True) | models.Q(hasta__gte=fecha))
-        roles = self.roles.filter(params)
+        if curso != None and fecha != None:
+            params = models.Q(tipo=ROL) & (models.Q(hasta__isnull=True) | models.Q(hasta__gte=fecha))
+            roles = self.roles.filter(params)
+        else: 
+            roles = self.roles.filter()
         if ROL == self.ROL_ENCARGADO and self.es_encargado:
             return self
         if roles.exists() and ((ROL == self.ROL_AFILIADO or ROL == self.ROL_PROFESOR) or (ROL == self.ROL_ALUMNO and len(roles) == 1)):
@@ -168,6 +140,8 @@ class Rol(models.Model):
             rol.persona = self
             rol.save()
     
+
+
     def sos(self, Klass):
         return any([isinstance(rol, Klass) for rol in self.roles_related()])
 
