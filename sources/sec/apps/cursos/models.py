@@ -139,7 +139,7 @@ class Alumno (Rol):
     def inscribir(self, persona, curso):
         assert not persona.es_alumno, "Ya soy Alumno"
         assert self.curso == curso, "Alumno ya inscripto al curso"
-        self.persona = self
+        self.persona = persona
         self.curso = curso
         self.save()
         curso.alumnos.add(self) 
@@ -148,8 +148,8 @@ class Alumno (Rol):
        
 
     def desinscribir(self, persona, curso, fecha):
-        assert self.curso == curso, "Alumno no pertenece al curso"
         assert self.persona == persona, "Alumno no existe" 
+        assert self.curso == curso, "Alumno no pertenece al curso"
         self.hasta = fecha
         self.save()
         persona.es_alumno = False

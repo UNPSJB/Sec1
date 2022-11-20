@@ -72,8 +72,8 @@ class Persona(models.Model):
  
     def afiliar( self, afiliado,  fecha = None):
         assert not self.es_afiliado, "Ya soy afiliado" 
-        if  fecha is None:
-           fecha= datetime.now()
+        #if  fecha is None:
+        #   fecha= datetime.now()
         afiliado.desde = fecha 
         afiliado.persona = self 
         afiliado.save()
