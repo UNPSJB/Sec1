@@ -70,6 +70,57 @@ class Persona(models.Model):
     encargados = EncargadoManager()
 
 
+ 
+    def afiliar( self, afiliado,  fecha = None):
+        assert not self.es_afiliado, "Ya soy afiliado" 
+        if  fecha is None:
+           fecha= datetime.now()
+        afiliado.desde = fecha 
+        afiliado.persona = self 
+        afiliado.save()
+        self.es_afiliado=True
+        self.save()
+
+    def desafiliar(self,afiliado, fecha):
+        assert afiliado.persona == self, "Afiliado no existe o es incorrecto"
+        afiliado.hasta = fecha
+        afiliado.save() 
+        self.es_afiliado = False
+        self.save()
+
+    def serProfesor(self, profesor):
+        assert not self.es_profesor, "Ya soy Profesor" 
+        profesor.persona = self
+        profesor.save()
+        self.es_profesor = True
+        self.save()
+
+    def serAlumno(self, alumno):
+        assert not self.es_alumno, "Ya soy Alumno"
+        alumno.persona = self
+        alumno.save()
+        self.es_alumno = True
+        self.save()
+
+    def inscribirACurso(self, alumno,  curso, dictado):
+        assert alumno.curso == curso, "Alumno ya inscripto en el curso"
+        alumno.persona = self
+        alumno.curso = curso
+        alumno.dictado = dictado
+        alumno.save()
+        curso.self.add(self) 
+        self.persona.es_alumno = True
+        self.save()
+
+    def desinscribirDeCurso(self,alumno, fecha):
+        assert alumno.persona == self, "Alumno equivocado o inexistente"
+        alumno.hasta = fecha
+        alumno.save() 
+        self.es_alumno = False 
+        self.save()
+
+
+
     def serEncargado (self):
         assert not self.es_encargado, "Ya soy encargado" 
         self.es_encargado = True

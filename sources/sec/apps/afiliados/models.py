@@ -26,21 +26,6 @@ class Afiliado(Rol):
     jornadaLaboral = models.CharField(max_length=50) 
     empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
 
-    
-    def afiliar( self, fecha=None):
-        assert not self.persona.es_afiliado, "Ya soy afiliado" 
-        #if  fecha is None:
-        #    fecha= datetime.now()
-        #afiliado.desde = fecha
-        self.persona = self
-        self.persona.es_afiliado=True
-        self.save()
-
-    def desafiliar(self, fecha):
-        assert self.persona == self, "Afiliado no existe o es incorrecto"
-        self.hasta = fecha
-        self.persona.es_afiliado = False
-        self.save()
 
     def __str__(self):
         return f'{self.persona.nombre} {self.persona.apellido}'

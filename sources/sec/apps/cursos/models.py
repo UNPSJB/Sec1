@@ -43,12 +43,6 @@ class Profesor(Rol):
     cbu = models.PositiveIntegerField(max_length=22, unique = True)
 
 
-    def serProfesor(self):
-        assert not self.es_profesor, "ya soy Profesor" 
-        self.persona = self
-        self.save()
-        self.persona.es_profesor = True
-        self.save()
 
     def inscribirProfesor (self, dictado): 
         assert dictado.profesor == self, "Profesor ya existente en el dictado" 
@@ -62,7 +56,6 @@ class Profesor(Rol):
         self.especializacion = especializacion
         self.aniosExperiencia = aniosExperiencia
         self.cbu = cbu
-        self.serProfesor(self)
         self.save()
 
 
@@ -117,10 +110,9 @@ class Dictado(models.Model):
         self.save() 
 
 
-    def inscribirAlumnoADictado (self, persona): 
+    def inscribirAlumnoADictado (self, alumno): 
         curso = self.curso
-        persona = Alumno()
-        persona = Alumno.inscribirACurso(persona, curso, self)
+        alumno = Alumno.inscribirACurso(alumno, curso, self)
         self.save() 
 
 
@@ -150,21 +142,6 @@ class Alumno (Rol):
     TIPO = Persona.ROL_ALUMNO
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
-
-    def inscribirACurso(self, curso, dictado):
-        assert self.curso == curso, "Alumno ya inscripto en el curso"
-        self.curso = curso
-        self.dictado = dictado
-        self.save()
-        curso.self.add(self) 
-        self.persona.es_alumno = True
-        self.save()
-
-    def desinscribirDeCurso(self, fecha):
-        assert self.persona == self, "Alumno equivocado o inexistente"
-        self.persona.es_alumno = False 
-        self.hasta = fecha
-        self.save()
 
 
     @property
