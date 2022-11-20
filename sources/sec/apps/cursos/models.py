@@ -20,7 +20,7 @@ class Especialidad (models.Model):
         return f'{self.nombre}'
 
 class Aula(models.Model): 
-    numero = models.PositiveIntegerField(max_length=2)
+    numero = models.PositiveIntegerField(max_length=2, unique = True)
     capacidad = models.PositiveIntegerField(max_length=3)
 
     #Revisar
@@ -40,8 +40,14 @@ class Profesor(Rol):
     telefono = models.CharField(max_length=13)
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
     aniosExperiencia = models.PositiveIntegerField(max_length=2)
-    cbu = models.PositiveIntegerField(max_length=22)
+    cbu = models.PositiveIntegerField(max_length=22, unique = True)
 
+
+
+    def inscribirProfesor (self, dictado): 
+        assert dictado.profesor == self, "Profesor ya existente en el dictado" 
+        dictado.profesores.add(self) 
+        self.save() 
 
     #Revisar
     def agregarProfesor (self, domicilio, telefono, especializacion, aniosExperiencia, cbu): 
@@ -51,6 +57,7 @@ class Profesor(Rol):
         self.aniosExperiencia = aniosExperiencia
         self.cbu = cbu
         self.save()
+
 
     def __str__(self):
         return f'{self.persona.nombre} {self.persona.apellido} {self.persona.dni}'
@@ -81,7 +88,7 @@ class Curso(models.Model):
         self.formaPago = formaPago
         self.especialidad = especialidad
         self.save() 
-
+    
     def __str__(self):
         return f'{self.nombre}, ${self.precio}'
 
@@ -102,9 +109,8 @@ class Dictado(models.Model):
         self.fin = fin 
         self.save() 
 
-
     def __str__(self):
-        return f'{self.cursos}, {self.profesor}'
+        return f'{self.curso}, {self.profesor}'
 
 
 class Clase (models.Model): 
@@ -114,7 +120,6 @@ class Clase (models.Model):
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
 
-    #Revisar
     def agregarClase (self, inicio, fin, dia, dictado): 
         self.inicio = inicio 
         self.fin = fin 
@@ -130,12 +135,24 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
-    #Revisar
-    def agregarAlumno (self, curso, dictado): 
-        self.curso = curso 
-        self.dictado = dictado
-        self.save() 
+    def inscribir(self, persona, curso):
+        assert not persona.es_alumno, "Ya soy Alumno"
+        assert self.curso == curso, "Alumno ya inscripto al curso"
+        self.persona = persona
+        self.curso = curso
+        self.save()
+        curso.alumnos.add(self) 
+        persona.es_alumno = True
+        persona.save()
+       
 
+    def desinscribir(self, persona, curso, fecha):
+        assert self.persona == persona, "Alumno no existe" 
+        assert self.curso == curso, "Alumno no pertenece al curso"
+        self.hasta = fecha
+        self.save()
+        persona.es_alumno = False
+        persona.save() 
 
     @property
     def responsable(self):
@@ -156,7 +173,6 @@ class PagoDictado (models.Model):
     monto = models.FloatField(max_length = 10)
     tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
 
-    #Revisar
     def agregarPago (self, dictado, alumno, pago, monto, tipo):
         self.dictado = dictado 
         self.alumno = alumno 
@@ -174,8 +190,8 @@ class Titularidad (models.Model):
     desde = models.DateField() 
     hasta = models.DateField(null = True, blank = True) 
 
-    #Revisar
-    def agregarTitularidad (self, profesor, curso, desde, hasta): 
+
+    def agregarTitularidad (self, profesor, curso, desde, hasta = None): 
         self.profesor = profesor 
         self.curso = curso 
         self.desde = desde 
@@ -183,7 +199,7 @@ class Titularidad (models.Model):
         self.save() 
 
     def __str__ (self): 
-        return f'Desde= {self.desde}, Hasta= {self.hasta}'
+        return f'Profesor= {self.profesor.persona.__str__}, Desde: {self.desde}'
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()
@@ -204,7 +220,6 @@ class AsistenciaProfesor (models.Model):
     asistencia = models.DateField()
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
 
-    #Revisar
     def agregarAsistencia (self, asistencia, titular): 
         self.asistencia = asistencia 
         self.titular = titular
