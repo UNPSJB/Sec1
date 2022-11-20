@@ -20,7 +20,7 @@ class Especialidad (models.Model):
         return f'{self.nombre}'
 
 class Aula(models.Model): 
-    numero = models.PositiveIntegerField(max_length=2, primary_key = True)
+    numero = models.PositiveIntegerField(max_length=2, unique = True)
     capacidad = models.PositiveIntegerField(max_length=3)
 
     #Revisar
@@ -66,7 +66,7 @@ Rol.register(Profesor)
 
 class Curso(models.Model):
     TIPO = [(0, "Clase"), (1, "Mensual")]
-    nombre = models.CharField(max_length = 100, primary_key = True)
+    nombre = models.CharField(max_length = 100)
     desde = models.DateField()
     hasta = models.DateField()
     cupo = models.PositiveIntegerField(max_length = 20)
@@ -120,7 +120,6 @@ class Clase (models.Model):
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
 
-    #Revisar
     def agregarClase (self, inicio, fin, dia, dictado): 
         self.inicio = inicio 
         self.fin = fin 
@@ -174,7 +173,6 @@ class PagoDictado (models.Model):
     monto = models.FloatField(max_length = 10)
     tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
 
-    #Revisar
     def agregarPago (self, dictado, alumno, pago, monto, tipo):
         self.dictado = dictado 
         self.alumno = alumno 
@@ -192,7 +190,7 @@ class Titularidad (models.Model):
     desde = models.DateField() 
     hasta = models.DateField(null = True, blank = True) 
 
-    #Revisar
+
     def agregarTitularidad (self, profesor, curso, desde, hasta = None): 
         self.profesor = profesor 
         self.curso = curso 
@@ -222,7 +220,6 @@ class AsistenciaProfesor (models.Model):
     asistencia = models.DateField()
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
 
-    #Revisar
     def agregarAsistencia (self, asistencia, titular): 
         self.asistencia = asistencia 
         self.titular = titular

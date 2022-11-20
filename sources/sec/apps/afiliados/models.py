@@ -3,7 +3,7 @@ from apps.personas.models import Rol, Persona
 
 
 class Empresa(models.Model):
-    cuit = models.CharField(max_length=13)
+    cuit = models.CharField(max_length=13, unique = True)
     razonSocial = models.CharField(max_length=50)
     rama = models.CharField(max_length=50)
     domicilio = models.CharField(max_length=50)
@@ -15,7 +15,7 @@ class Empresa(models.Model):
 
 class Afiliado(Rol):
     TIPO = Persona.ROL_AFILIADO
-    cuil = models.CharField(max_length=13)
+    cuil = models.CharField(max_length=13, unique = True)
     nacionalidad = models.CharField(max_length=50)
     estadoCivil = models.CharField(max_length=50)
     domicilio = models.CharField(max_length=50)

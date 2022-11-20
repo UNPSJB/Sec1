@@ -52,7 +52,7 @@ class Persona(models.Model):
     ROL_ALUMNO= 2
     ROL_PROFESOR= 3
     ROL_ENCARGADO= 4
-    dni = models.CharField(max_length=8)
+    dni = models.CharField(max_length=8, unique = True)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
