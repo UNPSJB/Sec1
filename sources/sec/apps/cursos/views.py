@@ -300,19 +300,19 @@ class DictadoCreateView(CreateView):
     # template_name = 'profesores/profesor_form.html' # template del form
     success_url = reverse_lazy('listarDictados')
 
-    # def post(self, *args, **kwargs):
-    #     self.object = None
-    #     dictado_form = self.get_form()
+    def post(self, *args, **kwargs):
+        self.object = None
+        dictado_form = self.get_form()
         
 
-    #     if dictado_form.is_valid():
-    #         dictado = dictado_form.save()
-    #         messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
-    #         if 'guardar' in self.request.POST:
-    #             return redirect('listarDictados')
-    #         return redirect('listarDictados')
-    #     messages.add_message(self.request, messages.ERROR, dictado_form.errors)
-    #     return self.form_invalid(form=dictado_form)
+        if dictado_form.is_valid():
+            dictado = dictado_form.save()
+            messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
+            if 'guardar' in self.request.POST:
+                return redirect('listarDictados')
+            return redirect('listarDictados')
+        messages.add_message(self.request, messages.ERROR, dictado_form.errors)
+        return self.form_invalid(form=dictado_form)
 
 class DictadoUpdateView(UpdateView):
     model = Dictado

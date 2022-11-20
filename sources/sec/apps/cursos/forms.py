@@ -216,7 +216,7 @@ class DictadoForm(forms.ModelForm):
     class Meta:
         model = Dictado
         fields = "__all__"
-        exclude = ['profesor']
+        #exclude = ['profesor']
         widgets = {
                 "inicio": forms.TextInput(attrs={'type': 'date'}),
                 "fin": forms.TextInput(attrs={'type': 'date'}),
@@ -229,20 +229,19 @@ class DictadoForm(forms.ModelForm):
 
 class CrearDictadoForm(forms.Form):
     
-
+    #aca deberia solucionar los conflictos de nombres repetidos en los distintos formularios?
 
     def is_valid(self):
         #quiero crear el dictado para despues usarlo en la titularidad
         #pero no puedo avanzar porque la titularidad sin dictado no es valida
-        #para ver que pasa le agregue que dictado puede ser null en titularidad
         dictadoForm = DictadoForm(self.data)
         titularidadForm = TitularidadForm(self.data)
         print('dictado form',dictadoForm.is_valid())
         print('titularidad form',titularidadForm.is_valid())
         valid = super().is_valid() and dictadoForm.is_valid() and titularidadForm.is_valid()
-        # if not valid:
-        #     self.errors.update(dictadoForm.errors)
-        #     self.errors.update(titularidadForm.errors)
+        if not valid:
+            self.errors.update(dictadoForm.errors)
+            self.errors.update(titularidadForm.errors)
         return valid
 
     def save(self, commit=False):
