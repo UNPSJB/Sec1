@@ -111,8 +111,7 @@ class Dictado(models.Model):
 
 
     def inscribirAlumnoADictado (self, alumno): 
-        curso = self.curso
-        alumno = Alumno.inscribirACurso(alumno, curso, self)
+        alumno = Alumno.inscribirACurso(alumno, self.curso, self)
         self.save() 
 
 
@@ -143,6 +142,19 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
+    def inscribirACurso(self, curso, dictado):
+        assert self.curso == curso, "Alumno ya inscripto en el curso"
+        self.curso = curso
+        self.dictado = dictado
+        self.persona.serAlumno(self)
+        curso.self.add(self) 
+        self.save()
+
+    def desinscribirDeCurso(self, curso, fecha):
+        assert self.curso == curso, "Alumno no pertenece al curso"
+        self.hasta = fecha
+        self.persona.es_alumno = False
+        self.save() 
 
     @property
     def responsable(self):

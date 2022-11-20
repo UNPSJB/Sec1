@@ -52,7 +52,7 @@ class Persona(models.Model):
     ROL_ALUMNO= 2
     ROL_PROFESOR= 3
     ROL_ENCARGADO= 4
-    dni = models.CharField(max_length=8, unique=True)
+    dni = models.CharField(max_length=8)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
@@ -68,7 +68,6 @@ class Persona(models.Model):
     profesores = PersonaRolManager.from_queryset(PersonaRolQuerySet)(3)
     alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
     encargados = EncargadoManager()
-
 
  
     def afiliar( self, afiliado,  fecha = None):
@@ -102,24 +101,7 @@ class Persona(models.Model):
         self.es_alumno = True
         self.save()
 
-    def inscribirACurso(self, alumno,  curso, dictado):
-        assert alumno.curso == curso, "Alumno ya inscripto en el curso"
-        alumno.persona = self
-        alumno.curso = curso
-        alumno.dictado = dictado
-        alumno.save()
-        curso.self.add(self) 
-        self.persona.es_alumno = True
-        self.save()
-
-    def desinscribirDeCurso(self,alumno, fecha):
-        assert alumno.persona == self, "Alumno equivocado o inexistente"
-        alumno.hasta = fecha
-        alumno.save() 
-        self.es_alumno = False 
-        self.save()
-
-
+   
 
     def serEncargado (self):
         assert not self.es_encargado, "Ya soy encargado" 
