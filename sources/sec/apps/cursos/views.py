@@ -296,7 +296,7 @@ class EspecialidadListView(ListView):
 class DictadoCreateView(CreateView):
 
     model = Dictado
-    form_class = DictadoForm
+    form_class = CrearDictadoForm
     # template_name = 'profesores/profesor_form.html' # template del form
     success_url = reverse_lazy('listarDictados')
 

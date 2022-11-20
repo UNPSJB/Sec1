@@ -191,9 +191,9 @@ class Titularidad (models.Model):
     hasta = models.DateField(null = True, blank = True) 
 
 
-    def agregarTitularidad (self, profesor, curso, desde, hasta = None): 
+    def agregarTitularidad (self, profesor, dictado, desde, hasta = None): 
         self.profesor = profesor 
-        self.curso = curso 
+        self.dictado = dictado 
         self.desde = desde 
         self.hasta = hasta
         self.save() 
