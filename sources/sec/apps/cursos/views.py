@@ -291,3 +291,54 @@ class EspecialidadDetailView(DetailView):
 class EspecialidadListView(ListView):
     model = Especialidad
     paginate_by = 100 
+
+
+class DictadoCreateView(CreateView):
+
+    model = Dictado
+    form_class = DictadoForm
+    # template_name = 'profesores/profesor_form.html' # template del form
+    success_url = reverse_lazy('listarDictados')
+
+    # def post(self, *args, **kwargs):
+    #     self.object = None
+    #     dictado_form = self.get_form()
+        
+
+    #     if dictado_form.is_valid():
+    #         dictado = dictado_form.save()
+    #         messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
+    #         if 'guardar' in self.request.POST:
+    #             return redirect('listarDictados')
+    #         return redirect('listarDictados')
+    #     messages.add_message(self.request, messages.ERROR, dictado_form.errors)
+    #     return self.form_invalid(form=dictado_form)
+
+class DictadoUpdateView(UpdateView):
+    model = Dictado
+    form_class = DictadoForm
+    success_url = reverse_lazy("listarDictados")
+"""
+    def form_valid(self, form):
+        #messages.add_message(self.request, messages.SUCCESS, 'Dictado modificado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        #messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
+"""
+def dictado_eliminar(request, pk):
+    a = Dictado.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarDictados') 
+
+#class DictadoDeleteView(DeleteView):
+#    model = Dictado
+#    success_url = reverse_lazy('listarDictados')
+
+class DictadoDetailView(DetailView):
+    model = Dictado
+
+class DictadoListView(ListView):
+    model = Dictado
+    paginate_by = 100 

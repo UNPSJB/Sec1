@@ -197,10 +197,107 @@ class CursoForm(forms.ModelForm):
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
+class TitularidadForm(forms.ModelForm):
+    class Meta:
+        model = Titularidad
+        fields = "__all__"
+        #exclude = ['dictado']
+        widgets = {
+                "desde": forms.TextInput(attrs={'type': 'date'}),
+                "hasta": forms.TextInput(attrs={'type': 'date'}),
+        }
+
+        labels = {
+                'desde': 'Fecha Desde',
+                'hasta': 'Fecha Hasta',
+        }
+
 class DictadoForm(forms.ModelForm):
     class Meta:
         model = Dictado
         fields = "__all__"
+        exclude = ['profesor']
+        widgets = {
+                "inicio": forms.TextInput(attrs={'type': 'date'}),
+                "fin": forms.TextInput(attrs={'type': 'date'}),
+        }
+
+        labels = {
+                'inicio': 'Fecha inicio',
+                'fin': 'Fecha fin',
+        }
+
+class CrearDictadoForm(forms.Form):
+    
+
+
+    def is_valid(self):
+        #quiero crear el dictado para despues usarlo en la titularidad
+        #pero no puedo avanzar porque la titularidad sin dictado no es valida
+        #para ver que pasa le agregue que dictado puede ser null en titularidad
+        dictadoForm = DictadoForm(self.data)
+        titularidadForm = TitularidadForm(self.data)
+        print('dictado form',dictadoForm.is_valid())
+        print('titularidad form',titularidadForm.is_valid())
+        valid = super().is_valid() and dictadoForm.is_valid() and titularidadForm.is_valid()
+        # if not valid:
+        #     self.errors.update(dictadoForm.errors)
+        #     self.errors.update(titularidadForm.errors)
+        return valid
+
+    def save(self, commit=False):
+        print('llego al save')
+        dictadoForm = DictadoForm(data=self.cleaned_data)
+        dictado = dictadoForm.save() 
+        titularidadForm = TitularidadForm(data=self.cleaned_data)
+        titularidad = titularidadForm.save() 
+        profesor = self.cleaned_data['profesor']
+        curso = self.cleaned_data['curso']
+        desde = self.cleaned_data['desde']
+        hasta = self.cleaned_data['hasta']
+        costo = self.cleaned_data['costo']
+        inicio = self.cleaned_data['inicio']
+        fin = self.cleaned_data['fin']
+        print(hasta)
+        dictado.agregarDictado(curso, costo, inicio, fin)
+        titularidad.agregarTitularidad(profesor, dictado, desde, hasta)
+        print(profesor)
+        #dictado.profesor.set(profesor)
+        print(dictado)
+        return dictado
+
+    def __init__(self, instance=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar Dictado</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Dictado",
+            Row(
+                Column('aula', css_class='form-group col-md-4 mb-0'),
+                Column('curso', css_class='form-group col-md-4 mb-0'),
+                Column('costo', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('inicio', css_class='form-group col-md-4 mb-0'),
+                Column('fin', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),),     
+            Fieldset(
+                   "Datos Titularidad",
+            Row(
+                Column('profesor', css_class='form-group col-md-4 mb-0'),
+                Column('desde', css_class='form-group col-md-4 mb-0'),
+                Column('hasta', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
+
 
 class ClaseForm(forms.ModelForm):
     class Meta:
@@ -228,7 +325,7 @@ class ClaseForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                #Column('dictado', css_class='form-group col-md-4 mb-0'),
+                Column('dictado', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
@@ -239,10 +336,6 @@ class PagoDictadoForm(forms.ModelForm):
         model = PagoDictado
         fields = "__all__"
 
-class TitularidadForm(forms.ModelForm):
-    class Meta:
-        model = Titularidad
-        fields = "__all__"
 
 class LiquidacionForm(forms.ModelForm):
     class Meta:
@@ -289,7 +382,7 @@ class CrearAlumnoForm(forms.Form):
 
     def save(self, commit=False):
         try:
-            persona = Persona.objects.get(dni=form.cleaned_data['dni'])
+            persona = Persona.objects.get(dni=self.cleaned_data['dni'])
         except Persona.DoesNotExist:
             persona = None
 
@@ -328,6 +421,10 @@ class CrearAlumnoForm(forms.Form):
 
             Submit('submit', 'Guardar', css_class='button white'),)
         
+
+CrearDictadoForm.base_fields.update(DictadoForm.base_fields)
+CrearDictadoForm.base_fields.update(TitularidadForm.base_fields)
+
 
 CrearProfesorForm.base_fields.update(PersonaForm.base_fields)
 CrearProfesorForm.base_fields.update(ProfesorForm.base_fields)
