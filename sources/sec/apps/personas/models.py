@@ -94,14 +94,6 @@ class Persona(models.Model):
         self.es_profesor = True
         self.save()
 
-    def serAlumno(self, alumno):
-        assert not self.es_alumno, "Ya soy Alumno"
-        alumno.persona = self
-        alumno.save()
-        self.es_alumno = True
-        self.save()
-
-   
 
     def serEncargado (self):
         assert not self.es_encargado, "Ya soy encargado" 

@@ -109,12 +109,6 @@ class Dictado(models.Model):
         self.fin = fin 
         self.save() 
 
-
-    def inscribirAlumnoADictado (self, alumno): 
-        alumno = Alumno.inscribirACurso(alumno, self.curso, self)
-        self.save() 
-
-
     def __str__(self):
         return f'{self.curso}, {self.profesor}'
 
@@ -142,19 +136,24 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
-    def inscribirACurso(self, curso, dictado):
-        assert self.curso == curso, "Alumno ya inscripto en el curso"
+    def inscribir(self, persona, curso):
+        assert not persona.es_alumno, "Ya soy Alumno"
+        assert self.curso == curso, "Alumno ya inscripto al curso"
+        self.persona = self
         self.curso = curso
-        self.dictado = dictado
-        self.persona.serAlumno(self)
-        curso.self.add(self) 
         self.save()
+        curso.alumnos.add(self) 
+        persona.es_alumno = True
+        persona.save()
+       
 
-    def desinscribirDeCurso(self, curso, fecha):
+    def desinscribir(self, persona, curso, fecha):
         assert self.curso == curso, "Alumno no pertenece al curso"
+        assert self.persona == persona, "Alumno no existe" 
         self.hasta = fecha
-        self.persona.es_alumno = False
-        self.save() 
+        self.save()
+        persona.es_alumno = False
+        persona.save() 
 
     @property
     def responsable(self):
