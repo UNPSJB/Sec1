@@ -94,9 +94,9 @@ class Curso(models.Model):
 
 
 class Dictado(models.Model): 
-    aula = models.ManyToManyField(Aula)
+    aulas = models.ManyToManyField(Aula)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
-    profesor = models.ManyToManyField(Profesor, through = 'Titularidad')
+    profesores = models.ManyToManyField(Profesor, through = 'Titularidad')
     costo = models.FloatField(max_length=10)
     inicio = models.DateField()
     fin = models.DateField() 
@@ -109,8 +109,14 @@ class Dictado(models.Model):
         self.fin = fin 
         self.save() 
 
+    def agregarTitularidad(self, profesor, desde, hasta):
+        return Titularidad.objects.create(profesor=profesor,
+                                        desde=desde,
+                                        hasta=hasta,
+                                        dictado=self)
+
     def __str__(self):
-        return f'{self.curso}, {self.profesor}'
+        return f'{self.curso}, {self.profesores.all()}, {self.aulas}'
 
 
 class Clase (models.Model): 
@@ -199,7 +205,7 @@ class Titularidad (models.Model):
         self.save() 
 
     def __str__ (self): 
-        return f'Profesor= {self.profesor.persona.__str__}, Desde: {self.desde}'
+        return f'Profesor= {self.profesor}, Desde: {self.desde}'
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()

@@ -303,7 +303,7 @@ class DictadoCreateView(CreateView):
         self.object = None
         dictado_form = self.get_form()
         if dictado_form.is_valid():
-            dictado = dictado_form.save() #pincha aca
+            dictado = dictado_form.save()
             messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
             if 'guardar' in self.request.POST:
                 return redirect('listarDictados')

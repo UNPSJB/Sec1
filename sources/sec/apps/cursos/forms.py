@@ -201,6 +201,7 @@ class TitularidadForm(forms.ModelForm):
     class Meta:
         model = Titularidad
         fields = "__all__"
+        exclude=['dictado']
         widgets = {
                 "desde": forms.TextInput(attrs={'type': 'date'}),
                 "hasta": forms.TextInput(attrs={'type': 'date'}),
@@ -215,6 +216,7 @@ class DictadoForm(forms.ModelForm):
     class Meta:
         model = Dictado
         fields = "__all__"
+        exclude = ['profesores'] # excluimos el campo ManyToMany
         widgets = {
                 "inicio": forms.TextInput(attrs={'type': 'date'}),
                 "fin": forms.TextInput(attrs={'type': 'date'}),
@@ -225,33 +227,20 @@ class DictadoForm(forms.ModelForm):
                 'fin': 'Fecha fin',
         }
 
+    def save(self, profesor, desde, hasta, commit=False):
+        dictado = super().save()
+        dictado.agregarTitularidad(profesor, desde, hasta) # completamos los datos faltantes de titularidad (ver Model de Dictado).
+        dictado.save() # guardamos Dictado en db
+        return dictado
+
 class CrearDictadoForm(forms.Form):
 
-    def is_valid(self):
-        #como formularioForm no era valido super() tampoco lo era asi que los saque a los dos.
-        dictadoForm = DictadoForm(self.data)
-        valid = dictadoForm.is_valid()
-        if not valid:
-            self.errors.update(dictadoForm.errors)
-        return valid
-
     def save(self, commit=False):
-        #llegado a este punto no tengo cleaned_data y no entiendo por que.
-        #solo se que esta relacionado con la CreateView
-        dictadoForm = DictadoForm(data=self.cleaned_data)
-        dictado = dictadoForm.save()
-        titularidadForm = TitularidadForm(data=self.cleaned_data, initial = {**self.data.dict(), 'dictado':dictado})
-        titularidad = titularidadForm.save()
+        dictadoForm = DictadoForm(self.cleaned_data)
         profesor = self.cleaned_data['profesor']
-        curso = self.cleaned_data['curso']
         desde = self.cleaned_data['desde']
         hasta = self.cleaned_data['hasta']
-        costo = self.cleaned_data['costo']
-        inicio = self.cleaned_data['inicio']
-        fin = self.cleaned_data['fin']
-        print(hasta)
-        dictado.agregarDictado(curso, costo, inicio, fin)
-        titularidad.agregarTitularidad(profesor, dictado, desde, hasta)
+        dictado = dictadoForm.save(profesor, desde, hasta)
         return dictado
 
     def __init__(self, instance=None, *args, **kwargs):
@@ -265,7 +254,7 @@ class CrearDictadoForm(forms.Form):
             Fieldset(
                    "Datos Dictado",
             Row(
-                Column('aula', css_class='form-group col-md-4 mb-0'),
+                Column('aulas', css_class='form-group col-md-4 mb-0'),
                 Column('curso', css_class='form-group col-md-4 mb-0'),
                 Column('costo', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
