@@ -109,10 +109,9 @@ class Dictado(models.Model):
         self.fin = fin 
         self.save() 
 
-    def agregarTitularidad(self, profesor, desde, hasta):
+    def agregarTitularidad(self, profesor, desde):
         return Titularidad.objects.create(profesor=profesor,
                                         desde=desde,
-                                        hasta=hasta,
                                         dictado=self)
 
     def __str__(self):
@@ -142,7 +141,7 @@ class Alumno (Rol):
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
     def inscribir(self, persona, curso):
-        assert not persona.es_alumno, "Ya soy Alumno"
+        #assert not persona.es_alumno, "Ya soy Alumno"
         assert self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
         self.curso = curso

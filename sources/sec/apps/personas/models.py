@@ -70,11 +70,11 @@ class Persona(models.Model):
     encargados = EncargadoManager()
 
  
-    def afiliar( self, afiliado,  fecha = None):
+    def afiliar( self, afiliado):
         assert not self.es_afiliado, "Ya soy afiliado" 
         #if  fecha is None:
         #   fecha= datetime.now()
-        afiliado.desde = fecha 
+        #afiliado.desde = fecha 
         afiliado.persona = self 
         afiliado.save()
         self.es_afiliado=True
@@ -89,6 +89,7 @@ class Persona(models.Model):
 
     def serProfesor(self, profesor):
         assert not self.es_profesor, "Ya soy Profesor" 
+        profesor.desde = datetime.now()
         profesor.persona = self
         profesor.save()
         self.es_profesor = True
@@ -149,7 +150,7 @@ class Rol(models.Model):
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    desde = models.DateField(auto_now_add=True, null= True, blank= True)
+    desde = models.DateField(null= True, blank= True)
     hasta = models.DateField(null=True, blank=True)
 
     def __str__(self):

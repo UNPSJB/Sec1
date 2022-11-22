@@ -95,28 +95,39 @@ class ProfesorForm(forms.ModelForm):
 class CrearProfesorForm(forms.Form):
 
     def clean_dni(self):
-        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
-        if self.persona is not None and self.persona.es_profesor:
-            raise ValidationError("Ya existe un profesor con ese DNI")
+        try:
+            persona = Persona.objects.get(dni=self.cleaned_data['dni'])
+            profesor = Profesor.objects.get(persona=persona, hasta=None)
+        except Persona.DoesNotExist:
+            persona = None
+        except Profesor.DoesNotExist:
+            profesor = None
+
+        if persona is not None and profesor is not None:
+            raise ValidationError("Ya existe un profesor activo con ese DNI")
         return self.cleaned_data['dni']
 
     def is_valid(self) -> bool:
-        personaForm = PersonaForm(self.data)
+        #personaForm = PersonaForm(self.data)
         profesorForm = ProfesorForm(self.data)
-        valid = super().is_valid() and personaForm.is_valid() and profesorForm.is_valid()
-        #self.cleaned_data.update(personaForm.cleaned_data)
-        #self.cleaned_data.update(alumnoForm.cleaned_data)
+        valid = super().is_valid() and profesorForm.is_valid()
+        if not valid:
+            self.errors.update(profesorForm.errors)
         print(self.cleaned_data)
         return valid
     
     def save(self, commit=False):
-        print(self.cleaned_data)
-        if self.persona is None:
+        try:
+            persona = Persona.objects.get(dni=self.cleaned_data['dni'])
+        except Persona.DoesNotExist:
+            persona = None
+
+        if persona is None:
             personaForm = PersonaForm(data=self.cleaned_data)
-            self.persona = personaForm.save()
+            persona = personaForm.save()
         profesorForm = ProfesorForm(data=self.cleaned_data)
         profesor = profesorForm.save(commit=False)
-        self.persona.serProfesor(profesor)
+        persona.serProfesor(profesor)
         return profesor
 
     def __init__(self, instance=None, *args, **kwargs):
@@ -201,15 +212,15 @@ class TitularidadForm(forms.ModelForm):
     class Meta:
         model = Titularidad
         fields = "__all__"
-        exclude=['dictado']
+        exclude=['dictado', 'hasta']
         widgets = {
                 "desde": forms.TextInput(attrs={'type': 'date'}),
-                "hasta": forms.TextInput(attrs={'type': 'date'}),
+                #"hasta": forms.TextInput(attrs={'type': 'date'}),
         }
 
         labels = {
                 'desde': 'Fecha Desde',
-                'hasta': 'Fecha Hasta',
+                #'hasta': 'Fecha Hasta',
         }
 
 class DictadoForm(forms.ModelForm):
@@ -227,9 +238,9 @@ class DictadoForm(forms.ModelForm):
                 'fin': 'Fecha fin',
         }
 
-    def save(self, profesor, desde, hasta, commit=False):
+    def save(self, profesor, desde, commit=False):
         dictado = super().save()
-        dictado.agregarTitularidad(profesor, desde, hasta) # completamos los datos faltantes de titularidad (ver Model de Dictado).
+        dictado.agregarTitularidad(profesor, desde) # completamos los datos faltantes de titularidad (ver Model de Dictado).
         dictado.save() # guardamos Dictado en db
         return dictado
 
@@ -239,8 +250,8 @@ class CrearDictadoForm(forms.Form):
         dictadoForm = DictadoForm(self.cleaned_data)
         profesor = self.cleaned_data['profesor']
         desde = self.cleaned_data['desde']
-        hasta = self.cleaned_data['hasta']
-        dictado = dictadoForm.save(profesor, desde, hasta)
+        #hasta = self.cleaned_data['hasta']
+        dictado = dictadoForm.save(profesor, desde)
         return dictado
 
     def __init__(self, instance=None, *args, **kwargs):
@@ -406,7 +417,7 @@ class CrearAlumnoForm(forms.Form):
         alumnoForm = AlumnoForm(data=self.cleaned_data)
         alumno = alumnoForm.save(commit=False)
         curso = self.cleaned_data['curso']
-        persona.inscribir(alumno, self.cleaned_data['curso'])
+        alumno.inscribir(persona, curso)
         return alumno
 
     def __init__(self, instance=None, *args, **kwargs):

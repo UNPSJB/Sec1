@@ -13,7 +13,7 @@
                           <tr>
                             <th scope="col">Aulas</th>
                             <th scope="col">Curso</th>
-                            <th scope="col">Profesores</th>
+                            <th scope="col">Profesor</th>
                             <th scope="col">Costo</th> 
                             <th scope="col">Inicia</th> 
                             <th scope="col">Termina</th>   
@@ -23,10 +23,15 @@
                         <tr>
                           {% for dictado in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ dictado.aulas.all }}</td>
+                            
+                            <td>{% for aula in dictado.aulas.all %} {{ aula }} {% endfor %}</td>  
                             <td>{{ dictado.curso }}</td>
-                            <td>{{ dictado.profesores.all }}</td>
-                            <td>{{ dictado.costo }}</td>
+                            <td>{% for titularidad in dictado.titularidad_set.all %} 
+                                  {% if titularidad.hasta is None %}  
+                                    {{ titularidad.profesor }}
+                                  {% endif %}
+                                {% endfor %}</td>
+                            <td>${{ dictado.costo }}</td>
                             <td>{{ dictado.inicio }}</td>
                             <td>{{ dictado.fin }}</td>
                             <td><a href="#" class="btn btn-success"> Ver </a></td>             

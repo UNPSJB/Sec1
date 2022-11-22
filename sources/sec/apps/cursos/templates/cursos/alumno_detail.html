@@ -24,7 +24,7 @@
             <label><b> Fecha Nacimiento: </b></label> {{alumno.persona.nacimiento}}
           </div>
           <div class="input-group py-2">
-            <label><b> Direccion: </b></label> {{alumno.direccion}}
+            <label><b> Direccion: </b></label> {{alumno.direccion}} **revisar**
           </div>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
@@ -76,15 +76,19 @@
                 </thead>
                 <tbody>
                     <div>
+                      {% for rol in alumno.persona.roles.all%}
+                        {%if rol.tipo == 2 %}
                         <tr>
-                          <td> {{alumno.curso.nombre}}</td>
-                          <td> {{alumno.curso.desde}} </td>
-                          <td> {{alumno.curso.hasta}} </td>
-                          <td> {{alumno.curso.descuento}}% </td>
+                          <td> {{rol.alumno.curso.nombre}}</td>
+                          <td> {{rol.alumno.curso.desde}} </td>
+                          <td> {{rol.alumno.curso.hasta}} </td>
+                          <td> {{rol.alumno.curso.descuento}}% </td>
                           <td> ***Revisar*** </td>
-                          <td> {{alumno.curso.precio}}$ </td>
-                          <td><a href="{% url 'detallarCurso' alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
+                          <td> {{rol.alumno.curso.precio}}$ </td>
+                          <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
                         </tr>
+                        {%endif%}
+                      {%endfor%}
                     </div>
                 </tbody>
             </table>
