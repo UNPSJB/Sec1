@@ -65,15 +65,17 @@
                 </thead>
                 <tbody>
                     <div>
-                        <tr>
-                            <td> 123 </td>
-                            <td> Joako </td>
-                            <td> Salon 1 </td>
-                            <td> 12/12/21 </td>
-                            <td> 13/02/22 </td>
-                            <td> <div> <input type="checkbox"> </div></td>
-                            <td><a href="{% url 'verAlquiler' %}" class="btn btn-success"> Ver </a></td>
-                        </tr>
+                      {%for alquiler in salon.alquiler_set.all %}
+                      <tr>
+                          <td> {{alquiler.pk}}</td>
+                          <td> {{alquiler.afiliado}}</td>
+                          <td> {{alquiler.salon.nombre}}</td>
+                          <td> {{alquiler.reserva}} </td>
+                          <td> {{alquiler.inicio}} </td>
+                          <td> <div> <input type="checkbox"> </div></td>
+                          <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                      </tr>
+                      {% endfor %}
                     </div>
                 </tbody>
             </table>

@@ -292,6 +292,7 @@ class EspecialidadListView(ListView):
     model = Especialidad
     paginate_by = 100 
 
+#--------------------------------Dictado---------------------------------------------
 
 class DictadoCreateView(CreateView):
 
