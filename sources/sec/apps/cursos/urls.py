@@ -20,6 +20,13 @@ urlpatterns = [
     path('detallarDictado/<int:pk>', DictadoDetailView.as_view(), name='detallarDictado'),
     path('listarDictados/', DictadoListView.as_view(), name='listarDictados'),
 
+    path('crearPagoDictado/', PagoDictadoCreateView.as_view(), name='crearPagoDictado'),
+    path('modificarPagoDictado/<int:pk>', PagoDictadoUpdateView.as_view(), name='modificarPagoDictado'),
+    #path('eliminarPagoDictado/<int:pk>', PagoDictadoDeleteView.as_view(), name='eliminarPagoDictado'),
+    path('eliminarPagoDictado/<int:pk>', pago_dictado_eliminar, name='eliminarPagoDictado'),
+    path('detallarPagoDictado/<int:pk>', PagoDictadoDetailView.as_view(), name='detallarPagoDictado'),
+    path('listarPagosDictados/', PagoDictadoListView.as_view(), name='listarPagosDictados'),
+
     #path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     path('crearCurso/', CursoCreateView.as_view(), name='crearCurso'),
     path('modificarCurso/<int:pk>', CursoUpdateView.as_view(), name='modificarCurso'),

@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">  
+    <div class="container-listados my-3"> 
+              <div class="table-responsive card shadow p-3"> 
+                <h3>Listado de Pagos de Dictados</h3>
+                  <table class="table table-striped table-responsive">
+                      <thead>
+                          <tr>
+                            <th scope="col">Alumno</th>
+                            <th scope="col">Fecha de pago</th>
+                            <th scope="col">Monto</th>
+                            <th scope="col">Forma de pago</th>  
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% for dictado_pago in object_list %}
+                          <tr class="bg-transition">
+                            <td>{{ dictado_pago.alumno }}</td>
+                            <td>{{ dictado_pago.pago }}</td>
+                            <td>{{ dictado_pago.monto }}</td>
+                            <td>{{ dictado_pago.tipoPago }}</td>
+                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="{% url 'eliminarPagoDictado' dictado_pago.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                                                                       
+                          </tr>
+                          {% endfor %}  
+                      </tbody>
+                  </table>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

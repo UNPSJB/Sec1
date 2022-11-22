@@ -292,7 +292,7 @@ class EspecialidadListView(ListView):
     model = Especialidad
     paginate_by = 100 
 
-
+#--------------------------------DICTADO---------------------------------------------
 class DictadoCreateView(CreateView):
 
     model = Dictado
@@ -340,4 +340,54 @@ class DictadoDetailView(DetailView):
 
 class DictadoListView(ListView):
     model = Dictado
+    paginate_by = 100 
+
+#--------------------------------PAGO DICTADO---------------------------------------------
+class PagoDictadoCreateView(CreateView):
+
+    model = PagoDictado
+    form_class = PagoDictadoForm
+    success_url = reverse_lazy('listarPagosDictados')
+
+    def post(self, *args, **kwargs):
+        self.object = None
+        pago_dictado_form = self.get_form()
+        if pago_dictado_form.is_valid():
+            dictado = pago_dictado_form.save()
+            messages.add_message(self.request, messages.SUCCESS, 'El pago del dictado fue registrado con éxito')
+            if 'guardar' in self.request.POST:
+                return redirect('listarPagosDictados')
+            return redirect('listarPagosDictados')
+        else:
+            print("Errores", pago_dictado_form.errors)
+            messages.add_message(self.request, messages.ERROR, pago_dictado_form.errors)
+        return self.form_invalid(form=pago_dictado_form)
+
+class PagoDictadoUpdateView(UpdateView):
+    model = PagoDictado
+    form_class = PagoDictadoForm
+    success_url = reverse_lazy("listarPagosDictados")
+"""
+    def form_valid(self, form):
+        #messages.add_message(self.request, messages.SUCCESS, 'Dictado modificado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        #messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
+"""
+def pago_dictado_eliminar(request, pk):
+    a = PagoDictado.objects.get(pk=pk)
+    a.delete()
+    return redirect('listarPagosDictados') 
+
+#class PagoDictadoDeleteView(DeleteView):
+#    model = PagoDictado
+#    success_url = reverse_lazy('listarPagosDictados')
+
+class PagoDictadoDetailView(DetailView):
+    model = PagoDictado
+
+class PagoDictadoListView(ListView):
+    model = PagoDictado
     paginate_by = 100 

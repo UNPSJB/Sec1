@@ -285,6 +285,11 @@ class ClaseForm(forms.ModelForm):
             "dia": forms.TextInput(attrs={'type': 'date'}),
     }
 
+    labels = {
+                'inicio': 'Fecha inicio',
+                'fin': 'Fecha fin',
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -312,7 +317,39 @@ class PagoDictadoForm(forms.ModelForm):
     class Meta:
         model = PagoDictado
         fields = "__all__"
+        
+        widgets = {
+                "pago": forms.TextInput(attrs={'type': 'date'}),
+        }
 
+        labels = {
+                'pago': 'Fecha pago',
+                'tipoPago': 'Forma de pago',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Registrar PagoDictado</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos PagoDictado",
+            Row(
+                Column('alumno', css_class='form-group col-md-4 mb-0'),
+                Column('pago', css_class='form-group col-md-4 mb-0'),
+                Column('monto', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('tipoPago', css_class='form-group col-md-4 mb-0'),
+                Column('dictado', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
 
 class LiquidacionForm(forms.ModelForm):
     class Meta:
