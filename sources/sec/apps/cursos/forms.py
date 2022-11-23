@@ -227,7 +227,7 @@ class DictadoForm(forms.ModelForm):
     class Meta:
         model = Dictado
         fields = "__all__"
-        exclude = ['profesores'] # excluimos el campo ManyToMany
+        exclude = ['profesores', 'curso'] # excluimos el campo ManyToMany
         widgets = {
                 "inicio": forms.TextInput(attrs={'type': 'date'}),
                 "fin": forms.TextInput(attrs={'type': 'date'}),
@@ -238,12 +238,6 @@ class DictadoForm(forms.ModelForm):
                 'fin': 'Fecha fin',
         }
 
-    def save(self, profesor, desde, commit=False):
-        dictado = super().save()
-        dictado.agregarTitularidad(profesor, desde) # completamos los datos faltantes de titularidad (ver Model de Dictado).
-        dictado.save() # guardamos Dictado en db
-        return dictado
-
 class CrearDictadoForm(forms.Form):
 
     def save(self, commit=False):
@@ -251,11 +245,14 @@ class CrearDictadoForm(forms.Form):
         profesor = self.cleaned_data['profesor']
         desde = self.cleaned_data['desde']
         #hasta = self.cleaned_data['hasta']
-        dictado = dictadoForm.save(profesor, desde)
+        dictado = dictadoForm.save(commit=False)
+        dictado.curso = self.initial["curso"]
+        dictado.save()
+        dictado.agregarTitularidad(profesor, desde) # completamos los datos faltantes de titularidad (ver Model de Dictado).
         return dictado
 
-    def __init__(self, instance=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, initial=None, instance=None, *args, **kwargs):
+        super().__init__(initial=initial, *args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(
@@ -266,7 +263,6 @@ class CrearDictadoForm(forms.Form):
                    "Datos Dictado",
             Row(
                 Column('aulas', css_class='form-group col-md-4 mb-0'),
-                Column('curso', css_class='form-group col-md-4 mb-0'),
                 Column('costo', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),

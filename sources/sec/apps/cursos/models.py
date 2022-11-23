@@ -194,15 +194,7 @@ class Titularidad (models.Model):
     dictado = models.ForeignKey(Dictado, on_delete = models.CASCADE)
     desde = models.DateField() 
     hasta = models.DateField(null = True, blank = True) 
-
-
-    def agregarTitularidad (self, profesor, dictado, desde, hasta = None): 
-        self.profesor = profesor 
-        self.dictado = dictado 
-        self.desde = desde 
-        self.hasta = hasta
-        self.save() 
-
+    
     def __str__ (self): 
         return f'Profesor= {self.profesor}, Desde: {self.desde}'
 
