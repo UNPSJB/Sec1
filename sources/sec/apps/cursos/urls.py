@@ -13,7 +13,7 @@ urlpatterns = [
     path('detallarProfesor/<int:pk>', ProfesorDetailView.as_view(), name='detallarProfesor'),
     path('listarProfesores/', ProfesorListView.as_view(), name='listarProfesores'),
     
-    path('crearDictado/', DictadoCreateView.as_view(), name='crearDictado'),
+    path('crearDictado/<int:pk>', DictadoCreateView.as_view(), name='crearDictado'),
     path('modificarDictado/<int:pk>', DictadoUpdateView.as_view(), name='modificarDictado'),
     #path('eliminarDictado/<int:pk>', DictadoDeleteView.as_view(), name='eliminarDictado'),
     path('eliminarDictado/<int:pk>', dictado_eliminar, name='eliminarDictado'),

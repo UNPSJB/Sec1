@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 #--------------------------------PROFESOR---------------------------------------------
 
@@ -299,19 +299,19 @@ class DictadoCreateView(CreateView):
     form_class = CrearDictadoForm
     success_url = reverse_lazy('listarDictados')
 
-    def post(self, *args, **kwargs):
-        self.object = None
-        dictado_form = self.get_form()
-        if dictado_form.is_valid():
-            dictado = dictado_form.save()
-            messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('listarDictados')
-            return redirect('listarDictados')
-        else:
-            print("Errores", dictado_form.errors)
-            messages.add_message(self.request, messages.ERROR, dictado_form.errors)
-        return self.form_invalid(form=dictado_form)
+    def get_initial(self):
+        curso = get_object_or_404(Curso, pk=self.kwargs.get('pk', 0))
+        initial = super().get_initial()
+        initial["curso"] = curso
+        return initial
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Dictado registrado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
 
 class DictadoUpdateView(UpdateView):
     model = Dictado
