@@ -60,7 +60,7 @@ class Profesor(Rol):
 
 
     def __str__(self):
-        return f'{self.persona.nombre} {self.persona.apellido} {self.persona.dni}'
+        return f'{self.persona.nombre} {self.persona.apellido} {self.especializacion} {self.persona.dni}'
 
 Rol.register(Profesor)
 
@@ -115,7 +115,7 @@ class Dictado(models.Model):
                                         dictado=self)
 
     def __str__(self):
-        return f'{self.curso}, {self.profesores.all()}, {self.aulas}'
+        return f'{self.curso}, {self.profesores.all()}, {self.aulas.all()}'
 
 
 class Clase (models.Model): 
