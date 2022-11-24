@@ -12,6 +12,7 @@
                       <thead>
                           <tr>
                             <th scope="col">Alumno</th>
+                            <th scope="col">Dictado</th>
                             <th scope="col">Fecha de pago</th>
                             <th scope="col">Monto</th>
                             <th scope="col">Forma de pago</th>  
@@ -22,9 +23,10 @@
                           {% for dictado_pago in object_list %}
                           <tr class="bg-transition">
                             <td>{{ dictado_pago.alumno }}</td>
+                            <td>{{ dictado_pago.dictado.curso }}</td>
                             <td>{{ dictado_pago.pago }}</td>
                             <td>{{ dictado_pago.monto }}</td>
-                            <td>{{ dictado_pago.tipoPago }}</td>
+                            <td>{{ dictado_pago.get_tipoPago_display }}</td>
                             <td><a href="#"class="btn btn-primary">Editar</a></td>
                             <td><a href="{% url 'eliminarPagoDictado' dictado_pago.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        

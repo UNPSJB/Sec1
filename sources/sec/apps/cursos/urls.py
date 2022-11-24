@@ -4,8 +4,7 @@ from apps.cursos import views
 from django.contrib import admin
 
 urlpatterns = [
-    #path('', views.listadoProfesores, name='listadoProfesores'),
-    #path('index', cursos.cursosIndex, name='cursosIndex'),
+    
     path('crearProfesor/', ProfesorCreateView.as_view(), name='crearProfesor'),
     path('modificarProfesor/<int:pk>', ProfesorUpdateView.as_view(), name='modificarProfesor'),
     #path('eliminarProfesor/<int:pk>', ProfesorDeleteView.as_view(), name='eliminarProfesor'),
@@ -19,6 +18,14 @@ urlpatterns = [
     path('eliminarDictado/<int:pk>', dictado_eliminar, name='eliminarDictado'),
     path('detallarDictado/<int:pk>', DictadoDetailView.as_view(), name='detallarDictado'),
     path('listarDictados/', DictadoListView.as_view(), name='listarDictados'),
+    #path('listadoDictados', views.listadoDictados, name='listadoDictados'),
+
+    path('crearClase/', ClaseCreateView.as_view(), name='crearClase'),
+    path('modificarClase/<int:pk>', ClaseUpdateView.as_view(), name='modificarClase'),
+    #path('eliminarClase/<int:pk>', ClaseDeleteView.as_view(), name='eliminarClase'),
+    path('eliminarClase/<int:pk>', clase_eliminar, name='eliminarClase'),
+    path('detallarClase/<int:pk>', ClaseDetailView.as_view(), name='detallarClase'),
+    path('listarClases/', ClaseListView.as_view(), name='listarClases'),
 
     path('crearPagoDictado/', PagoDictadoCreateView.as_view(), name='crearPagoDictado'),
     path('modificarPagoDictado/<int:pk>', PagoDictadoUpdateView.as_view(), name='modificarPagoDictado'),
@@ -27,26 +34,18 @@ urlpatterns = [
     path('detallarPagoDictado/<int:pk>', PagoDictadoDetailView.as_view(), name='detallarPagoDictado'),
     path('listarPagosDictados/', PagoDictadoListView.as_view(), name='listarPagosDictados'),
 
-    #path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     path('crearCurso/', CursoCreateView.as_view(), name='crearCurso'),
     path('modificarCurso/<int:pk>', CursoUpdateView.as_view(), name='modificarCurso'),
     #path('eliminarCurso/<int:pk>', CursoDeleteView.as_view(), name='eliminarCurso'),
     path('eliminarCurso/<int:pk>', curso_eliminar, name='eliminarCurso'),
     path('detallarCurso/<int:pk>', CursoDetailView.as_view(), name='detallarCurso'),
     path('listarCursos/', CursoListView.as_view(), name='listarCursos'),
+    path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     
-    #path('', views.listadoAlumnos, name='listadoAlumnos'),
-    #path('index', cursos.cursosIndex, name='cursosIndex'),
     path('crearAlumno/', AlumnoCreateView.as_view(), name='crearAlumno'), 
     path('listarAlumnos/', AlumnoListView.as_view(), name='listarAlumnos'),
     path('detallarAlumno/<int:pk>', AlumnoDetailView.as_view(), name='detallarAlumno'),
     path('modificarAlumno/<int:pk>', AlumnoUpdateView.as_view(), name='modificarAlumno'),
-
-    #path('', views.listadoClases, name='listadoClases'),
-    #path('index', clases.clasesIndex, name='clasesIndex'),
-    path('crearClase/', ClaseCreateView.as_view(), name='crearClase'),
-
-    path('listadoCursos', views.listadoCursos, name='listadoCursos'),
     
     path('crearAula/', AulaCreateView.as_view(), name='crearAula'),
     path('modificarAula/<int:pk>', AulaUpdateView.as_view(), name='modificarAula'),
