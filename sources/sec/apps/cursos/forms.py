@@ -244,10 +244,11 @@ class CrearDictadoForm(forms.Form):
         dictadoForm = DictadoForm(self.cleaned_data)
         profesor = self.cleaned_data['profesor']
         desde = self.cleaned_data['desde']
-        #hasta = self.cleaned_data['hasta']
+        print(self.cleaned_data['aulas'])
         dictado = dictadoForm.save(commit=False)
         dictado.curso = self.initial["curso"]
         dictado.save()
+        print(dictado.aulas)# no esta agregando el aula en el save por alguna razon
         dictado.agregarTitularidad(profesor, desde) # completamos los datos faltantes de titularidad (ver Model de Dictado).
         return dictado
 
@@ -287,26 +288,35 @@ class ClaseForm(forms.ModelForm):
     class Meta:
         model = Clase
         fields = "__all__"
-    
-    widgets = {
-            "dia": forms.TextInput(attrs={'type': 'date'}),
-    }
+        #exclude = 'dictado'
+        widgets = {
+                'dia': forms.TextInput(attrs={'type': 'date'}),
+                'inicio' : forms.TimeInput(attrs={'type': 'time'}),
+                'fin' : forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+        }
 
-    labels = {
+        labels = {
                 'inicio': 'Fecha inicio',
                 'fin': 'Fecha fin',
-    }
+        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def save(self, commit=False):
+        claseForm = ClaseForm(self.cleaned_data)
+        clase = claseForm.save(commit=False)
+        clase.dictado = self.initial['dictado']
+        clase.save()
+        return clase
+
+    def __init__(self, initial=None, *args, **kwargs):
+        super().__init__(initial=initial, *args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(
-                    '<h2><center>Registrar Curso</center></h2>'),
+                    '<h2><center>Registrar Clase</center></h2>'),
             HTML(
                     '<hr/>'),
             Fieldset(
-                   "Datos Curso",
+                   "Datos Clase",
             Row(
                 Column('dia', css_class='form-group col-md-4 mb-0'),
                 Column('inicio', css_class='form-group col-md-4 mb-0'),

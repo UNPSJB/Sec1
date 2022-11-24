@@ -34,7 +34,7 @@
                             <td>${{ dictado.costo }}</td>
                             <td>{{ dictado.inicio }}</td>
                             <td>{{ dictado.fin }}</td>
-                            <td><a href="#" class="btn btn-success"> Ver </a></td>             
+                            <td><a href="{% url 'detallarDictado' dictado.pk %}" class="btn btn-success"> Ver </a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

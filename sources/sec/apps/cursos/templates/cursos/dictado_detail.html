@@ -1,0 +1,82 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div class="py-4" style="background-color: #0f66c3">
+    <div class="container py-3" style="background-color: white">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/curso.png' %}" class="img-thumbnail" alt="persona">
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b> DATOS DICTADO </b></label>
+          <div class="input-group py-2">
+            <label><b> Curso: </b></label> {{dictado.curso.nombre}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Fecha Desde: </b></label> {{dictado.inicio}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Fecha Hasta: </b></label> {{dictado.fin}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Costo: </b></label> {{dictado.costo}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Profesor: </b></label> {% for titularidad in dictado.titularidad_set.all %} 
+            {% if titularidad.hasta is None %}  
+              {{ titularidad.profesor }}
+            {% endif %}
+          {% endfor %}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <div class="col sm-12 col-md-12 col-lg-12">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <td><a href="#"class="btn btn-success">Editar</a></td>
+              <td><a href="#"class="btn btn-success">Eliminar</a></td>
+              <td><a href="#"class="btn btn-success">Nueva Clase</a></td>
+            </div>
+          </div>
+      </div> 
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3"> 
+                <div class="row">
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <h3> Listado Clases </h3>
+                  </div>
+                  <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <a href="#" class="btn btn-success"> + </a>
+                    </div>
+                  </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th> Dia </th>
+                            <th> Inicio </th>
+                            <th> Fin </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <div>
+                            {% for clase in dictado.clases.all %}
+                            <tr>
+                                <td> {{clases.dia}} </td>
+                                <td> {{clases.inicio}} </td>
+                                <td> {{clases.fin}} </td>
+                                <td> **¿esto va?** </td>
+                            </tr>
+                            {% endfor %}
+                        </div>
+                    </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
