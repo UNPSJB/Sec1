@@ -102,7 +102,7 @@ class Curso(models.Model):
 
 
 class Dictado(models.Model): 
-    aulas = models.ManyToManyField(Aula)
+    aula = models.ForeignKey(Aula, on_delete = models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     profesores = models.ManyToManyField(Profesor, through = 'Titularidad')
     costo = models.FloatField(max_length=10)
@@ -164,7 +164,7 @@ class Alumno (Rol):
         
     def inscribir(self, persona, curso):
         #assert not persona.es_alumno, "Ya soy Alumno"
-        assert not self.curso == curso, "Alumno ya inscripto al curso"
+        #assert not self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
         self.curso = curso
         self.save()

@@ -24,9 +24,9 @@
                           {% for dictado in object_list %}
                           <tr class="bg-transition">
                             
-                            <td>{% for aula in dictado.aulas.all %} {{ aula }} {% endfor %}</td>  
+                            <td>{{ dictado.aula }}</td>  
                             <td>{{ dictado.curso }}</td>
-                            <td>{% for titularidad in dictado.titularidad_set.all %} 
+                            <td>{% for titularidad in dictado.titulares.all %} 
                                   {% if titularidad.hasta is None %}  
                                     {{ titularidad.profesor }}
                                   {% endif %}

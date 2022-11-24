@@ -24,7 +24,7 @@
             <label><b> Costo: </b></label> {{dictado.costo}}
           </div>
           <div class="input-group py-2">
-            <label><b> Profesor: </b></label> {% for titularidad in dictado.titularidad_set.all %} 
+            <label><b> Profesor: </b></label> {% for titularidad in dictado.titulares.all %} 
             {% if titularidad.hasta is None %}  
               {{ titularidad.profesor }}
             {% endif %}
@@ -36,7 +36,6 @@
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <td><a href="#"class="btn btn-success">Editar</a></td>
               <td><a href="#"class="btn btn-success">Eliminar</a></td>
-              <td><a href="#"class="btn btn-success">Nueva Clase</a></td>
             </div>
           </div>
       </div> 
@@ -49,7 +48,7 @@
                   </div>
                   <div class="col sm-12 col-md-8 col-lg-8 py-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <a href="#" class="btn btn-success"> + </a>
+                      <a href="{% url 'crearClase' dictado.pk %}" class="btn btn-success"> + </a>
                     </div>
                   </div>
                 </div>
@@ -65,10 +64,9 @@
                         <div>
                             {% for clase in dictado.clases.all %}
                             <tr>
-                                <td> {{clases.dia}} </td>
-                                <td> {{clases.inicio}} </td>
-                                <td> {{clases.fin}} </td>
-                                <td> **¿esto va?** </td>
+                                <td> {{clase.dia}} </td>
+                                <td> {{clase.inicio}} </td>
+                                <td> {{clase.fin}} </td>
                             </tr>
                             {% endfor %}
                         </div>

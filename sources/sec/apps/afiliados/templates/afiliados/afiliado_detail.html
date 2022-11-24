@@ -76,13 +76,13 @@
                 </thead>
                 <tbody>
                     <div>
-                        <tr>
+                      <tr>
                             <td> 40400400 </td>
                             <td> Pepe </td>
                             <td> Pepe </td>
                             <td> 13/02/22 </td>
                             <td> Hijo </td>
-                        </tr>
+                        </tr>  
                     </div>
                 </tbody>
             </table>
@@ -116,14 +116,21 @@
                 <tbody>
                     <div>
                         <tr>
-                          <td> Desarrollo de software</td>
-                          <td> 01/08/21 </td>
-                          <td> 21/11/12 </td>
-                          <td> 15% </td>
-                          <td> Diego </td>
-                          <td> 15000$ </td>
-                          <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
-                        </tr>
+                          {% if afiliado.persona.es_alumno is True %}
+                          {% for rol in afiliado.persona.roles.all%}
+                            {%if rol.tipo == 2 %}
+                            <tr>
+                              <td> {{rol.alumno.curso.nombre}}</td>
+                              <td> {{rol.alumno.curso.desde}} </td>
+                              <td> {{rol.alumno.curso.hasta}} </td>
+                              <td> {{rol.alumno.curso.descuento}}% </td>
+                              <td> ***Revisar*** </td>
+                              <td> {{rol.alumno.curso.precio}}$ </td>
+                              <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
+                            </tr>
+                            {%endif%}
+                          {%endfor%}
+                          {%endif%}  
                     </div>
                 </tbody>
             </table>

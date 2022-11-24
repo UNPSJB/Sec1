@@ -227,7 +227,7 @@ class DictadoForm(forms.ModelForm):
     class Meta:
         model = Dictado
         fields = "__all__"
-        exclude = ['profesores', 'curso'] # excluimos el campo ManyToMany
+        exclude = ['profesores', 'curso', 'costo'] # excluimos el campo ManyToMany
         widgets = {
                 "inicio": forms.TextInput(attrs={'type': 'date'}),
                 "fin": forms.TextInput(attrs={'type': 'date'}),
@@ -244,11 +244,11 @@ class CrearDictadoForm(forms.Form):
         dictadoForm = DictadoForm(self.cleaned_data)
         profesor = self.cleaned_data['profesor']
         desde = self.cleaned_data['desde']
-        print(self.cleaned_data['aulas'])
         dictado = dictadoForm.save(commit=False)
-        dictado.curso = self.initial["curso"]
+        curso = self.initial["curso"]
+        dictado.curso = curso
+        dictado.costo = curso.precio
         dictado.save()
-        print(dictado.aulas)# no esta agregando el aula en el save por alguna razon
         dictado.agregarTitularidad(profesor, desde) # completamos los datos faltantes de titularidad (ver Model de Dictado).
         return dictado
 
@@ -263,11 +263,7 @@ class CrearDictadoForm(forms.Form):
             Fieldset(
                    "Datos Dictado",
             Row(
-                Column('aulas', css_class='form-group col-md-4 mb-0'),
-                Column('costo', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
+                Column('aula', css_class='form-group col-md-4 mb-0'),
                 Column('inicio', css_class='form-group col-md-4 mb-0'),
                 Column('fin', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
@@ -288,9 +284,9 @@ class ClaseForm(forms.ModelForm):
     class Meta:
         model = Clase
         fields = "__all__"
-        #exclude = 'dictado'
+        exclude = ['dictado']
         widgets = {
-                'dia': forms.TextInput(attrs={'type': 'date'}),
+                #'dia': forms.TextInput(attrs={'type': 'date'}),
                 'inicio' : forms.TimeInput(attrs={'type': 'time'}),
                 'fin' : forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
         }
@@ -299,11 +295,9 @@ class ClaseForm(forms.ModelForm):
                 'inicio': 'Fecha inicio',
                 'fin': 'Fecha fin',
         }
-
     def save(self, commit=False):
-        claseForm = ClaseForm(self.cleaned_data)
-        clase = claseForm.save(commit=False)
-        clase.dictado = self.initial['dictado']
+        clase = super().save(commit)
+        clase.dictado = self.initial["dictado"]
         clase.save()
         return clase
 

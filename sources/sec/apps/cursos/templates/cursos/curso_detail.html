@@ -106,7 +106,7 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>
-                      <th scope="col">Aulas</th>
+                      <th scope="col">Aula</th>
                       <th scope="col">Curso</th>
                       <th scope="col">Profesor</th>
                       <th scope="col">Costo</th> 
@@ -119,9 +119,9 @@
                     {% for dictado in curso.dictado_set.all %}
                     <tr class="bg-transition">
                       
-                      <td>{% for aula in dictado.aulas.all %} {{ aula }} {% endfor %}</td>  
+                      <td>{{ dictado.aula }}</td>  
                       <td>{{ dictado.curso }}</td>
-                      <td>{% for titularidad in dictado.titularidad_set.all %} 
+                      <td>{% for titularidad in dictado.titulares.all %} 
                             {% if titularidad.hasta is None %}  
                               {{ titularidad.profesor }}
                             {% endif %}
@@ -129,7 +129,7 @@
                       <td>${{ dictado.costo }}</td>
                       <td>{{ dictado.inicio }}</td>
                       <td>{{ dictado.fin }}</td>
-                      <td><a href="#" class="btn btn-success"> Ver </a></td>             
+                      <td><a href="{% url 'detallarDictado' dictado.pk %}" class="btn btn-success"> Ver </a></td>             
                                                                  
                     </tr>
                     {% endfor %}  
