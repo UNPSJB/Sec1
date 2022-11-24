@@ -30,9 +30,8 @@
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
           <div class="col sm-12 col-md-12 col-lg-12">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <td><a href="{% url 'modificarCurso' object.pk %}"class="btn btn-success">Editar</a></td>
-              <td><a href="{% url 'eliminarCurso' object.pk %}"class="btn btn-success">Eliminar</a></td>
-              <td><a href="{% url 'crearDictado' object.pk %}"class="btn btn-success">Dictado</a></td>
+              <td><a href="{% url 'modificarCurso' curso.pk %}"class="btn btn-success">Editar</a></td>
+              <td><a href="{% url 'eliminarCurso' curso.pk %}"class="btn btn-success">Eliminar</a></td>
             </div>
           </div>
           <div class="input-group py-2">
@@ -87,6 +86,54 @@
                             {% endfor %}
                         </div>
                     </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3"> 
+                <div class="row">
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <h3> Dictados </h3>
+                  </div>
+                  <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <a href="{% url 'crearDictado' curso.pk %}" class="btn btn-success"> + </a>
+                    </div>
+                  </div>
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Aulas</th>
+                      <th scope="col">Curso</th>
+                      <th scope="col">Profesor</th>
+                      <th scope="col">Costo</th> 
+                      <th scope="col">Inicia</th> 
+                      <th scope="col">Termina</th>   
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {% for dictado in curso.dictado_set.all %}
+                    <tr class="bg-transition">
+                      
+                      <td>{% for aula in dictado.aulas.all %} {{ aula }} {% endfor %}</td>  
+                      <td>{{ dictado.curso }}</td>
+                      <td>{% for titularidad in dictado.titularidad_set.all %} 
+                            {% if titularidad.hasta is None %}  
+                              {{ titularidad.profesor }}
+                            {% endif %}
+                          {% endfor %}</td>
+                      <td>${{ dictado.costo }}</td>
+                      <td>{{ dictado.inicio }}</td>
+                      <td>{{ dictado.fin }}</td>
+                      <td><a href="#" class="btn btn-success"> Ver </a></td>             
+                                                                 
+                    </tr>
+                    {% endfor %}  
+                </tbody>
                 </table>
           </div>
         </div>
