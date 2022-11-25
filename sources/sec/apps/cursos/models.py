@@ -115,6 +115,7 @@ class Alumno (Rol):
         return PagoDictado.objects.create(dictado = dictado, alumno = self, pago = fechaPago,
         monto = monto, tipoPago = tipoPago) 
 
+
     def inscribir(self, persona, curso):
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
@@ -151,14 +152,6 @@ class PagoDictado (models.Model):
     pago = models.DateField() 
     monto = models.FloatField(max_length = 10)
     tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
-
-    def agregarPago (self, dictado, alumno, pago, monto, tipo):
-        self.dictado = dictado 
-        self.alumno = alumno 
-        self.pago = pago
-        self.monto = monto 
-        self.tipoPago = tipo
-        self.save() 
 
     def __str__(self): 
         return f'{self.pago}, ${self.monto}'
