@@ -9,13 +9,6 @@ class Especialidad (models.Model):
     nombre = models.CharField(max_length = 20)
     area = models.PositiveSmallIntegerField(choices = AREA)
 
-    #Revisar
-    def agregarEspecialidad (self, nombre, area): 
-        self.nombre = nombre 
-        self.area = area
-        self.save() 
-
-
     def __str__ (self): 
         return f'{self.nombre}'
 
@@ -83,19 +76,6 @@ class Curso(models.Model):
     precio = models.PositiveIntegerField(max_length = 4)
     formaPago = models.PositiveSmallIntegerField(choices = TIPO)
     especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
-
-    #Revisar
-    def agregarCurso (self, nombre, desde, hasta, cupo, cantModulos, descuento, precio, formaPago, especialidad): 
-        self.nombre = nombre 
-        self.desde = desde 
-        self.hasta = hasta 
-        self.cupo = cupo 
-        self.cantModulos = cantModulos 
-        self.descuento = descuento 
-        self.precio = precio 
-        self.formaPago = formaPago
-        self.especialidad = especialidad
-        self.save() 
     
     def __str__(self):
         return f'{self.nombre}, ${self.precio}'
@@ -108,13 +88,6 @@ class Dictado(models.Model):
     costo = models.FloatField(max_length=10)
     inicio = models.DateField()
     fin = models.DateField() 
-
-    def agregarDictado (self, curso, costo, inicio, fin): 
-        self.curso = curso 
-        self.costo = costo 
-        self.inicio = inicio 
-        self.fin = fin 
-        self.save() 
 
     def agregarTitularidad(self, profesor, desde):
         return Titularidad.objects.create(profesor=profesor,

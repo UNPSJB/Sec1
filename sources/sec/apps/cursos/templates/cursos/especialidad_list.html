@@ -23,7 +23,7 @@
                           <tr class="bg-transition">
                             <td>{{ especialidad.nombre }}</td>
                             <td>{{ especialidad.get_area_display }}</td>
-                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="{% url 'modificarEspecialidad' especialidad.pk %}"class="btn btn-primary">Editar</a></td>
                             <td><a href="{% url 'eliminarEspecialidad' especialidad.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        
                           </tr>
