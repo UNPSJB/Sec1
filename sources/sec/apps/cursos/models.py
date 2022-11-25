@@ -12,6 +12,7 @@ class Especialidad (models.Model):
     def __str__ (self): 
         return f'{self.nombre}'
 
+
 class Aula(models.Model): 
     numero = models.PositiveIntegerField(max_length=2, unique = True)
     capacidad = models.PositiveIntegerField(max_length=3)
@@ -29,18 +30,11 @@ class Profesor(Rol):
     cbu = models.PositiveIntegerField(max_length=22, unique = True)
 
 
-
-    def inscribirProfesor (self, dictado): 
-        assert dictado.profesor == self, "Profesor ya existente en el dictado" 
-        dictado.profesores.add(self) 
-        self.save() 
-
-
     def registrarAsistencia (self, fecha):
         for t in self.dictados.filter(hasta__isnull = True ):
             dictado = t.dictado
-            c = dictado.clases.all() 
-            for c in c.all(): 
+            clases = dictado.clases.all() 
+            for c in clases: 
                 if (c.dia == fecha.isoweekday()): 
                     t.agregarAsistencia(fecha)
 
@@ -80,6 +74,10 @@ class Dictado(models.Model):
                                         dictado=self)
 
 
+    def agregarClase (self, horaInicio, horaFin, dia): 
+        return Clase.objects.create(inicio = horaInicio, fin=horaFin, dia = dia, dictado = self)
+
+
     def cambiarTitularidad (self, profesor, desde):
         titular = self.titulares.filter(hasta__isnull = True).first()
         assert titular != None, "Debe existir al menos un titular" 
@@ -87,6 +85,8 @@ class Dictado(models.Model):
         titular.hasta = desde
         titular.save() 
         return self.agregarTitularidad(profesor,desde) 
+
+
 
 
     def __str__(self):
@@ -100,12 +100,6 @@ class Clase (models.Model):
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, related_name = "clases", on_delete = models.CASCADE)
 
-    def agregarClase (self, inicio, fin, dia, dictado): 
-        self.inicio = inicio 
-        self.fin = fin 
-        self.dia = dia 
-        self.dictado = dictado
-        self.save() 
 
     def __str__(self): 
         return f'{self.dia}, {self.inicio}, {self.fin}'
@@ -117,11 +111,10 @@ class Alumno (Rol):
 
 
     def inscribirADictado (self, dictado): 
-        assert self.dictado == dictado, "Alumno ya inscripto en el dictado"
-        self.dictado = dictado
-        
+        assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
+        self.save() 
+
     def inscribir(self, persona, curso):
-        #assert not persona.es_alumno, "Ya soy Alumno"
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
         self.curso = curso
