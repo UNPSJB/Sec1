@@ -98,7 +98,7 @@ class Dictado(models.Model):
 
 
     def __str__(self):
-        return f'{self.curso}, {self.profesores.all()}, {self.aulas.all()}'
+        return f'{self.curso}, {self.profesores.all()}, {self.aula.all()}'
 
 
 class Clase (models.Model): 
