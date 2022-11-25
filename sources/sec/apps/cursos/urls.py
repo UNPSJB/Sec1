@@ -27,7 +27,7 @@ urlpatterns = [
     path('detallarClase/<int:pk>', ClaseDetailView.as_view(), name='detallarClase'),
     path('listarClases/', ClaseListView.as_view(), name='listarClases'),
 
-    path('crearPagoDictado/', PagoDictadoCreateView.as_view(), name='crearPagoDictado'),
+    path('crearPagoDictado/<int:pk>', PagoDictadoCreateView.as_view(), name='crearPagoDictado'),
     path('modificarPagoDictado/<int:pk>', PagoDictadoUpdateView.as_view(), name='modificarPagoDictado'),
     #path('eliminarPagoDictado/<int:pk>', PagoDictadoDeleteView.as_view(), name='eliminarPagoDictado'),
     path('eliminarPagoDictado/<int:pk>', pago_dictado_eliminar, name='eliminarPagoDictado'),

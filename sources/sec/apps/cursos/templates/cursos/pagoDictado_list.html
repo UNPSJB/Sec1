@@ -28,7 +28,7 @@
                             <td>{{ dictado_pago.monto }}</td>
                             <td>{{ dictado_pago.get_tipoPago_display }}</td>
                             <td><a href="#"class="btn btn-primary">Editar</a></td>
-                            <td><a href="{% url 'eliminarPagoDictado' dictado_pago.pk %}"class="btn btn-primary">Eliminar</a></td>             
+                            <td><a href="{% url 'detallarPagoDictado' dictado_pago.pk %}"class="btn btn-primary">Ver</a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

@@ -54,7 +54,7 @@
           <div class="table-responsive card shadow p-3">
             <div class="row">
               <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                <h3> Cursos vigentes </h3>
+                <h3> Cursos en espera </h3>
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -86,6 +86,52 @@
                           <td> ***Revisar*** </td>
                           <td> {{rol.alumno.curso.precio}}$ </td>
                           <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
+                        </tr>
+                        {%endif%}
+                      {%endfor%}
+                    </div>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3">
+            <div class="row">
+              <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                <h3> Cursos vigentes </h3>
+              </div>
+              <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th> Nombre </th>
+                      <th> Fecha Desde </th>
+                      <th> Fecha Hasta </th>
+                      <th> Descuento </th>
+                      <th> Profesor </th>
+                      <th> Precio </th>
+                      <th> Acciones </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div>
+                      {% for rol in alumno.persona.roles.all%}
+                        {%if rol.tipo == 2 %}
+                        <tr>
+                          <td> {{rol.alumno.curso.nombre}}</td>
+                          <td> {{rol.alumno.curso.desde}} </td>
+                          <td> {{rol.alumno.curso.hasta}} </td>
+                          <td> {{rol.alumno.curso.descuento}}% </td>
+                          <td> ***Revisar*** </td>
+                          <td> {{rol.alumno.curso.precio}}$ </td>
+                          <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
+                          <td><a href="#" class="btn btn-success"> Pagar </a></td>
                         </tr>
                         {%endif%}
                       {%endfor%}
