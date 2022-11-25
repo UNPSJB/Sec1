@@ -50,7 +50,8 @@ class Alquiler (models.Model):
     afiliado = models.ForeignKey(Afiliado, on_delete = models.CASCADE)
     senia = models.FloatField(max_length = 8)
     reserva = models.DateField() 
-    inicio = models.DateField( null = True, blank = True) 
+    inicio = models.DateField( null = True, blank = True)
+    monto = models.FloatField(max_length= 9)
 
     def agregarAlquiler (self, salon, senia, reserva, inicio, afiliado): 
         self.salon = salon 
@@ -65,7 +66,7 @@ class PagoAlquiler (models.Model):
     TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
     pago = models.DateField() 
-    monto = models.FloatField(max_length = 8)
+    monto = models.FloatField(max_length = 9)
     formaPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
     
     #Revisar
