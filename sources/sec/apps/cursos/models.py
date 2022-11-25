@@ -110,9 +110,10 @@ class Alumno (Rol):
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
 
-    def inscribirADictado (self, dictado): 
+    def inscribirADictado (self, dictado, fechaPago, monto, tipoPago): 
         assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
-        self.save() 
+        return PagoDictado.objects.create(dictado = dictado, alumno = self, pago = fechaPago,
+        monto = monto, tipoPago = tipoPago) 
 
     def inscribir(self, persona, curso):
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
