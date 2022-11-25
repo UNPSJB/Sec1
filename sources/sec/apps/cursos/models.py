@@ -165,6 +165,8 @@ class Titularidad (models.Model):
     def agregarAsistencia (self,fecha): 
         return AsistenciaProfesor.objects.create(asistencia = fecha, titular = self)
 
+    def agregarPagoTitular (self, monto, fechaLiquidacion): 
+        return Liquidacion.objects.create(liquidacion = fechaLiquidacion, monto = monto, titular = self)
 
 
     def __str__ (self): 
@@ -174,13 +176,6 @@ class Liquidacion (models.Model):
     liquidacion = models.DateField()
     monto = models.FloatField(max_length = 4) 
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
-
-
-    def agregarLiquidacion (self, liquidacion, monto, titular): 
-        self.liquidacion = liquidacion 
-        self.monto = monto 
-        self.titular = titular
-        self.save() 
 
     def __str__(self): 
         return f'{self.liquidacion}, ${self.monto}'
