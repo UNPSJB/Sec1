@@ -10,25 +10,21 @@
           <img src="{% static 'img/curso.png' %}" class="img-thumbnail" alt="persona">
         </div>
         <div class="col sm-12 col-md-4 col-lg-4 py-3">
-          <label><b> DATOS DICTADO </b></label>
+          <label><b> DATOS PAGOS de DICTADO </b></label>
           <div class="input-group py-2">
-            <label><b> Curso: </b></label> {{dictado.curso.nombre}}
+            <label><b> Curso: </b></label> {{object.dictado.curso.nombre}}
           </div>
           <div class="input-group py-2">
-            <label><b> Fecha Desde: </b></label> {{dictado.inicio}}
+            <label><b> Alumno: </b></label> {{object.alumno}}
           </div>
           <div class="input-group py-2">
-            <label><b> Fecha Hasta: </b></label> {{dictado.fin}}
+            <label><b> Fecha Pago: </b></label> {{object.pago}}
           </div>
           <div class="input-group py-2">
-            <label><b> Costo: </b></label> {{dictado.costo}}
+            <label><b> Monto: </b></label> ${{object.monto}}
           </div>
           <div class="input-group py-2">
-            <label><b> Profesor: </b></label> {% for titularidad in dictado.titulares.all %} 
-            {% if titularidad.hasta is None %}  
-              {{ titularidad.profesor }}
-            {% endif %}
-          {% endfor %}
+            <label><b> Forma de pago: </b></label> {{object.get_tipoPago_display}}
           </div>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
@@ -44,32 +40,24 @@
           <div class="table-responsive card shadow p-3"> 
                 <div class="row">
                   <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                    <h3> Listado Clases </h3>
+                    <h3> Listado Algo </h3>
                   </div>
                   <div class="col sm-12 col-md-8 col-lg-8 py-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <a href="{% url 'crearClase' dictado.pk %}" class="btn btn-success"> + </a>
+                      <a href="#" class="btn btn-success"> + </a>
                     </div>
                   </div>
                 </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th> Dia </th>
-                            <th> Inicio </th>
-                            <th> Fin </th>
+                            <th> No se que </th>
+                            <th> Mostrar </th>
+                            <th> Aca </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <div>
-                            {% for clase in dictado.clases.all %}
-                            <tr>
-                                <td> {{clase.get_dia_display}} </td>
-                                <td> {{clase.inicio}} </td>
-                                <td> {{clase.fin}} </td>
-                            </tr>
-                            {% endfor %}
-                        </div>
+                        
                     </tbody>
                 </table>
           </div>
