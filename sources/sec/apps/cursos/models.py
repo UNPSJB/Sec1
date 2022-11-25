@@ -16,13 +16,6 @@ class Aula(models.Model):
     numero = models.PositiveIntegerField(max_length=2, unique = True)
     capacidad = models.PositiveIntegerField(max_length=3)
 
-    #Revisar
-    def agregarAula (self, numero, capacidad): 
-        self.numero = numero 
-        self.capacidad = capacidad 
-        self.save() 
-
-
     def __str__ (self): 
         return f'{self.numero}'
 
