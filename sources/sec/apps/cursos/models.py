@@ -35,15 +35,6 @@ class Profesor(Rol):
         dictado.profesores.add(self) 
         self.save() 
 
-    #Revisar
-    def agregarProfesor (self, domicilio, telefono, especializacion, aniosExperiencia, cbu): 
-        self.domicilio = domicilio
-        self.telefono = telefono 
-        self.especializacion = especializacion
-        self.aniosExperiencia = aniosExperiencia
-        self.cbu = cbu
-        self.save()
-
     def registrarAsistencia (self, fecha):
         for t in self.dictados.filter(hasta__isnull = True ):
             dictado = t.dictado
