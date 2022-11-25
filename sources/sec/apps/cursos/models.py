@@ -35,6 +35,7 @@ class Profesor(Rol):
         dictado.profesores.add(self) 
         self.save() 
 
+
     def registrarAsistencia (self, fecha):
         for t in self.dictados.filter(hasta__isnull = True ):
             dictado = t.dictado

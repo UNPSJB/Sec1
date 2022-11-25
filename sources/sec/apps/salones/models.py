@@ -17,13 +17,6 @@ class Salon(models.Model):
         alquiler = Alquiler.agregarAlquiler(alquiler, self, senia, reserva, inicio, afiliado)
         self.save()
 
-    def agregarSalon (self, nombre, direccion, capacidad, monto, encargado): 
-        self.nombre = nombre 
-        self.direccion = direccion 
-        self.capacidad = capacidad 
-        self.monto = monto 
-        self.encargado = encargado
-        self.save()
 
     def __str__(self):
         return f'{self.nombre} {self.direccion}'
@@ -34,13 +27,6 @@ class Servicio(models.Model):
     obligatorio = models.BooleanField(default = False)
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)
 
-    #Revisar
-    def agregarServicio (self, nombre, descripcion, obligatorio, salon): 
-        self.nombre = nombre 
-        self.descripcion = descripcion 
-        self.obligatorio = obligatorio 
-        self.salon = salon 
-        self.save() 
 
     def __str__(self):
         return f'{self.nombre}'
