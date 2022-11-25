@@ -10,10 +10,10 @@ class Especialidad (models.Model):
     area = models.PositiveSmallIntegerField(choices = AREA)
 
     #Revisar
-    def agregarEspecialidad (self, nombre, area): 
-        self.nombre = nombre 
-        self.area = area
-        self.save() 
+    #def agregarEspecialidad (self, nombre, area): 
+    #    self.nombre = nombre 
+    #    self.area = area
+    #    self.save() 
 
 
     def __str__ (self): 
@@ -85,17 +85,17 @@ class Curso(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
 
     #Revisar
-    def agregarCurso (self, nombre, desde, hasta, cupo, cantModulos, descuento, precio, formaPago, especialidad): 
-        self.nombre = nombre 
-        self.desde = desde 
-        self.hasta = hasta 
-        self.cupo = cupo 
-        self.cantModulos = cantModulos 
-        self.descuento = descuento 
-        self.precio = precio 
-        self.formaPago = formaPago
-        self.especialidad = especialidad
-        self.save() 
+    #def agregarCurso (self, nombre, desde, hasta, cupo, cantModulos, descuento, precio, formaPago, especialidad): 
+    #    self.nombre = nombre 
+    #    self.desde = desde 
+    #    self.hasta = hasta 
+    #    self.cupo = cupo 
+    #    self.cantModulos = cantModulos 
+    #    self.descuento = descuento 
+    #   self.precio = precio 
+    #   self.formaPago = formaPago
+    #   self.especialidad = especialidad
+    #   self.save() 
     
     def __str__(self):
         return f'{self.nombre}, ${self.precio}'
