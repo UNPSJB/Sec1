@@ -327,7 +327,7 @@ class PagoDictadoForm(forms.ModelForm):
     class Meta:
         model = PagoDictado
         fields = "__all__"
-        
+        exclude = ['dictado']
         widgets = {
                 "pago": forms.TextInput(attrs={'type': 'date'}),
         }
@@ -361,7 +361,6 @@ class PagoDictadoForm(forms.ModelForm):
             ),
             Row(
                 Column('tipoPago', css_class='form-group col-md-4 mb-0'),
-                Column('dictado', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),

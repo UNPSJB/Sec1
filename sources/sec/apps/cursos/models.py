@@ -105,7 +105,7 @@ class Dictado(models.Model):
 
 
     def __str__(self):
-        return f'{self.curso}, {self.profesores.all()}, {self.aulas.all()}'
+        return f'{self.curso}, {self.profesores.all()}, {self.aula}'
 
 
 class Clase (models.Model): 
@@ -128,7 +128,7 @@ class Clase (models.Model):
 class Alumno (Rol): 
     TIPO = Persona.ROL_ALUMNO
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
-    dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
+    dictado = models.ForeignKey(Dictado, blank= True, null = True, on_delete = models.CASCADE)
 
 
     def inscribirADictado (self, dictado): 

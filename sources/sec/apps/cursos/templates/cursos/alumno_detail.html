@@ -131,7 +131,7 @@
                           <td> ***Revisar*** </td>
                           <td> {{rol.alumno.curso.precio}}$ </td>
                           <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
-                          <td><a href="#" class="btn btn-success"> Pagar </a></td>
+                          <td><a href="{% url 'crearPagoDictado' rol.alumno.pk rol.alumno.curso.pk %}" class="btn btn-success"> Pagar </a></td>
                         </tr>
                         {%endif%}
                       {%endfor%}

@@ -84,6 +84,13 @@ class AlumnoUpdateView(UpdateView):
     form_class = CrearAlumnoForm
     success_url = reverse_lazy("listarAlumnos")
 
+
+def alumno_agregar_dictado(request, apk):
+    alumno = Alumno.objects.get(apk=apk)
+    #dictado = Dictado.objects.get(dpk=dpk)
+    #alumno.inscribirADictado(dictado)
+    return redirect('listarDictados') #elegir a donde ir (?
+
 #--------------------------------CURSO---------------------------------------------
 
 class CursoCreateView(CreateView):
@@ -238,6 +245,7 @@ class DictadoDetailView(DetailView):
 class DictadoListView(ListView):
     model = Dictado
     paginate_by = 100 
+ 
 
 # def listadoDictados(request):
 #     return render(request, 'listadoDictados.html', {})
@@ -300,7 +308,7 @@ class PagoDictadoCreateView(CreateView):
     success_url = reverse_lazy('listarPagosDictados')
 
     def get_initial(self):
-        dictado = get_object_or_404(Dictado, pk=self.kwargs.get('pk', 0))
+        dictado = get_object_or_404(Dictado, pk=self.kwargs.get('cpk', 0))
         initial = super().get_initial()
         initial["dictado"] = dictado
         return initial
