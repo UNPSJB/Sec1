@@ -3,7 +3,7 @@ from sqlite3 import Row
 from django import forms 
 
 from apps.personas.models import Persona
-from apps.personas.forms import PersonaForm
+from apps.personas.forms import PersonaForm, ModificarPersonaForm
 from django.forms import ValidationError
 from .models import Afiliado, Empresa
 from crispy_forms.helper import FormHelper
@@ -37,9 +37,7 @@ class AfiliadoForm(forms.ModelForm):
             "ingresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
             "cuil": forms.TextInput(attrs={'placeholder': 'Ingrese cuil'}),
             "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
-            "estadoCivil": forms.TextInput(attrs={'placeholder': 'Ingrese estado civil'}),
-            "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
-            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
+            #"estadoCivil": forms.TextInput(attrs={'placeholder': 'Ingrese estado civil'}),
             "email": forms.TextInput(attrs={'placeholder': 'Ingrese E-mail'}),
             "jornadaLaboral": forms.TextInput(attrs={'placeholder': 'Ingrese jornada laboral'}),
             "sueldo": forms.TextInput(attrs={'placeholder': 'Ingrese sueldo'}),
@@ -160,45 +158,23 @@ CrearAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)
 CrearAfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
 
 class ModificarAfiliadoForm(forms.Form):
-
-    def clean_dni(self):
-        self.persona = Persona.objects.filter(dni=self.cleaned_data['dni']).first()
-        if self.persona is not None and self.persona.es_afiliado:
-            raise ValidationError("Ya existe un afiliado activo con ese DNI")
-        return self.cleaned_data['dni']
-
     def is_valid(self) -> bool:
-        personaForm = PersonaForm(self.data)
-        afiliadoForm = AfiliadoForm(self.data)
-        valid = super().is_valid() and personaForm.is_valid() and afiliadoForm.is_valid()
-        return valid 
-
-    def save(self, commit=False):
-        print(self.cleaned_data)
-        if self.persona is None:
-            personaForm = PersonaForm(data=self.cleaned_data)
-            self.persona = personaForm.save()
-        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        #afiliado = super().save(commit=False)
-        afiliado = afiliadoForm.save(commit=False)
-        #empresaForm = EmpresaForm(data=self.cleaned_data)
-        #TODO: clean empresa  para garantizzar la referancia 
-        #afiliado.empresa = empresaForm.save(commit=True)
-        #self.persona.afiliar(afiliado, self.cleaned_data.get('fecha_afiliacion'))
-        return afiliado
+        return super().is_valid() and self.personaForm.is_valid() and self.afiliadoForm.is_valid()
         
-    def __init__(self, instance=None, *args, **kwargs):
+    def save(self):
+        p = self.personaForm.save()
+        return self.afiliadoForm.save()
+        
+    def __init__(self, initial=None, instance=None, *args, **kwargs):
         if instance is not None:
-            persona= instance.persona 
-            afiliado= instance.afiliado
-            datapersona = model_to_dict(persona) 
-            dataafiliado = model_to_dict(afiliado)
-            print(datapersona)
-            print(dataafiliado)
-           # datapersona.fecha_nacimiento
-            datapersona.update(dataafiliado)
-            kwargs["initial"]= datapersona
-        super().__init__(*args, **kwargs)
+            self.personaForm = ModificarPersonaForm(initial=initial, instance=instance.persona, *args, **kwargs)
+            self.afiliadoForm = AfiliadoForm(initial=initial, instance=instance, *args, **kwargs)
+        else:
+            self.personaForm = ModificarPersonaForm(initial=initial, *args, **kwargs)
+            self.afiliadoForm = AfiliadoForm(initial=initial, *args, **kwargs)
+        initial = dict(self.personaForm.initial)
+        initial.update(self.afiliadoForm.initial)
+        super().__init__(initial=initial, *args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(
@@ -208,35 +184,32 @@ class ModificarAfiliadoForm(forms.Form):
             Fieldset(
                    "Datos Personales",
             Row(
-                Column('dni', css_class='form-group col-md-4 mb-0'),
                 Column('nombre', css_class='form-group col-md-4 mb-0'),
                 Column('apellido', css_class='form-group col-md-4 mb-0'),
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
                 Column('cuil', css_class='form-group col-md-4 mb-0'),
                 Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
+                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
+                
                 Column('domicilio', css_class='form-group col-md-4 mb-0'),
                 Column('telefono', css_class='form-group col-md-4 mb-0'),
+                Column('email', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('email', css_class='form-group col-md-4 mb-0'),
                 Column('jornadaLaboral', css_class='form-group col-md-4 mb-0'),
                 Column('sueldo', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
                 Column('ingresoTrabajo', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
-ModificarAfiliadoForm.base_fields.update(PersonaForm.base_fields)
+ModificarAfiliadoForm.base_fields.update(ModificarPersonaForm.base_fields)
 ModificarAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)

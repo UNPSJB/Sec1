@@ -13,21 +13,33 @@ class ProfesorCreateView(CreateView):
 
     model = Profesor
     form_class = CrearProfesorForm
-    success_url = reverse_lazy('listarProfesores')
+
+    def get_success_url(self):
+        return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Profesor registrado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
  
 class ProfesorUpdateView(UpdateView):
     model = Profesor
     form_class = CrearProfesorForm
-    success_url = reverse_lazy("listarProfesores")
-"""
+
+    def get_success_url(self):
+        return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
+
     def form_valid(self, form):
-        #messages.add_message(self.request, messages.SUCCESS, 'Profesor modificado con éxito')
+        messages.add_message(self.request, messages.SUCCESS, 'Profesor modificado con éxito')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        #messages.add_message(self.request, messages.ERROR, form.errors)
+        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
-"""
+
 def profesor_eliminar(request, pk):
     a = Profesor.objects.get(pk=pk)
     a.delete()
@@ -50,27 +62,22 @@ class AlumnoCreateView(CreateView):
 
     model = Alumno
     form_class = CrearAlumnoForm
-    # template_name = 'alumnos/alumno_form.html' # template del form
-    success_url = reverse_lazy('listarAlumnos')
+
+    def get_success_url(self):
+        return reverse_lazy('detallarAlumno', kwargs={'pk': self.object.pk})
 
     #def get_initial(self):
         # Validar dni de entrada
     #    p = Persona.objects.filter(dni=self.request.GET["dni"]).first()
     #    return {"dni": p.dni}
      
-    def post(self, *args, **kwargs):
-        self.object = None
-        form = self.get_form() # equivalente a cargaAlumnoForm(self.request.POST)
-        if form.is_valid(): # este is_valid() llama internamente al is_valid() de los forms que lo componen.
-            alumno = form.save()
-            messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('listarAlumnos')
-            return redirect('listarAlumnos')
-        else:
-            print("Errores", form.errors)
-            messages.add_message(self.request, messages.ERROR, form.errors)
-        return super().form_invalid(form=form)
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Alumno registrado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
 
 class AlumnoListView(ListView):
     model = Alumno
@@ -81,8 +88,23 @@ class AlumnoDetailView(DetailView):
 
 class AlumnoUpdateView(UpdateView):
     model = Alumno
-    form_class = CrearAlumnoForm
-    success_url = reverse_lazy("listarAlumnos")
+    form_class = ModificarAlumnoForm
+
+    def get_success_url(self):
+        return reverse_lazy('detallarAlumno', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = "Modificar Alumnooo"
+        return context
+    
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Alumno modificado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
 
 #--------------------------------CURSO---------------------------------------------
 

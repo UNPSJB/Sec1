@@ -17,8 +17,9 @@ class AfiliadoCreateView(CreateView):
 
     model = Afiliado
     form_class = CrearAfiliadoForm
-    # template_name = 'afiliados/afiliado_form.html' # template del form
-    success_url = reverse_lazy('listarAfiliados')
+
+    def get_success_url(self):
+        return reverse_lazy('detallarAfiliado', kwargs={'pk': self.object.pk})
 """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,7 +47,10 @@ class AfiliadoCreateView(CreateView):
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
     form_class = ModificarAfiliadoForm
-    success_url = reverse_lazy("detallarAfiliado")
+    #success_url = reverse_lazy("detallarAfiliado")
+
+    def get_success_url(self):
+        return reverse_lazy('detallarAfiliado', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,12 +58,13 @@ class AfiliadoUpdateView(UpdateView):
         return context
     
     def form_valid(self, form):
-        #messages.add_message(self.request, messages.SUCCESS, 'Afiliado modificado con éxito')
+        messages.add_message(self.request, messages.SUCCESS, 'Afiliado modificado con éxito')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        #messages.add_message(self.request, messages.ERROR, form.errors)
+        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
+
 
 def afiliado_eliminar(request, pk):
     a = Afiliado.objects.get(pk=pk)

@@ -13,6 +13,8 @@ class PersonaForm(ModelForm):
             "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
             "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
+            "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
+            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
             "nacimiento": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {
@@ -35,6 +37,39 @@ class PersonaForm(ModelForm):
                     'nacimiento',    
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
+
+class ModificarPersonaForm(ModelForm):
+    class Meta:
+        model = Persona
+        fields = '__all__'
+        exclude=['persona', 'tipo','dni']
+        widgets = {
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
+            "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
+            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
+            "nacimiento": forms.TextInput(attrs={'type': 'date'})
+        }
+        labels = {
+            'nacimiento': 'Fecha de nacimiento',
+            
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = 'guardarAfiliado'
+        self.helper.layout = Layout(
+            Fieldset(
+                   "",
+                HTML(
+                    '<hr/>'),
+                    'nombre',
+                    'apellido',
+                    'nacimiento',    
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),)
+
 
 from django_select2 import forms as s2forms
 

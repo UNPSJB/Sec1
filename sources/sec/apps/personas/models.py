@@ -56,10 +56,8 @@ class Persona(models.Model):
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
-
     domicilio = models.CharField(max_length=50, null=True, blank=True)
     telefono = models.CharField(max_length=50, null=True, blank=True)
-
     familia = models.ManyToManyField('self', blank=True, through = 'Vinculo')
     usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
     es_afiliado = models.BooleanField(default = False) 
