@@ -2,7 +2,7 @@ from dataclasses import fields
 from sqlite3 import Row
 from django import forms 
 from apps.personas.models import Persona
-from apps.personas.forms import PersonaForm
+from apps.personas.forms import PersonaForm, ModificarPersonaForm
 from django.forms import ValidationError, ModelForm, Textarea
 from .models import Especialidad, Aula, Profesor, Curso, Dictado, Clase, Alumno, PagoDictado, Titularidad, Liquidacion, AsistenciaProfesor 
 from crispy_forms.helper import FormHelper
@@ -382,6 +382,11 @@ class AlumnoForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['persona','tipo', 'dictado']
 
+class EditarAlumnoForm(forms.ModelForm):
+    class Meta:
+        model = Alumno
+        fields = "__all__"
+        exclude = ['persona','tipo', 'dictado', 'curso']
         
 class CrearAlumnoForm(forms.Form):
     curso = forms.ModelChoiceField(queryset= Curso.objects.all())
@@ -441,6 +446,11 @@ class CrearAlumnoForm(forms.Form):
                 css_class='form-row'
             ),
             Row(
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
+                Column('telefono', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
                 Column('nacimiento', css_class='form-group col-md-4 mb-0'),
                 Column('curso', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
@@ -449,7 +459,53 @@ class CrearAlumnoForm(forms.Form):
             HTML('<hr/>'),   
 
             Submit('submit', 'Guardar', css_class='button white'),)
+
+class ModificarAlumnoForm(forms.Form):
+    def is_valid(self) -> bool:
+        return super().is_valid() and self.personaForm.is_valid() and self.alumnoForm.is_valid()
         
+    def save(self):
+        p = self.personaForm.save()
+        return self.alumnoForm.save()
+
+    def __init__(self, initial=None, instance=None, *args, **kwargs):
+        if instance is not None:
+            self.personaForm = ModificarPersonaForm(initial=initial, instance=instance.persona, *args, **kwargs)
+            self.alumnoForm = EditarAlumnoForm(initial=initial, instance=instance, *args, **kwargs)
+        else:
+            self.personaForm = ModificarPersonaForm(initial=initial, *args, **kwargs)
+            self.alumnoForm = EditarAlumnoForm(initial=initial, *args, **kwargs)
+        initial = dict(self.personaForm.initial)
+        initial.update(self.alumnoForm.initial)
+        super().__init__(initial=initial, *args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout( 
+            HTML(
+                    '<h2><center>Modificar Alumno</center></h2>'),
+            HTML(
+                    '<hr/>'),
+            Fieldset(
+                   "Datos Personales",
+            Row(
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('apellido', css_class='form-group col-md-4 mb-0'),
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+
+                Column('telefono', css_class='form-group col-md-4 mb-0'),
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+            HTML('<hr/>'),   
+
+            Submit('submit', 'Guardar', css_class='button white'),)
+
+
+ModificarAlumnoForm.base_fields.update(EditarAlumnoForm.base_fields)
+ModificarAlumnoForm.base_fields.update(ModificarPersonaForm.base_fields)        
 
 CrearDictadoForm.base_fields.update(DictadoForm.base_fields)
 CrearDictadoForm.base_fields.update(TitularidadForm.base_fields)

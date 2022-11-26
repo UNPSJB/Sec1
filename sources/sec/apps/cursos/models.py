@@ -5,7 +5,6 @@ from apps.personas.models import Vinculo
 
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
-    
     nombre = models.CharField(max_length = 20)
     area = models.PositiveSmallIntegerField(choices = AREA)
 
@@ -16,49 +15,23 @@ class Aula(models.Model):
     numero = models.PositiveIntegerField(max_length=2, unique = True)
     capacidad = models.PositiveIntegerField(max_length=3)
 
-    #Revisar
-    def agregarAula (self, numero, capacidad): 
-        self.numero = numero 
-        self.capacidad = capacidad 
-        self.save() 
-
-
     def __str__ (self): 
         return f'{self.numero}'
 
-
 class Profesor(Rol):
     TIPO = Persona.ROL_PROFESOR
-    domicilio = models.CharField(max_length=50)
-    telefono = models.CharField(max_length=13)
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
     aniosExperiencia = models.PositiveIntegerField(max_length=2)
     cbu = models.PositiveIntegerField(max_length=22, unique = True)
 
 
-
-    def inscribirProfesor (self, dictado): 
-        assert dictado.profesor == self, "Profesor ya existente en el dictado" 
-        dictado.profesores.add(self) 
-        self.save() 
-
-    #Revisar
-    def agregarProfesor (self, domicilio, telefono, especializacion, aniosExperiencia, cbu): 
-        self.domicilio = domicilio
-        self.telefono = telefono 
-        self.especializacion = especializacion
-        self.aniosExperiencia = aniosExperiencia
-        self.cbu = cbu
-        self.save()
-
     def registrarAsistencia (self, fecha):
         for t in self.dictados.filter(hasta__isnull = True ):
             dictado = t.dictado
-            c = dictado.clases.all() 
-            for c in c.all(): 
+            clases = dictado.clases.all() 
+            for c in clases: 
                 if (c.dia == fecha.isoweekday()): 
                     t.agregarAsistencia(fecha)
-
 
     def __str__(self):
         return f'{self.persona.nombre} {self.persona.apellido} {self.especializacion} {self.persona.dni}'
@@ -80,7 +53,6 @@ class Curso(models.Model):
     def __str__(self):
         return f'{self.nombre}, ${self.precio}'
 
-
 class Dictado(models.Model): 
     aula = models.ForeignKey(Aula, on_delete = models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
@@ -95,6 +67,10 @@ class Dictado(models.Model):
                                         dictado=self)
 
 
+    def agregarClase (self, horaInicio, horaFin, dia): 
+        return Clase.objects.create(inicio = horaInicio, fin=horaFin, dia = dia, dictado = self)
+
+
     def cambiarTitularidad (self, profesor, desde):
         titular = self.titulares.filter(hasta__isnull = True).first()
         assert titular != None, "Debe existir al menos un titular" 
@@ -102,7 +78,6 @@ class Dictado(models.Model):
         titular.hasta = desde
         titular.save() 
         return self.agregarTitularidad(profesor,desde) 
-
 
     def __str__(self):
         return f'{self.curso}, {self.profesores.all()}, {self.aula}'
@@ -115,12 +90,6 @@ class Clase (models.Model):
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, related_name = "clases", on_delete = models.CASCADE)
 
-    def agregarClase (self, inicio, fin, dia, dictado): 
-        self.inicio = inicio 
-        self.fin = fin 
-        self.dia = dia 
-        self.dictado = dictado
-        self.save() 
 
     def __str__(self): 
         return f'{self.dia}, {self.inicio}, {self.fin}'
@@ -131,12 +100,13 @@ class Alumno (Rol):
     dictado = models.ForeignKey(Dictado, blank= True, null = True, on_delete = models.CASCADE)
 
 
-    def inscribirADictado (self, dictado): 
-        assert self.dictado == dictado, "Alumno ya inscripto en el dictado"
-        self.dictado = dictado
-        
+    def inscribirADictado (self, dictado, fechaPago, monto, tipoPago): 
+        assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
+        return PagoDictado.objects.create(dictado = dictado, alumno = self, pago = fechaPago,
+        monto = monto, tipoPago = tipoPago) 
+
+
     def inscribir(self, persona, curso):
-        #assert not persona.es_alumno, "Ya soy Alumno"
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
         self.curso = curso
@@ -145,7 +115,6 @@ class Alumno (Rol):
         persona.es_alumno = True
         persona.save()
        
-
     def desinscribir(self, persona, curso, fecha):
         assert self.persona == persona, "Alumno no existe" 
         assert self.curso == curso, "Alumno no pertenece al curso"
@@ -173,14 +142,6 @@ class PagoDictado (models.Model):
     monto = models.FloatField(max_length = 10)
     tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
 
-    def agregarPago (self, dictado, alumno, pago, monto, tipo):
-        self.dictado = dictado 
-        self.alumno = alumno 
-        self.pago = pago
-        self.monto = monto 
-        self.tipoPago = tipo
-        self.save() 
-
     def __str__(self): 
         return f'{self.pago}, ${self.monto}'
 
@@ -193,6 +154,8 @@ class Titularidad (models.Model):
     def agregarAsistencia (self,fecha): 
         return AsistenciaProfesor.objects.create(asistencia = fecha, titular = self)
 
+    def agregarPagoTitular (self, monto, fechaLiquidacion): 
+        return Liquidacion.objects.create(liquidacion = fechaLiquidacion, monto = monto, titular = self)
 
 
     def __str__ (self): 
@@ -202,13 +165,6 @@ class Liquidacion (models.Model):
     liquidacion = models.DateField()
     monto = models.FloatField(max_length = 4) 
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
-
-
-    def agregarLiquidacion (self, liquidacion, monto, titular): 
-        self.liquidacion = liquidacion 
-        self.monto = monto 
-        self.titular = titular
-        self.save() 
 
     def __str__(self): 
         return f'{self.liquidacion}, ${self.monto}'
