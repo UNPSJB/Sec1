@@ -321,19 +321,19 @@ class PagoDictadoCreateView(CreateView):
     form_class = PagoDictadoForm
     success_url = reverse_lazy('listarPagosDictados')
 
-    def post(self, *args, **kwargs):
-        self.object = None
-        pago_dictado_form = self.get_form()
-        if pago_dictado_form.is_valid():
-            dictado = pago_dictado_form.save()
-            messages.add_message(self.request, messages.SUCCESS, 'El pago del dictado fue registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('listarPagosDictados')
-            return redirect('listarPagosDictados')
-        else:
-            print("Errores", pago_dictado_form.errors)
-            messages.add_message(self.request, messages.ERROR, pago_dictado_form.errors)
-        return self.form_invalid(form=pago_dictado_form)
+    def get_initial(self):
+        dictado = get_object_or_404(Dictado, pk=self.kwargs.get('pk', 0))
+        initial = super().get_initial()
+        initial["dictado"] = dictado
+        return initial
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Pago de Dictado registrado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, form.errors)
+        return super().form_invalid(form)
 
 class PagoDictadoUpdateView(UpdateView):
     model = PagoDictado

@@ -24,16 +24,12 @@ class Profesor(Rol):
     aniosExperiencia = models.PositiveIntegerField(max_length=2)
     cbu = models.PositiveIntegerField(max_length=22, unique = True)
 
-    def inscribirProfesor (self, dictado): 
-        assert dictado.profesor == self, "Profesor ya existente en el dictado" 
-        dictado.profesores.add(self) 
-        self.save() 
 
     def registrarAsistencia (self, fecha):
         for t in self.dictados.filter(hasta__isnull = True ):
             dictado = t.dictado
-            c = dictado.clases.all() 
-            for c in c.all(): 
+            clases = dictado.clases.all() 
+            for c in clases: 
                 if (c.dia == fecha.isoweekday()): 
                     t.agregarAsistencia(fecha)
 
@@ -70,6 +66,11 @@ class Dictado(models.Model):
                                         desde=desde,
                                         dictado=self)
 
+
+    def agregarClase (self, horaInicio, horaFin, dia): 
+        return Clase.objects.create(inicio = horaInicio, fin=horaFin, dia = dia, dictado = self)
+
+
     def cambiarTitularidad (self, profesor, desde):
         titular = self.titulares.filter(hasta__isnull = True).first()
         assert titular != None, "Debe existir al menos un titular" 
@@ -79,7 +80,7 @@ class Dictado(models.Model):
         return self.agregarTitularidad(profesor,desde) 
 
     def __str__(self):
-        return f'{self.curso}, {self.profesores.all()}, {self.aulas.all()}'
+        return f'{self.curso}, {self.profesores.all()}, {self.aula.all()}'
 
 
 class Clase (models.Model): 
@@ -89,12 +90,6 @@ class Clase (models.Model):
     dia = models.PositiveSmallIntegerField(choices = DIA)
     dictado = models.ForeignKey(Dictado, related_name = "clases", on_delete = models.CASCADE)
 
-    def agregarClase (self, inicio, fin, dia, dictado): 
-        self.inicio = inicio 
-        self.fin = fin 
-        self.dia = dia 
-        self.dictado = dictado
-        self.save() 
 
     def __str__(self): 
         return f'{self.dia}, {self.inicio}, {self.fin}'
@@ -104,12 +99,14 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ManyToManyField(Dictado, blank= True , through = "PagoDictado")
 
-    def inscribirADictado (self, dictado): 
-        assert self.dictado == dictado, "Alumno ya inscripto en el dictado"
-        self.dictado = dictado
-        
+
+    def inscribirADictado (self, dictado, fechaPago, monto, tipoPago): 
+        assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
+        return PagoDictado.objects.create(dictado = dictado, alumno = self, pago = fechaPago,
+        monto = monto, tipoPago = tipoPago) 
+
+
     def inscribir(self, persona, curso):
-        #assert not persona.es_alumno, "Ya soy Alumno"
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
         self.persona = persona
         self.curso = curso
@@ -145,14 +142,6 @@ class PagoDictado (models.Model):
     monto = models.FloatField(max_length = 10)
     tipoPago = models.PositiveSmallIntegerField(choices = TIPO)
 
-    def agregarPago (self, dictado, alumno, pago, monto, tipo):
-        self.dictado = dictado 
-        self.alumno = alumno 
-        self.pago = pago
-        self.monto = monto 
-        self.tipoPago = tipo
-        self.save() 
-
     def __str__(self): 
         return f'{self.pago}, ${self.monto}'
 
@@ -165,6 +154,10 @@ class Titularidad (models.Model):
     def agregarAsistencia (self,fecha): 
         return AsistenciaProfesor.objects.create(asistencia = fecha, titular = self)
 
+    def agregarPagoTitular (self, monto, fechaLiquidacion): 
+        return Liquidacion.objects.create(liquidacion = fechaLiquidacion, monto = monto, titular = self)
+
+
     def __str__ (self): 
         return f'Profesor= {self.profesor}, Desde: {self.desde}'
 
@@ -172,12 +165,6 @@ class Liquidacion (models.Model):
     liquidacion = models.DateField()
     monto = models.FloatField(max_length = 4) 
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
-
-    def agregarLiquidacion (self, liquidacion, monto, titular): 
-        self.liquidacion = liquidacion 
-        self.monto = monto 
-        self.titular = titular
-        self.save() 
 
     def __str__(self): 
         return f'{self.liquidacion}, ${self.monto}'

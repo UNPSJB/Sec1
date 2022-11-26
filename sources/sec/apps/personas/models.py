@@ -1,34 +1,8 @@
-
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.core.exceptions import ValidationError
-
-'''
-def validacion_dni_unico(models, field, value):
-    aux = dict([(f"{field}__iregex", f'^{value}$')])
-    if models.objects.filter(**aux).exists():
-        raise ValidationError({"dni": "DNI ya existe"}) 
-'''
-
-'''
-    def cambiarRol (self, rol): 
-            if (rol == self.ROL_AFILIADO): 
-                self = Afiliado().afiliar
-            else: 
-                if (rol == self.ROL_ALUMNO): 
-                    self = Alumno()
-                else: 
-                    if (rol == self.ROL_PROFESOR): 
-                        self = Profesor()
-                    else: 
-                        if (rol == self.ROL_ENCARGADO): 
-                            self.serEncargado()
-'''
-
-
-
 
 class PersonaRolManager(models.Manager):
     def __init__(self, tipo):

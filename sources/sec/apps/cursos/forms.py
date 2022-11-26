@@ -286,8 +286,7 @@ class ClaseForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['dictado']
         widgets = {
-                #'dia': forms.TextInput(attrs={'type': 'date'}),
-                'inicio' : forms.TimeInput(attrs={'type': 'time'}),
+                'inicio' : forms.TimeInput(format='%H:%M',attrs={'type': 'time'}),
                 'fin' : forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
         }
 
@@ -338,16 +337,22 @@ class PagoDictadoForm(forms.ModelForm):
                 'tipoPago': 'Forma de pago',
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def save(self, commit=False):
+        pago_dictado = super().save(commit)
+        pago_dictado.dictado = self.initial["dictado"]
+        pago_dictado.save()
+        return pago_dictado
+
+    def __init__(self, initial=None, *args, **kwargs):
+        super().__init__(initial=initial, *args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout( 
             HTML(
-                    '<h2><center>Registrar PagoDictado</center></h2>'),
+                    '<h2><center>Registrar Pago de Dictado</center></h2>'),
             HTML(
                     '<hr/>'),
             Fieldset(
-                   "Datos PagoDictado",
+                   "Datos Pago de Dictado",
             Row(
                 Column('alumno', css_class='form-group col-md-4 mb-0'),
                 Column('pago', css_class='form-group col-md-4 mb-0'),
