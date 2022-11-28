@@ -27,10 +27,15 @@ class ProfesorCreateView(CreateView):
  
 class ProfesorUpdateView(UpdateView):
     model = Profesor
-    form_class = CrearProfesorForm
+    form_class = ModificarProfesorForm
 
     def get_success_url(self):
         return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = "Modificar Profesor"
+        return context
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Profesor modificado con éxito')

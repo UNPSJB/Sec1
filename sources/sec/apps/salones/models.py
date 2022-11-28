@@ -55,11 +55,5 @@ class PagoAlquiler (models.Model):
     monto = models.FloatField(max_length = 9)
     formaPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
     
-    #Revisar
-    def agregarPago (self, alquiler, pago, monto, formaPago):
-        self.alquiler = alquiler 
-        self.pago = pago 
-        self.monto = monto 
-        self.formaPago = formaPago 
-        self.save() 
+   
 
