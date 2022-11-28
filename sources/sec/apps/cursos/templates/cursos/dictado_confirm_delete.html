@@ -4,9 +4,12 @@
 
 {% block container %}
 <form method="post">{% csrf_token %}
-	
     <p style="text-align: center"><b>¿Estás seguro que desea eliminar el dictado? {{ Dictado }}</b></p>
-    
-    <input class="btn btn-primary" type="submit" value="Confirmar">
+    <div class="col sm-12 col-md-12 col-lg-12">
+        <div class="d-grid gap-2 d-md-flex">
+            <input class="btn btn-primary" type="submit" value="Confirmar">
+            <a href="{% url 'listarDictados %}" class="btn btn-danger">Cancelar</a>
+        </div>
+    </div>
 </form>
 {% endblock %}
