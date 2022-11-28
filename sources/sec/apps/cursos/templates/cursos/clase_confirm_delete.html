@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<form method="post">{% csrf_token %}
+	
+    <p style="text-align: center"><b>¿Estás seguro que desea eliminar la clase? {{ Clase }}</b></p>
+    
+    <input class="btn btn-primary" type="submit" value="Confirmar">
+</form>
+{% endblock %}
