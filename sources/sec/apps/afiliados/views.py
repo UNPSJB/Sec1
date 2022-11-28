@@ -71,9 +71,9 @@ def afiliado_eliminar(request, pk):
     a.delete()
     return redirect('listarAfiliados') 
 
-#class AfiliadoDeleteView(DeleteView):
-#    model = Afiliado
-#    success_url = reverse_lazy('')
+class AfiliadoDeleteView(DeleteView):
+    model = Afiliado
+    success_url = reverse_lazy('')
 
 class AfiliadoDetailView(DetailView):
     model = Afiliado

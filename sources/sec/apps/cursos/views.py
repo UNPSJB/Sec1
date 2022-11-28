@@ -214,7 +214,7 @@ def especialidad_eliminar(request, pk):
 
 class EspecialidadDeleteView(DeleteView):
     model = Especialidad
-    success_url = reverse_lazy('')
+    success_url = reverse_lazy('listarEspecialidades')
 
 class EspecialidadDetailView(DetailView):
     model = Especialidad
