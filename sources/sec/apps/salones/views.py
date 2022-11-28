@@ -59,9 +59,9 @@ def salon_eliminar(request, pk):
     a.delete()
     return redirect('listarSalones') 
 
-#class SalonDeleteView(DeleteView):
-#    model = Salon
-#    success_url = reverse_lazy('listarSalones')
+class SalonDeleteView(DeleteView):
+    model = Salon
+    success_url = reverse_lazy('listarSalones')
 
 class SalonDetailView(DetailView):
     model = Salon
@@ -111,9 +111,9 @@ def alquiler_eliminar(request, pk):
     a.delete()
     return redirect('listarAlquileres') 
 
-#class AlquilerDeleteView(DeleteView):
-#    model = Alquiler
-#    success_url = reverse_lazy('listarAlquileres')
+class AlquilerDeleteView(DeleteView):
+    model = Alquiler
+    success_url = reverse_lazy('listarAlquileres')
 
 class AlquilerDetailView(DetailView):
     model = Alquiler
@@ -164,9 +164,9 @@ def servicio_eliminar(request, pk):
     a.delete()
     return redirect('listarServicios') 
 
-#class ServicioDeleteView(DeleteView):
-#    model = Servicio
-#    success_url = reverse_lazy('listarServicios')
+class ServicioDeleteView(DeleteView):
+    model = Servicio
+    success_url = reverse_lazy('listarServicios')
 
 class ServicioDetailView(DetailView):
     model = Servicio
