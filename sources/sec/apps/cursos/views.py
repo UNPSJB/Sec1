@@ -107,11 +107,11 @@ class AlumnoUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-def alumno_agregar_dictado(request, apk):
-    alumno = Alumno.objects.get(apk=apk)
-    #dictado = Dictado.objects.get(dpk=dpk)
-    #alumno.inscribirADictado(dictado)
-    return redirect('listarDictados') #elegir a donde ir (?
+def alumno_agregar_dictado(request, apk, dpk):
+    alumno = Alumno.objects.get(pk=apk)
+    dictado = Dictado.objects.get(pk=dpk)
+    alumno.inscribirADictado(dictado)
+    return redirect('iniciarDictado', dpk) #elegir a donde ir (?
 
 #--------------------------------CURSO---------------------------------------------
 
@@ -256,6 +256,13 @@ def dictado_eliminar(request, pk):
     a = Dictado.objects.get(pk=pk)
     a.delete()
     return redirect('listarDictados') 
+
+def dictado_iniciar(request, pk):
+    dictado = Dictado.objects.get(pk=pk)
+    curso = dictado.curso
+    alumnos = curso.alumnos.all().filter(dictado=None)
+    context = {'dictado': dictado,'curso': curso, 'alumnos': alumnos}
+    return render(request, 'cursos/dictado_iniciar.html' , context)
 
 #class DictadoDeleteView(DeleteView):
 #    model = Dictado

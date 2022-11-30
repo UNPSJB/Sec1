@@ -127,12 +127,10 @@
                       {% for rol in alumno.persona.roles.all%}
                         {%if rol.tipo == 2 %}
                         <tr>
-                          <td> {{rol.alumno.curso.nombre}}</td>
-                          <td> {{rol.alumno.curso.desde}} </td>
-                          <td> {{rol.alumno.curso.hasta}} </td>
-                          <td> {{rol.alumno.curso.descuento}}% </td>
-                          <td> ***Revisar*** </td>
-                          <td> {{rol.alumno.curso.precio}}$ </td>
+                          <td> {{rol.alumno.dictado.costo}}</td>
+                          <td> {{rol.alumno.dictado.inicio}} </td>
+                          <td> {{rol.alumno.dictado.fin}} </td>
+                          <td> {{rol.alumno.dictado.curso}}% </td>
                           <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
                           <td><a href="{% url 'crearPagoDictado' rol.alumno.pk rol.alumno.curso.pk %}" class="btn btn-success"> Pagar </a></td>
                         </tr>

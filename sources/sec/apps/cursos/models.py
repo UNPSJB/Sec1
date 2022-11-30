@@ -99,12 +99,16 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ForeignKey(Dictado, blank= True, null = True, on_delete = models.CASCADE)
 
-
+    """
     def inscribirADictado (self, dictado, fechaPago, monto, tipoPago): 
         assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
         return PagoDictado.objects.create(dictado = dictado, alumno = self, pago = fechaPago,
         monto = monto, tipoPago = tipoPago) 
-
+    """
+    def inscribirADictado (self, dictado): 
+        #assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
+        self.dictado = dictado
+        self.save() 
 
     def inscribir(self, persona, curso):
         #assert not self.curso == curso, "Alumno ya inscripto al curso"
