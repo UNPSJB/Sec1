@@ -27,10 +27,15 @@ class ProfesorCreateView(CreateView):
  
 class ProfesorUpdateView(UpdateView):
     model = Profesor
-    form_class = CrearProfesorForm
+    form_class = ModificarProfesorForm
 
     def get_success_url(self):
         return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = "Modificar Profesor"
+        return context
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Profesor modificado con éxito')
@@ -45,9 +50,9 @@ def profesor_eliminar(request, pk):
     a.delete()
     return redirect('listarProfesores') 
 
-#class ProfesorDeleteView(DeleteView):
-#    model = Profesor
-#    success_url = reverse_lazy('listarProfesores')
+class ProfesorDeleteView(DeleteView):
+    model = Profesor
+    success_url = reverse_lazy('listarProfesores')
 
 class ProfesorDetailView(DetailView):
     model = Profesor
@@ -131,9 +136,9 @@ def curso_eliminar(request, pk):
     a.delete()
     return redirect('listarCursos') 
 
-#class CursoDeleteView(DeleteView):
-#    model = Curso
-#    success_url = reverse_lazy('listarCursos')
+class CursoDeleteView(DeleteView):
+    model = Curso
+    success_url = reverse_lazy('listarCursos')
 
 class CursoDetailView(DetailView):
     model = Curso
@@ -159,14 +164,14 @@ class AulaUpdateView(UpdateView):
     form_class = AulaForm
     success_url = reverse_lazy("listarAulas")
 
-def aula_eliminar(request, pk):
-    a = Aula.objects.get(pk=pk)
-    a.delete()
-    return redirect('listarAulas') 
+#def aula_eliminar(request, pk):
+#   a = Aula.objects.get(pk=pk)
+#   a.delete()
+#   return redirect('listarAulas') 
 
-#class AulaDeleteView(DeleteView):
-#    model = Aula
-#    success_url = reverse_lazy('listarAulas')
+class AulaDeleteView(DeleteView):
+    model = Aula
+    success_url = reverse_lazy('listarAulas')
 
 class AulaDetailView(DetailView):
     model = Aula
@@ -207,9 +212,9 @@ def especialidad_eliminar(request, pk):
     a.delete()
     return redirect('listarEspecialidades') 
 
-#class EspecialidadDeleteView(DeleteView):
-#    model = Especialidad
-#    success_url = reverse_lazy('')
+class EspecialidadDeleteView(DeleteView):
+    model = Especialidad
+    success_url = reverse_lazy('listarEspecialidades')
 
 class EspecialidadDetailView(DetailView):
     model = Especialidad
@@ -264,9 +269,9 @@ def dictado_iniciar(request, pk):
     context = {'dictado': dictado,'curso': curso, 'alumnos': alumnos}
     return render(request, 'cursos/dictado_iniciar.html' , context)
 
-#class DictadoDeleteView(DeleteView):
-#    model = Dictado
-#    success_url = reverse_lazy('listarDictados')
+class DictadoDeleteView(DeleteView):
+    model = Dictado
+    success_url = reverse_lazy('listarDictados')
 
 class DictadoDetailView(DetailView):
     model = Dictado
@@ -318,9 +323,9 @@ def clase_eliminar(request, pk):
     a.delete()
     return redirect('listarClases') 
 
-#class ClaseDeleteView(DeleteView):
-#    model = Clase
-#    success_url = reverse_lazy('listarClases')
+class ClaseDeleteView(DeleteView):
+    model = Clase
+    success_url = reverse_lazy('listarClases')
 
 class ClaseDetailView(DetailView):
     model = Clase
@@ -368,9 +373,9 @@ def pago_dictado_eliminar(request, pk):
     a.delete()
     return redirect('listarPagosDictados') 
 
-#class PagoDictadoDeleteView(DeleteView):
-#    model = PagoDictado
-#    success_url = reverse_lazy('listarPagosDictados')
+class PagoDictadoDeleteView(DeleteView):
+    model = PagoDictado
+    success_url = reverse_lazy('listarPagosDictados')
 
 class PagoDictadoDetailView(DetailView):
     model = PagoDictado

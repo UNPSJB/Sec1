@@ -12,19 +12,19 @@
         <div class="col sm-12 col-md-4 col-lg-4 py-3">
           <label><b> DATOS DICTADO </b></label>
           <div class="input-group py-2">
-            <label><b> Curso: </b></label> {{dictado.curso.nombre}}
+            <label><b> Curso: </b></label> &nbsp; {{dictado.curso.nombre}}
           </div>
           <div class="input-group py-2">
-            <label><b> Fecha Desde: </b></label> {{dictado.inicio}}
+            <label><b> Fecha Desde: </b></label> &nbsp; {{dictado.inicio}}
           </div>
           <div class="input-group py-2">
-            <label><b> Fecha Hasta: </b></label> {{dictado.fin}}
+            <label><b> Fecha Hasta: </b></label> &nbsp; {{dictado.fin}}
           </div>
           <div class="input-group py-2">
-            <label><b> Costo: </b></label> {{dictado.costo}}
+            <label><b> Costo: </b></label> &nbsp; {{dictado.costo}}
           </div>
           <div class="input-group py-2">
-            <label><b> Profesor: </b></label> {% for titularidad in dictado.titulares.all %} 
+            <label><b> Profesor: </b></label> &nbsp; {% for titularidad in dictado.titulares.all %} 
             {% if titularidad.hasta is None %}  
               {{ titularidad.profesor }}
             {% endif %}

@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<form method="post">{% csrf_token %}
+    <p style="text-align: center"><b>¿Estás seguro que desea eliminar el afiliado? {{ Afiliado }}</b></p>
+    <div class="col sm-12 col-md-12 col-lg-12">
+        <div class="d-grid gap-2 d-md-flex">
+            <input class="btn btn-primary" type="submit" value="Confirmar">
+            <a href="{% url 'listarAfiliados' %}" class="btn btn-danger">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

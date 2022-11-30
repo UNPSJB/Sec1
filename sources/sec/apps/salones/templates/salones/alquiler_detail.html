@@ -11,27 +11,27 @@
                 <div class="fields">
                   <div class="col sm-12 col-md-4 col-lg-4 py-3">
                     <div class="input-group py-2"> 
-                      <label><b> Número de alquiler: </b></label> {{alquiler.pk}}
+                      <label><b> Número de alquiler: </b></label> &nbsp; {{alquiler.pk}}
                     </div>
                     <div class="input-group py-2">
-                      <label><b> Fecha de reserva: </b></label> {{alquiler.reserva}}
+                      <label><b> Fecha de reserva: </b></label> &nbsp; {{alquiler.reserva}}
                     </div>
                     <div class="input-group py-2" style="display: flex; flex-direction: colum ">
-                      <label><b> Fecha inicio: </b></label> {{alquiler.inicio}}
+                      <label><b> Fecha inicio: </b></label> &nbsp; {{alquiler.inicio}}
                     </div>
                     <div class="input-group py-2">
-                      <label><b> Monto: </b></label> {{alquiler.salon.monto}} **revisar**
+                      <label><b> Monto: </b></label> &nbsp; {{alquiler.salon.monto}} **revisar**
                     </div>
                   </div>
                   <div class="col sm-12 col-md-4 col-lg-4 py-3">
                     <div class="input-group py-2">
-                        <label><b> Afiliado: </b></label> <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
+                        <label><b> Afiliado: </b></label> &nbsp; <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
                     </div>
                     <div class="input-group py-2">
-                      <label><b> Salón: </b></label> <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
+                      <label><b> Salón: </b></label> &nbsp; <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
                     </div>
                     <div class="input-group py-2">
-                      <label><b> Seña: </b></label> {{alquiler.senia}}
+                      <label><b> Seña: </b></label> &nbsp; {{alquiler.senia}}
                     </div>
                   </div>
                 </div>

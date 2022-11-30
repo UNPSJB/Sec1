@@ -160,6 +160,47 @@ class CrearProfesorForm(forms.Form):
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
+class ModificarProfesorForm(forms.Form):
+    def is_valid(self) -> bool:
+        return super().is_valid() and self.personaForm.is_valid() and self.profesorForm.is_valid()
+
+    def save(self):
+        p = self.personaForm.save()
+        return self.profesorForm.save()
+
+    def __init__(self, initial=None, instance=None, *args, **kwargs):
+        if instance is not None:
+            self.personaForm = ModificarPersonaForm(initial=initial, instance=instance.persona, *args, **kwargs)
+            self.profesorForm = ProfesorForm(initial=initial, instance=instance, *args, **kwargs)
+        else:
+            self.personaForm = ModificarPersonaForm(initial=initial, *args, **kwargs)
+            self.profesorForm = ProfesorForm(initial=initial, *args, **kwargs)
+        initial = dict(self.personaForm.initial)
+        initial.update(self.profesorForm.initial)
+        super().__init__(initial=initial, *args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML(
+                '<h2><center>Modificar Profesor</center></h2>'),
+            HTML(
+                '<hr2/>'),
+            Fieldset(
+                    "Datos personales",
+            Row(
+                Column('nombre', css_class='form-group col-md-4 mb-0'),
+                Column('apellido', css_class='form-group col-md-4 mb-0'),
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('especializacion', css_class='form-group col-md-4 mb-0'),
+                Column('aniosExperiencia', css_class='form-group col-md-4 mb-0'),
+                Column('cbu', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            ),
+        Submit('submit', 'Guardar', css_class='button white'),)
+
 class CursoForm(forms.ModelForm):
     class Meta:
         model = Curso
@@ -513,6 +554,9 @@ CrearDictadoForm.base_fields.update(TitularidadForm.base_fields)
 
 CrearProfesorForm.base_fields.update(PersonaForm.base_fields)
 CrearProfesorForm.base_fields.update(ProfesorForm.base_fields)
+
+ModificarProfesorForm.base_fields.update(ModificarPersonaForm.base_fields)
+ModificarProfesorForm.base_fields.update(ProfesorForm.base_fields) 
 
 CrearAlumnoForm.base_fields.update(AlumnoForm.base_fields)
 CrearAlumnoForm.base_fields.update(PersonaForm.base_fields)
