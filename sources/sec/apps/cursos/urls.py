@@ -18,6 +18,9 @@ urlpatterns = [
     #path('eliminarDictado/<int:pk>', dictado_eliminar, name='eliminarDictado'),
     path('detallarDictado/<int:pk>', DictadoDetailView.as_view(), name='detallarDictado'),
     path('listarDictados/', DictadoListView.as_view(), name='listarDictados'),
+    path('inscribirDictado/<int:apk>/<int:dpk>', alumno_agregar_dictado, name='inscribirDictado'),
+    path('desinscribirDictado/<int:apk>/<int:dpk>', alumno_bajar_dictado, name='desinscribirDictado'),
+    #path('iniciarDictado/<int:pk>', dictado_iniciar, name='iniciarDictado'),
     #path('listadoDictados', views.listadoDictados, name='listadoDictados'),
 
     path('crearClase/<int:pk>', ClaseCreateView.as_view(), name='crearClase'),
@@ -27,7 +30,6 @@ urlpatterns = [
     path('listarClases/', ClaseListView.as_view(), name='listarClases'),
 
     path('crearPagoDictado/<int:apk>/<int:cpk>', PagoDictadoCreateView.as_view(), name='crearPagoDictado'),
-    path('inscribirDictado/<int:apk>/<int:dpk>', alumno_agregar_dictado, name='inscribirDictado'),
     path('modificarPagoDictado/<int:pk>', PagoDictadoUpdateView.as_view(), name='modificarPagoDictado'),
     path('eliminarPagoDictado/<int:pk>', PagoDictadoDeleteView.as_view(), name='eliminarPagoDictado'),
     #path('eliminarPagoDictado/<int:pk>', pago_dictado_eliminar, name='eliminarPagoDictado'),

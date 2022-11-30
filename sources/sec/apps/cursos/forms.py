@@ -216,6 +216,7 @@ class CursoForm(forms.ModelForm):
             'hasta': 'Fecha hasta',
             'formaPago': 'Forma de pago',
             'especialidad': 'Especialidad',
+            'cupo': 'Cupo minimo',
         }
 
     def __init__(self, *args, **kwargs):

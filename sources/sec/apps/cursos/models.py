@@ -43,12 +43,16 @@ class Curso(models.Model):
     nombre = models.CharField(max_length = 100)
     desde = models.DateField()
     hasta = models.DateField()
-    cupo = models.PositiveIntegerField(max_length = 20)
+    cupo = models.PositiveIntegerField(max_length = 20, help_text= 'Cupo minimo de alumnos para iniciar dictado')
     cantModulos = models.PositiveIntegerField( max_length = 20)
     descuento = models.PositiveIntegerField(max_length = 2)
     precio = models.PositiveIntegerField(max_length = 4)
     formaPago = models.PositiveSmallIntegerField(choices = TIPO)
     especialidad = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
+
+    def alumnosEnEsperaPriorizados(self):
+        #TODO: priorizar alumnos en espera
+        return self.alumnos.all()
     
     def __str__(self):
         return f'{self.nombre}, ${self.precio}'
@@ -58,6 +62,7 @@ class Dictado(models.Model):
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     profesores = models.ManyToManyField(Profesor, through = 'Titularidad')
     costo = models.FloatField(max_length=10)
+    #cupo = models.PositiveIntegerField(max_length = 20)
     inicio = models.DateField()
     fin = models.DateField() 
 
@@ -108,7 +113,12 @@ class Alumno (Rol):
     def inscribirADictado (self, dictado): 
         #assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
         self.dictado = dictado
-        self.save() 
+        self.save()
+
+    def desinscribiDeDictado (self): 
+        #assert self.dictado != dictado, "Alumno ya inscripto en el dictado"
+        self.dictado = None
+        self.save()  
 
     def inscribir(self, persona, curso):
         #assert not self.curso == curso, "Alumno ya inscripto al curso"

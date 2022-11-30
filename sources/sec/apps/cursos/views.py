@@ -116,7 +116,12 @@ def alumno_agregar_dictado(request, apk, dpk):
     alumno = Alumno.objects.get(pk=apk)
     dictado = Dictado.objects.get(pk=dpk)
     alumno.inscribirADictado(dictado)
-    return redirect('iniciarDictado', dpk) #elegir a donde ir (?
+    return redirect('detallarDictado', dpk) #elegir a donde ir (?
+
+def alumno_bajar_dictado(request, apk, dpk):
+    alumno = Alumno.objects.get(pk=apk)
+    alumno.desinscribiDeDictado()
+    return redirect('detallarDictado', dpk) #elegir a donde ir (?
 
 #--------------------------------CURSO---------------------------------------------
 
@@ -290,6 +295,9 @@ class ClaseCreateView(CreateView):
     model = Clase
     form_class = ClaseForm
     success_url = reverse_lazy('listarClases')
+
+    def get_success_url(self):
+        return reverse_lazy('detallarDictado', kwargs={'pk': self.object.dictado.pk})
 
     def get_initial(self):
         dictado = get_object_or_404(Dictado, pk=self.kwargs.get('pk', 0))
