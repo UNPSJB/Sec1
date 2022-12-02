@@ -106,7 +106,7 @@
                                 <td> {{alumno.persona.apellido}} </td>
                                 <td> **¿esto va?** </td>
                                 <td><a href="{% url 'detallarAlumno' alumno.pk%}" class="btn btn-success"> Ver </a></td>
-                                <td><a href="{% url 'desinscribirDictado' alumno.pk dictado.pk %}" class="btn btn-success"> Quitar </a></td>
+                                <td><a href="{% url 'desinscribirDictado' alumno.pk dictado.pk %}" class="btn btn-danger"> Quitar </a></td>
                             </tr>
                             {% endfor %}
                         </div>
