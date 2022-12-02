@@ -238,7 +238,7 @@ class CursoForm(forms.ModelForm):
             Row(
                 Column('hasta', css_class='form-group col-md-4 mb-0'),
                 Column('cupo', css_class='form-group col-md-4 mb-0'),
-                Column('cantModulos', css_class='form-group col-md-4 mb-0'),
+                Column('modulos', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(

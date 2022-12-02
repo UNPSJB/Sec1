@@ -6,7 +6,7 @@ MAYEDAD = 18
 
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
-    nombre = models.CharField(max_length = 20)
+    nombre = models.CharField(unique = True, max_length = 20)
     area = models.PositiveSmallIntegerField(choices = AREA)
 
     def __str__ (self): 
@@ -41,11 +41,13 @@ Rol.register(Profesor)
 
 class Curso(models.Model):
     TIPO = [(0, "Clase"), (1, "Mensual")]
+    TIPOMODULO = [(0, "Por clase"), (1, "Por mes"), (2, "Total")]
     nombre = models.CharField(max_length = 100)
     desde = models.DateField()
     hasta = models.DateField()
     cupo = models.PositiveIntegerField(max_length = 20, help_text= 'Cupo minimo de alumnos para iniciar dictado')
-    cantModulos = models.PositiveIntegerField( max_length = 20)
+    modulos = models.PositiveIntegerField( max_length = 20, help_text = 'Cantidad de horas. 1 modulo = 1 hora')
+    tipoModulo = models.PositiveSmallIntegerField(choices = TIPOMODULO)
     descuento = models.PositiveIntegerField(max_length = 2)
     precio = models.PositiveIntegerField(max_length = 4)
     formaPago = models.PositiveSmallIntegerField(choices = TIPO)
@@ -63,7 +65,7 @@ class Dictado(models.Model):
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     profesores = models.ManyToManyField(Profesor, through = 'Titularidad')
     costo = models.FloatField(max_length=10)
-    #cupo = models.PositiveIntegerField(max_length = 20)
+    cupo = models.PositiveIntegerField(max_length = 20)
     inicio = models.DateField()
     fin = models.DateField() 
 
