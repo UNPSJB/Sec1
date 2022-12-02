@@ -1,7 +1,7 @@
 from django.db import models
 from apps.personas.models import Rol, Persona
 from apps.personas.models import Vinculo
-
+from datetime import date
 
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
@@ -65,6 +65,12 @@ class Dictado(models.Model):
     #cupo = models.PositiveIntegerField(max_length = 20)
     inicio = models.DateField()
     fin = models.DateField() 
+
+    def comenzo(self):
+        return self.inicio <= date.today()
+
+    def finalizo(self):
+        return self.fin <= date.today()
 
     def agregarTitularidad(self, profesor, desde):
         return Titularidad.objects.create(profesor=profesor,
