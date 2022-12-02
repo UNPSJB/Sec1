@@ -2,6 +2,7 @@ from django.db import models
 from apps.personas.models import Rol, Persona
 from apps.personas.models import Vinculo
 from datetime import date
+MAYEDAD = 18 
 
 class Especialidad (models.Model): 
     AREA = [(0, "Capacitacion"), (1, "Cultura"), (2, "Gimnasio")]
@@ -34,7 +35,7 @@ class Profesor(Rol):
                     t.agregarAsistencia(fecha)
 
     def __str__(self):
-        return f'{self.persona.nombre} {self.persona.apellido} {self.especializacion} {self.persona.dni}'
+        return f'{self.persona.nombre} {self.persona.apellido}'
 
 Rol.register(Profesor)
 
@@ -71,6 +72,8 @@ class Dictado(models.Model):
 
     def finalizo(self):
         return self.fin <= date.today()
+
+
 
     def agregarTitularidad(self, profesor, desde):
         return Titularidad.objects.create(profesor=profesor,
@@ -109,6 +112,11 @@ class Alumno (Rol):
     TIPO = Persona.ROL_ALUMNO
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ForeignKey(Dictado, blank= True, null = True, on_delete = models.CASCADE)
+
+    def agregarResponsable (self, persona, tipoResponsable): 
+        if ((date.today() - self.persona.nacimiento ) < MAYEDAD): 
+            return Vinculo.objects.create (tipo = tipoResponsable, vinculante = self, vinculado = persona)
+
 
     """
     def inscribirADictado (self, dictado, fechaPago, monto, tipoPago): 

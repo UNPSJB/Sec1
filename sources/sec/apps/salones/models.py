@@ -13,10 +13,9 @@ class Salon(models.Model):
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 
-    def alquilar(self, afiliado, senia, reserva, inicio):
-        alquiler = Alquiler.agregarAlquiler(alquiler, self, senia, reserva, inicio, afiliado)
-        self.save()
-
+    def alquilar(self, afiliado, senia, reserva, inicio,monto):
+        alquiler = Alquiler.objects.create(alquiler, self, senia, reserva, inicio, afiliado, monto)
+        self.save() 
 
     def __str__(self):
         return f'{self.nombre} {self.direccion}'

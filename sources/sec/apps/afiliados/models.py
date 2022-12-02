@@ -1,5 +1,5 @@
 from django.db import models
-from apps.personas.models import Rol, Persona
+from apps.personas.models import Rol, Persona, Vinculo
 
 
 class Empresa(models.Model):
@@ -26,6 +26,9 @@ class Afiliado(Rol):
     sueldo = models.FloatField(max_length=50)
     jornadaLaboral = models.CharField(max_length=50) 
     empresa = models.ForeignKey(Empresa, on_delete = models.CASCADE)
+
+    def agregarFamiliar (self, persona, tipo):
+        return Vinculo.objects.create ( tipo = tipo, vinculante = self, vinculado = persona) 
 
 
     def __str__(self):
