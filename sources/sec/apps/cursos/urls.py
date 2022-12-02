@@ -57,7 +57,7 @@ urlpatterns = [
 
     path('crearEspecialidad/', EspecialidadCreateView.as_view(), name='crearEspecialidad'),
     path('modificarEspecialidad/<int:pk>', EspecialidadUpdateView.as_view(), name='modificarEspecialidad'),
-    path('eliminarEspecialidad/', EspecialidadDeleteView.as_view(), name='eliminarEspecialidad'),
+    path('eliminarEspecialidad/<int:pk>', EspecialidadDeleteView.as_view(), name='eliminarEspecialidad'),
     #path('eliminarEspecialidad/<int:pk>', especialidad_eliminar, name='eliminarEspecialidad'),
     path('detallarEspecialidad/<int:pk>', EspecialidadDetailView.as_view(), name='detallarEspecialidad'),
     path('listarEspecialidades/', EspecialidadListView.as_view(), name='listarEspecialidades'),           
