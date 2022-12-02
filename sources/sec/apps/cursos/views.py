@@ -91,6 +91,10 @@ class AlumnoListView(ListView):
 class AlumnoDetailView(DetailView):
     model = Alumno
 
+class AlumnoDeleteView(DeleteView):
+    model = Alumno
+    success_url = reverse_lazy('listarAlumnos')
+
 class AlumnoUpdateView(UpdateView):
     model = Alumno
     form_class = ModificarAlumnoForm
