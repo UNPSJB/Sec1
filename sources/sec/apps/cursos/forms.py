@@ -8,6 +8,7 @@ from .models import Especialidad, Aula, Profesor, Curso, Dictado, Clase, Alumno,
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 import ipdb
+from datetime import date
 
 class EspecialidadForm(forms.ModelForm):
     class Meta:
@@ -17,7 +18,10 @@ class EspecialidadForm(forms.ModelForm):
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
         nombre = nombre.lower()
+        if Especialidad.objects.filter(nombre__iexact=nombre).exists():
+            raise forms.ValidationError("Ya existe una especialidad con este nombre.")
         return nombre
+
 
     def clean(self):
         pass
@@ -55,6 +59,17 @@ class AulaForm(forms.ModelForm):
             'numero': 'Numero',
             'capacidad': 'Capacidad',
         }
+    def clean_numero(self):
+        numero = self.cleaned_data['numero']
+        if Aula.objects.filter(numero=numero).exists():
+            raise forms.ValidationError("Ya existe un aula con este numero.")
+        return numero
+    
+    def clean_capacidad(self):
+        capacidad = self.cleaned_data['capacidad']
+        if capacidad <= 0 or capacidad > 999:
+            raise forms.ValidationError("La capacidad no es valida")
+        return capacidad
 
     def clean(self):
         pass
@@ -62,7 +77,6 @@ class AulaForm(forms.ModelForm):
     def is_valid(self) -> bool:
         valid = super().is_valid()
         return valid
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,6 +120,27 @@ class CrearProfesorForm(forms.Form):
         if persona is not None and profesor is not None:
             raise ValidationError("Ya existe un profesor activo con ese DNI")
         return self.cleaned_data['dni']
+
+    def clean_aniosExperiencia(self):
+        aniosexp = self.cleaned_data['aniosExperiencia']
+        if aniosexp < 0 or aniosexp > 99:
+            raise forms.ValidationError("Los años de experiencia no son validos")
+        return aniosexp
+
+    def clean_cbu(self):
+        cbu = self.cleaned_data['cbu']
+        if Profesor.objects.filter(cbu=cbu).exists():
+            raise forms.ValidationError("Ya existe un profesor con este cbu.")
+        if cbu <= 0 or cbu > 9999999999999999999999:
+            raise forms.ValidationError("El cbu no es valido")
+        return cbu
+
+    def clean_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data['nacimiento']
+        if fecha_nacimiento:               
+            if fecha_nacimiento >= date.today():
+                raise forms.ValidationError("La fecha de nacimiento debe ser anterior a la fecha actual.")
+        return self.cleaned_data['nacimiento']
 
     def is_valid(self) -> bool:
         #personaForm = PersonaForm(self.data)
@@ -217,7 +252,40 @@ class CursoForm(forms.ModelForm):
             'formaPago': 'Forma de pago',
             'especialidad': 'Especialidad',
             'cupo': 'Cupo minimo',
+            'tipoModulo': 'Tipo de modulo',
         }
+
+    def clean_desde(self):
+        fecha_desde = self.cleaned_data['desde']               
+        if fecha_desde < date.today():
+            raise forms.ValidationError("La fecha de inicio del curso no puede ser anterior a hoy")
+        return fecha_desde
+
+    def clean_hasta(self):
+        fecha_hasta = self.cleaned_data['hasta']               
+        if fecha_hasta < date.today():
+            raise forms.ValidationError("La fecha de finalizacion del curso no puede ser anterior a hoy")
+        return fecha_hasta
+
+    def clean_cupo(self):
+        cupo = self.cleaned_data['cupo']
+        if cupo < 20:
+            raise forms.ValidationError("El cupo es insufuciente")
+        if cupo > 999:
+            raise forms.ValidationError("El cupo es demasiado grande")
+        return cupo
+
+    def clean_descuento(self):
+        descuento = self.cleaned_data['descuento']
+        if descuento > 100:
+            raise forms.ValidationError("El descuento es invalido")
+        return descuento
+
+    def clean_precio(self):
+        precio = self.cleaned_data['precio']
+        if precio > 999999:
+            raise forms.ValidationError("El precio es invalido, el precio maximo es 999999")
+        return precio
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -239,6 +307,7 @@ class CursoForm(forms.ModelForm):
                 Column('hasta', css_class='form-group col-md-4 mb-0'),
                 Column('cupo', css_class='form-group col-md-4 mb-0'),
                 Column('modulos', css_class='form-group col-md-4 mb-0'),
+                Column('tipoModulo', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(

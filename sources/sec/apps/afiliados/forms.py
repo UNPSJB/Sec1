@@ -9,6 +9,7 @@ from .models import Afiliado, Empresa
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from django.forms.models import model_to_dict
+from datetime import date
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
@@ -63,6 +64,20 @@ class CrearAfiliadoForm(forms.Form):
         if persona is not None and afiliado is not None:
             raise ValidationError("Ya existe un afiliado activo con ese DNI")
         return self.cleaned_data['dni']
+    
+    def clean_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data['nacimiento']
+        if fecha_nacimiento:               
+            if fecha_nacimiento >= date.today():
+                raise forms.ValidationError("La fecha de nacimiento debe ser anterior a la fecha actual.")
+        return self.cleaned_data['nacimiento']
+    
+    def clean_ingresoTrabajo(self):
+        fecha_ingresoTrabajo = self.cleaned_data['ingresoTrabajo']
+        if fecha_ingresoTrabajo:               
+            if fecha_ingresoTrabajo > date.today():
+                raise forms.ValidationError("La fecha de ingreso al trabajo tiene que ser valida")
+        return self.cleaned_data['ingresoTrabajo']
 
     def is_valid(self) -> bool:
         #personaForm = PersonaForm(self.data)
