@@ -20,30 +20,7 @@ class AfiliadoCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('detallarAfiliado', kwargs={'pk': self.object.pk})
-"""
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar afiliado"
-        context['ayuda'] = 'crear_afiliado.html'
-        return context
-
-
-    def post(self, *args, **kwargs):
-        self.object = None
-        afiliado_form = self.get_form()
-        
-
-        if afiliado_form.is_valid():
-            afiliado = afiliado_form.save()
-            #messages.add_message(self.request, messages.SUCCESS, 'Afiliado registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('')
-            return redirect('')
-        #messages.add_message(self.request, messages.ERROR, afiliado_form.errors)
-        return self.form_invalid(form=afiliado_form)
-"""
-
+    
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
     form_class = ModificarAfiliadoForm

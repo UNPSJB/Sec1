@@ -17,43 +17,22 @@ class SalonCreateView(CreateView):
 
     model = Salon
     form_class = SalonForm
-    # template_name = 'salones/salon_form.html' # template del form
-    success_url = reverse_lazy('listarSalones')
 
+    def get_success_url(self):
+        return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
     
-
-    def post(self, *args, **kwargs):
-        self.object = None
-        salon_form = self.get_form()
-        
-
-        if salon_form.is_valid():
-            salon = salon_form.save()
-            messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('listarSalones')
-            return redirect('listarSalones')
-        messages.add_message(self.request, messages.ERROR, salon_form.errors)
-        return self.form_invalid(form=salon_form)
-
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
     success_url = reverse_lazy("modificarSalon")
-"""
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo'] = "Modificar Especialidad"
-        return context
-    
-    def form_valid(self, form):
-        #messages.add_message(self.request, messages.SUCCESS, 'Persona modificada con éxito')
-        return super().form_valid(form)
 
-    def form_invalid(self, form):
-        #messages.add_message(self.request, messages.ERROR, form.errors)
-        return super().form_invalid(form)
-"""
 def salon_eliminar(request, pk):
     a = Salon.objects.get(pk=pk)
     a.delete()
@@ -76,31 +55,17 @@ class AlquilerCreateView(CreateView):
 
     model = Alquiler
     form_class = CrearAlquilerForm
-    # template_name = 'alquileres/alquiler_form.html' # template del form
-    success_url = reverse_lazy('listarAlquileres')
-"""
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    
+    def get_success_url(self):
+        return reverse_lazy('detallarAlquiler', kwargs={'pk': self.object.pk})
 
-        context['titulo'] = "Registrar alquiler"
-        context['ayuda'] = 'crear_alquiler.html'
-        return context
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Alquiler registrado con éxito')
+        return super().form_valid(form)
 
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
-    def post(self, *args, **kwargs):
-        self.object = None
-        alquiler_form = self.get_form()
-        
-
-        if alquiler_form.is_valid():
-            alquiler = alquiler_form.save()
-            #messages.add_message(self.request, messages.SUCCESS, 'Alquiler registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('')
-            return redirect('')
-        #messages.add_message(self.request, messages.ERROR, alquiler_form.errors)
-        return self.form_invalid(form=alquiler_form)
-"""
 class AlquilerUpdateView(UpdateView):
     model = Alquiler
     form_class = AlquilerForm

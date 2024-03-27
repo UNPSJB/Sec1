@@ -10,6 +10,7 @@ from django.forms import ValidationError
 from .models import Salon, Servicio, Alquiler, PagoAlquiler
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
+from datetime import date
 
 class ServicioForm(forms.ModelForm):
     
@@ -128,7 +129,34 @@ class CrearAlquilerForm(forms.Form):
         print(self.cleaned_data)
         #print(valid,afiliadoForm.is_valid(),salonForm.is_valid(),alquilerForm.is_valid())
         return valid
+    
+    def clean_senia(self):
+        senia = self.cleaned_data['senia']
+        if senia < 0 or senia > 99999999.99:
+            raise forms.ValidationError("La senia no es valida")
+        return senia
 
+    def clean_monto(self):
+        monto = self.cleaned_data['monto']
+        if monto < 0 or monto > 999999999.99:
+            raise forms.ValidationError("El monto no es valido")
+        return monto
+    
+    def clean_reserva(self):
+        reserva = self.cleaned_data['reserva']               
+        if reserva < date.today():
+            raise forms.ValidationError("La fecha de reserva del lugar no puede ser anterior a hoy")
+        return reserva
+    
+    def clean_inicio(self):
+        inicio = self.cleaned_data.get('inicio')
+        reserva = self.cleaned_data.get('reserva')
+        if inicio and reserva and inicio < reserva:
+            raise forms.ValidationError("La fecha de inicio del alquiler no puede ser anterior a la reserva")
+        if reserva is None:
+            return inicio
+        return inicio
+    
     def save(self, commit=False):
         print('llego aca')
         #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
@@ -183,11 +211,22 @@ class SalonForm(forms.ModelForm):
             'monto': 'Monto',   
         }
 
+    def clean_capacidad(self):
+        capacidad = self.cleaned_data['capacidad']
+        if capacidad < 0 or capacidad > 9999:
+            raise forms.ValidationError("La capacidad no es valida")
+        return capacidad
+
+    def clean_monto(self):
+        monto = self.cleaned_data['monto']
+        if monto < 0 or monto > 999999999.99:
+            raise forms.ValidationError("El monto no es valido")
+        return monto
+    
     def is_valid(self) -> bool:
         valid = super().is_valid()
         return valid
    
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -213,8 +252,8 @@ class SalonForm(forms.ModelForm):
             
             Submit('submit', 'Guardar', css_class='button white'),)
         
-#CrearAlquilerForm.base_fields.update(PersonaForm.base_fields)
-#CrearAlquilerForm.base_fields.update(SalonForm.base_fields)
+CrearAlquilerForm.base_fields.update(PersonaForm.base_fields)
+CrearAlquilerForm.base_fields.update(SalonForm.base_fields)
 CrearAlquilerForm.base_fields.update(AlquilerForm.base_fields)
-#CrearAlquilerForm.base_fields.update(AfiliadoForm.base_fields)
+CrearAlquilerForm.base_fields.update(AfiliadoForm.base_fields)
      

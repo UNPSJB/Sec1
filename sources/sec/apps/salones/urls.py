@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('crearSalon/', SalonCreateView.as_view(), name='crearSalon'),
     path('modificarSalon/<int:pk>', SalonCreateView.as_view(), name='modificarSalon'),
-    path('eliminarSalon/', SalonDeleteView.as_view(), name='eliminarSalon'),
+    path('eliminarSalon/<int:pk>', SalonDeleteView.as_view(), name='eliminarSalon'),
     #path('eliminarSalon/<int:pk>', salon_eliminar, name='eliminarSalon'),
     path('detallarSalon/<int:pk>', SalonDetailView.as_view(), name='detallarSalon'),
     path('listarSalones/', SalonListView.as_view(), name='listarSalones'),

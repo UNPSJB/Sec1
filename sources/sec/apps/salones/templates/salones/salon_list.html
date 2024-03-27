@@ -28,7 +28,7 @@
                             <td>{{ salon.monto }}</td>
                             <td>{{ salon.encargado }}</td>
                             <td><a href="{% url 'detallarSalon' salon.pk %}" class="btn btn-success"> Ver </a></td>             
-                            <td><a href="{% url 'eliminararSalon' salon.pk %}" class="btn btn-danger"> Eliminar </a></td>                                           
+                            <td><a href="{% url 'eliminarSalon' salon.pk %}" class="btn btn-danger"> Eliminar </a></td>                                           
                           </tr>
                           {% endfor %}  
                       </tbody>

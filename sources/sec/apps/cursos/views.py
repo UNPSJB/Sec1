@@ -22,7 +22,6 @@ class ProfesorCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
  
 class ProfesorUpdateView(UpdateView):
@@ -42,7 +41,6 @@ class ProfesorUpdateView(UpdateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
 def profesor_eliminar(request, pk):
@@ -81,7 +79,6 @@ class AlumnoCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
 class AlumnoListView(ListView):
@@ -112,9 +109,7 @@ class AlumnoUpdateView(UpdateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
-
 
 def alumno_agregar_dictado(request, apk, dpk):
     alumno = Alumno.objects.get(pk=apk)
@@ -250,7 +245,6 @@ class DictadoCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
 class DictadoUpdateView(UpdateView):
@@ -314,7 +308,6 @@ class ClaseCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
 class ClaseUpdateView(UpdateView):
@@ -364,7 +357,6 @@ class PagoDictadoCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
 class PagoDictadoUpdateView(UpdateView):
