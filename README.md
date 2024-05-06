@@ -1,8 +1,4 @@
 # SEC 1
-
-![Logo del SEC] (https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgk9Pei29roqinn4OHjU3Non7Ezjpk5qtFBzkib29c_Q&s)
-## Descripcion del proyecto
-
 ## Miembros del equipo
 - Arnaiz, Rodrigo
 - Blum, Ariel
