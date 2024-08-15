@@ -1,38 +1,60 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'estilos/estilos.css' %}">
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'estilos/estilos.css' %}" />
     {% block extracss %}{% endblock %}
-</head>
-<body>
+    <title>{% block title %}Sec{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/logo1.png' %}" type="image/icon type">
+  </head>
+  <body>
     <nav class="bg-nav navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'img/sec_noticia.png' %}" alt="logo" width="150px">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {% block itemNavbar %}{% endblock %}
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <img
+            src="{% static 'img/sec_noticia.png' %}"
+            alt="logo"
+            width="150px"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% block itemNavbar %}{% endblock %}
+          </ul>
         </div>
-</nav>
+      </div>
+    </nav>
     <div class="container p-2">
-        {% include 'mensajes.html' %}
-        {% block container %}{% endblock %}
+      {% include 'mensajes.html' %}
+      {% block container %}{% endblock %}
     </div>
-    
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     {% block extrajs %}{% endblock %}
-</body>
+  </body>
 </html>

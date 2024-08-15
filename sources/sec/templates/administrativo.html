@@ -1,45 +1,90 @@
-{% extends 'main.html' %}
-{% load static %}
-
+{% extends 'main.html' %} {% load static %} 
 {% block container %}
-<div style="background-color:#0f66c3">
-    <div class="container-home text-center">
-        <div class="row mt-4">
-            <!-- tarjeta 1 -->
-            <div class="col-sm-12 col-md-4 col-lg-4 py-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4> Gestión de Afiliados </h4>
-                        <img src="{% static 'img/persona.png' %}" class="card-img-top" alt="persona">
-                        <a href="{% url 'crearAfiliado' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Afiliado </a>
-                        <a href="{% url 'listadoAfiliados' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Afiliados </a>
-                        
-                      </div>
-                </div>
-            </div>
-            <!-- tarjeta 2 -->
-            <div class="col-sm-12 col-md-4 col-lg-4 py-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4> Gestión de Cursos </h4>
-                        <img src="{% static 'img/curso.png' %}" class="card-img-top" alt="curso">
-                        <a href="{% url 'crearCurso' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Curso </a>
-                        <a href="{% url 'listadoCursos' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Cursos </a>
-                    </div>
-                </div>
-            </div>
-            <!-- tarjeta 3 -->
-            <div class="col-sm-12 col-md-4 col-lg-4 py-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4> Gestión de Alquileres </h4>
-                        <img src="{% static 'img/salon.png' %}" class="card-img-top" alt="salon">
-                        <a href="{% url 'crearAlquiler' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Cargar Alquiler </a>
-                        <a href="{% url 'listadoAlquileres' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(5, 134, 5)"> Listados de Alquileres </a>
-                    </div>
-                </div>
-            </div>
+<div>
+  <div class="container-home text-center">
+    <div class="row mt-4">
+      <!-- tarjeta 1 -->
+      <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h4>Gestión de Afiliados</h4>
+            <img
+              src="{% static 'img/persona.png' %}"
+              class="card-img-top"
+              alt="persona"
+            />
+            <a
+              href="{% url 'crearAfiliado' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Cargar Afiliado
+            </a>
+            <a
+              href="{% url 'listarAfiliados' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Listados de Afiliados
+            </a>
+          </div>
         </div>
-      </div>  
+      </div>
+      <!-- tarjeta 2 -->
+      <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h4>Gestión de Cursos</h4>
+            <img
+              src="{% static 'img/curso.png' %}"
+              class="card-img-top"
+              alt="curso"
+            />
+            <a
+              href="{% url 'crearCurso' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Cargar Curso
+            </a>
+            <a
+              href="{% url 'listarCursos' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Listados de Cursos
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- tarjeta 3 -->
+      <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h4>Gestión de Alquileres</h4>
+            <img
+              src="{% static 'img/salon.png' %}"
+              class="card-img-top"
+              alt="salon"
+            />
+            <a
+              href="{% url 'crearAlquiler' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Cargar Alquiler
+            </a>
+            <a
+              href="{% url 'listarAlquileres' %}"
+              class="btn text-white w-100 mt-4 fw-semibold shadow-sm"
+              style="background-color: rgb(5, 134, 5)"
+            >
+              Listados de Alquileres
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

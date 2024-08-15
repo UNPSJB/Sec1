@@ -16,11 +16,11 @@ def gimnasio(request):
 def home(request):
     return render(request,"home.html")
 
-def listadoCursos(request):
-    return render(request,"listadoCursos.html")
+# def listadoCursos(request):
+#     return render(request,"listadoCursos.html")
 
-def listadoSalones(request):
-    return render(request,"listadoSalones.html")
+# def listadoSalones(request):
+#     return render(request,"listadoSalones.html")
 
 def login(request):
     return render(request,"login.html")
@@ -31,29 +31,29 @@ def usuario(request):
 def registro(request):
     return render(request, "registro.html")
 
-def listadoAlquileres(request):
-    return render(request,"listadoAlquileres.html")
+# def listadoAlquileres(request):
+#     return render(request,"listadoAlquileres.html")
 
-def listadoAlumnos(request):
-    return render(request,"listadoAlumnos.html")
+# def listadoAlumnos(request):
+#     return render(request,"listadoAlumnos.html")
 
 def listadoDePendientes(request):
     return render(request,"listadoPendientes.html")
 
-def verAlumno(request):
-    return render(request,"verAlumno.html")
+# def verAlumno(request):
+#     return render(request,"verAlumno.html")
 
-def verAlquiler(request):
-    return render(request,"verAlquiler.html")
+# def verAlquiler(request):
+#     return render(request,"verAlquiler.html")
 
-def verProfesor(request):
-    return render(request,"verProfesor.html")
+# def verProfesor(request):
+#     return render(request,"verProfesor.html")
 
-def verCurso(request):
-    return render(request,"verCurso.html")
+# def verCurso(request):
+#     return render(request,"verCurso.html")
 
-def verSalon(request):
-    return render(request,"verSalon.html")
+# def verSalon(request):
+#     return render(request,"verSalon.html")
 
-def verAfiliado(request):
-    return render(request,"verAfiliado.html")
+# def verAfiliado(request):
+#     return render(request,"verAfiliado.html")

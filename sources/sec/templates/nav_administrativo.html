@@ -1,68 +1,184 @@
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Afiliados
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearAfiliado' %}">Agregar afiliado</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarAfiliados' %}">Listado de afiliados</a></li>
-      <li><a class="dropdown-item" href="{% url 'pendientes' %}">Listado de Pendientes</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Alumnos
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearAlumno' %}">Agregar alumno</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarAlumnos' %}">Listado de alumnos</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Cursos
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearCurso' %}">Crear curso</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarCursos' %}">Listado de cursos</a></li>
-      <li><a class="dropdown-item" href="{% url 'crearAula' %}">Crear aula</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarAulas' %}">Listado de aulas</a></li>        
-      <li><a class="dropdown-item" href="{% url 'crearEspecialidad' %}">Crear especialidad</a></li>     
-      <li><a class="dropdown-item" href="{% url 'listarEspecialidades' %}">Listado de especialidades</a></li>    
-      <li><a class="dropdown-item" href="{% url 'listarPagosDictados' %}">Listado de pagos dictados</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Profesores
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearProfesor' %}">Agregar profesor</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarProfesores' %}">Listado de profesores</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Salones
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearSalon' %}">Agregar salón</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarSalones' %}">Listado de salones</a></li>
-      <li><a class="dropdown-item" href="{% url 'crearServicio' %}">Agregar servicio</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarServicios' %}">Listado de Servicios</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Gestión Alquileres
-    </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'crearAlquiler' %}">Agregar alquiler</a></li>
-      <li><a class="dropdown-item" href="{% url 'listarAlquileres' %}">Listado de alquileres</a></li>
-      <li class="dropdown-divider"></li>
-    </ul>
-  </li>
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Afiliados
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearAfiliado' %}"
+        ><i class="fa-solid fa-plus"></i> Agregar afiliado</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarAfiliados' %}"
+        ><i class="fa-solid fa-list"></i> Listado de afiliados</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'pendientes' %}"
+        ><i class="fa-regular fa-clock"></i> Listado de Pendientes</a
+      >
+    </li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Alumnos
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearAlumno' %}">Agregar alumno</a>
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarAlumnos' %}"
+        >Listado de alumnos</a
+      >
+    </li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Cursos
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearCurso' %}">Crear curso</a>
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarCursos' %}"
+        >Listado de cursos</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'crearAula' %}">Crear aula</a>
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarAulas' %}"
+        >Listado de aulas</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'crearEspecialidad' %}"
+        >Crear especialidad</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarEspecialidades' %}"
+        >Listado de especialidades</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarPagosDictados' %}"
+        >Listado de pagos dictados</a
+      >
+    </li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Profesores
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearProfesor' %}"
+        >Agregar profesor</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarProfesores' %}"
+        >Listado de profesores</a
+      >
+    </li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Salones
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearSalon' %}">Agregar salón</a>
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarSalones' %}"
+        >Listado de salones</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'crearServicio' %}"
+        >Agregar servicio</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarServicios' %}"
+        >Listado de Servicios</a
+      >
+    </li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle text-white"
+    href="#"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Gestión Alquileres
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="{% url 'crearAlquiler' %}"
+        >Agregar alquiler</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarAlquileres' %}"
+        >Listado de alquileres</a
+      >
+    </li>
+  </ul>
+</li>
