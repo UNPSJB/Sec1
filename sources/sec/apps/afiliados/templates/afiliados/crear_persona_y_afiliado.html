@@ -1,0 +1,124 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <form method="post">
+            {% csrf_token %}
+            <h2><center>Registrar Afiliado</center></h2>
+            <hr />
+            <fieldset>
+              <legend>Datos Personales</legend>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                  <div id="div_{{persona_form.dni.id_for_label}}" class="mb-3">
+                    <label for="{{ persona_form.dni.id_for_label }}" class="form-label">{{ persona_form.dni.label|safe }}</label>
+                    {{ persona_form.dni }}
+                  </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                  <div id="div_{{persona_form.nombre.id_for_label}}" class="mb-3">
+                    <label for="{{ persona_form.nombre.id_for_label }}" class="form-label">{{ persona_form.nombre.label|safe }}</label>
+                    {{ persona_form.nombre }}
+                  </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                  <div id="div_{{persona_form.apellido.id_for_label}}" class="mb-3">
+                    <label for="{{ persona_form.apellido.id_for_label }}" class="form-label">{{ persona_form.apellido.label|safe }}</label>
+                    {{ persona_form.apellido }}
+                  </div>
+                </div>
+              </div>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{persona_form.nacimiento.id_for_label}}" class="mb-3">
+                        <label for="{{ persona_form.nacimiento.id_for_label }}" class="form-label">{{ persona_form.nacimiento.label|safe }}</label>
+                        {{ persona_form.nacimiento }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{persona_form.domicilio.id_for_label}}" class="mb-3">
+                        <label for="{{ persona_form.domicilio.id_for_label }}" class="form-label">{{ persona_form.domicilio.label|safe }}</label>
+                        {{ persona_form.domicilio }}
+                      </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{persona_form.telefono.id_for_label}}" class="mb-3">
+                        <label for="{{ persona_form.telefono.id_for_label }}" class="form-label">{{ persona_form.telefono.label|safe }}</label>
+                        {{ persona_form.telefono }}
+                      </div>
+                </div>
+              </div>
+            </fieldset>
+            <hr />
+            <fieldset>
+              <legend>Datos Laborales</legend>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.cuil.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.cuil.id_for_label }}" class="form-label">{{ afiliado_form.cuil.label|safe }}</label>
+                        {{ afiliado_form.cuil }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.estadoCivil.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.estadoCivil.id_for_label }}" class="form-label">{{ afiliado_form.estadoCivil.label|safe }}</label>
+                        {{ afiliado_form.estadoCivil }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.nacionalidad.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.nacionalidad.id_for_label }}" class="form-label">{{ afiliado_form.nacionalidad.label|safe }}</label>
+                        {{ afiliado_form.nacionalidad }}
+                    </div>
+                </div>
+              </div>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.email.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.email.id_for_label }}" class="form-label">{{ afiliado_form.email.label|safe }}</label>
+                        {{ afiliado_form.email }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.ingresoTrabajo.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.ingresoTrabajo.id_for_label }}" class="form-label">{{ afiliado_form.ingresoTrabajo.label|safe }}</label>
+                        {{ afiliado_form.ingresoTrabajo }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.sueldo.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.sueldo.id_for_label }}" class="form-label">{{ afiliado_form.sueldo.label|safe }}</label>
+                        {{ afiliado_form.sueldo }}
+                    </div>
+                </div>
+              </div>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.jornadaLaboral.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.jornadaLaboral.id_for_label }}" class="form-label">{{ afiliado_form.jornadaLaboral.label|safe }}</label>
+                        {{ afiliado_form.jornadaLaboral }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_{{afiliado_form.empresa.id_for_label}}" class="mb-3">
+                        <label for="{{ afiliado_form.empresa.id_for_label }}" class="form-label">{{ afiliado_form.empresa.label|safe }}</label>
+                        {{ afiliado_form.empresa }}
+                    </div>
+                </div>
+              </div>
+            </fieldset>
+            <input
+            type="submit"
+            name="submit"
+            value="Guardar"
+            class="btn btn-primary button white"
+            id="submit-id-submit"
+          />
+        </form>
+    </div>
+</div>
+{% endblock %}

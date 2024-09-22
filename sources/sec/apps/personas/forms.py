@@ -10,7 +10,7 @@ class PersonaForm(ModelForm):
         fields = '__all__'
         exclude=['persona', 'tipo']
         widgets = {
-            "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########'}),
+            "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########', 'title': 'Debe ser un Dni Valido'}),
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
             "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
@@ -24,19 +24,10 @@ class PersonaForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_action = 'guardarAfiliado'
-        self.helper.layout = Layout(
-            Fieldset(
-                   "",
-                HTML(
-                    '<hr/>'),
-                    'dni', 
-                    'nombre',
-                    'apellido',
-                    'nacimiento',    
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
 
 class ModificarPersonaForm(ModelForm):
     class Meta:

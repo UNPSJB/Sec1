@@ -32,7 +32,7 @@ class AfiliadoForm(forms.ModelForm):
     class Meta:
         model = Afiliado
         fields = "__all__"
-        exclude = ['persona','tipo', 'familia', 'empresa']
+        exclude = ['persona','tipo', 'familia']
         
         widgets = {
             "ingresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
@@ -49,6 +49,13 @@ class AfiliadoForm(forms.ModelForm):
             'estadoCivil': 'Estado civil',
             'jornadaLaboral': 'Jornada laboral',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
 
 class CrearAfiliadoForm(forms.Form):
 

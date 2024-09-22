@@ -3,11 +3,12 @@ from django.views.generic import TemplateView
 from apps.afiliados import views
 from .views import *
 
+
 urlpatterns = [
     path('', views.listadoAfiliados, name='listadoAfiliados'),
 
     # ----------------- AFILIADOS -----------------
-
+    path('crear/', crear_persona_y_afiliado, name='crear_persona_y_afiliado'),
     path('crearAfiliado/', AfiliadoCreateView.as_view(), name='crearAfiliado'),
     path('modificarAfiliado/<int:pk>', AfiliadoUpdateView.as_view(), name='modificarAfiliado'),
     path('eliminarAfiliado/<int:pk>/', AfiliadoDeleteView.as_view(), name='eliminarAfiliado'),
