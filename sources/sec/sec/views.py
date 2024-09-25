@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-@login_required
 def administrativo(request):
 #    print (request.user.persona)
     return render(request,"administrativo.html")
 
+def beneficios(request):
+    return render(request,"beneficios.html")
 
 def contacto(request):
     return render(request,"contacto.html")

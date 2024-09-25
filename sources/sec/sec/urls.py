@@ -17,13 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
-from django.contrib.auth import views as auth_views
-
 
 
 urlpatterns = [
     path('administrativo/', administrativo, name= 'administrativo'),
+    path('beneficios/', beneficios),
     path('contacto/', contacto, name= 'contacto'),
+    path('gimnasio/', gimnasio),
     path('', home, name= 'home'),
     path('personas/', include('apps.personas.urls')),
     path('listadoPendientes/', listadoDePendientes, name='pendientes'),
@@ -32,8 +32,7 @@ urlpatterns = [
     # path('listadoAlumnos/', listadoAlumnos, name='listadoAlumnos'),
     # path('listadoAlquileres/', listadoAlquileres, name='listadoAlquileres'),
     # path('listadoCursos/', include('apps.cursos.urls')),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),  # Usamos la vista genérica
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'), 
+    path('login/', login, name= 'login'),
     path('usuario/', usuario),
     path('admin/', admin.site.urls),
     path('registro/', registro, name= 'registro'),
