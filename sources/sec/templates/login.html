@@ -16,31 +16,40 @@
     <br>
     <div class="d-flex justify-content-center align-items-center">
         <div class="bg-white p-5 rounded-5 shadow" style="width: 25rem">
+            <link rel="stylesheet" href="{% static 'css/error.css' %}">
             <div class="contenedor-icono d-flex justify-content-center">
                 <i class="bi bi-person-circle" style="font-size: 50px"></i>
             </div>
             <div class="text-center fs-3">Iniciar Sesión</div>
-            <div class="input-group">
-                <div class="input-group-text" style="background-color:#0f66c3">
-                    <i class="bi bi-person-fill"></i>
+
+            {% if form.errors %}
+            <div id="message-error" class="alert alert-danger" role="alert">
+                <strong>Usuario o contraseña incorrectos. Por favor, inténtelo de nuevo.</strong>
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <div class="input-group-text" style="background-color:#0f66c3">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    {{ form.username }}
                 </div>
-                <input class="form-control bg-light" type="text" placeholder="Usuario">
-            </div>
-            <br>
-            <div class="input-group">
-                <div class="input-group-text" style="background-color:#0f66c3">
-                    <i class="bi bi-shield-lock-fill"></i>
+                <br>
+                <div class="input-group">
+                    <div class="input-group-text" style="background-color:#0f66c3">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    {{ form.password }}
                 </div>
-                <input class="form-control" type="password" placeholder="Contraseña">
-            </div>
-            <div class="d-flex justify-content-around mt-1">
-            </div>
-            <a href="{% url 'administrativo' %}" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Iniciar </a>
-            <div class="d-flex gap-1 justify-content-center mt-1">
-                <div> ¿No estás registrado? </div>
-                <a href="{% url 'registro' %}" class="text-decoration-none fw-semibold"> Regístrate aquí </a>
-            </div>
-        </div>
+                <div class="d-flex justify-content-around mt-1">
+                    <button type="submit" class="btn text-white w-100 mt-4 fw-semibold shadow-sm" style="background-color: rgb(6, 161, 6)"> Iniciar </button>
+
+                </div>
+            </form>
     </div>
+    <script src="{% static 'js/error.js' %}"></script>
+
 </div>
 {% endblock %}

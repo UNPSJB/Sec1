@@ -139,6 +139,12 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+
+LOGIN_REDIRECT_URL = '/administrativo/'  # Página a la que se redirige tras el login
+LOGOUT_REDIRECT_URL = '/login'  # Página a la que se redirige tras el logout
+
+LOGIN_URL = 'login'
+
 #Para el diagrama de clases
 GRAPH_MODELS = {
     'all_applications': True, 
