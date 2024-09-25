@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-
 @login_required
 def administrativo(request):
 #    print (request.user.persona)
@@ -10,7 +9,6 @@ def administrativo(request):
 
 def contacto(request):
     return render(request,"contacto.html")
-
 
 
 def home(request):
