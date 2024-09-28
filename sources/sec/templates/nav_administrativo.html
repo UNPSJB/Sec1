@@ -68,25 +68,25 @@
     </li>
     <li class="dropdown-divider"></li>
     <li>
+      <a class="dropdown-item" href="{% url 'crearAula' %}"
+        ><i class="fa-solid fa-plus"></i> Crear aula</a>
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'crearEspecialidad' %}"
+        ><i class="fa-solid fa-plus"></i> Crear especialidad</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
       <a class="dropdown-item" href="{% url 'listarCursos' %}"
         ><i class="fa-solid fa-list"></i> Listado de cursos</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'crearAula' %}"
-        ><i class="fa-solid fa-plus"></i> Crear aula</a>
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
       <a class="dropdown-item" href="{% url 'listarAulas' %}"
         ><i class="fa-solid fa-list"></i> Listado de aulas</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'crearEspecialidad' %}"
-        ><i class="fa-solid fa-plus"></i> Crear especialidad</a
       >
     </li>
     <li class="dropdown-divider"></li>
@@ -144,14 +144,14 @@
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'listarSalones' %}"
-        ><i class="fa-solid fa-list"></i> Listado de salones</a
+      <a class="dropdown-item" href="{% url 'crearServicio' %}"
+        ><i class="fa-solid fa-plus"></i> Agregar servicio</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'crearServicio' %}"
-        ><i class="fa-solid fa-plus"></i> Agregar servicio</a
+      <a class="dropdown-item" href="{% url 'listarSalones' %}"
+        ><i class="fa-solid fa-list"></i> Listado de salones</a
       >
     </li>
     <li class="dropdown-divider"></li>
@@ -185,6 +185,6 @@
     </li>
   </ul>
   <li class="nav-item"> <a class="nav-link text-white" href = "{% url 'logout' %}" role="button"
-    > Cerrar Sesion</a>
+     ><i class="fa-solid fa-power-off"></i>
   </li>
 </li>
