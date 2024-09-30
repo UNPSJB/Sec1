@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import *
 from django.contrib.auth import views as auth_views
-
+from .forms import LoginForm
 
 
 urlpatterns = [
@@ -32,7 +32,7 @@ urlpatterns = [
     # path('listadoAlumnos/', listadoAlumnos, name='listadoAlumnos'),
     # path('listadoAlquileres/', listadoAlquileres, name='listadoAlquileres'),
     # path('listadoCursos/', include('apps.cursos.urls')),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),  # Usamos la vista genérica
+    path('login/', auth_views.LoginView.as_view(template_name='login.html', authentication_form=LoginForm), name='login'),  # Usamos la vista genérica
     path('logout/', auth_views.LogoutView.as_view(), name='logout'), 
     path('usuario/', usuario),
     path('admin/', admin.site.urls),
