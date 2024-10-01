@@ -6,6 +6,9 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, get_list_or_404
+from django.http import JsonResponse
 
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
@@ -44,6 +47,7 @@ class SalonDeleteView(DeleteView):
 
 class SalonDetailView(DetailView):
     model = Salon
+    context_object_name = 'salon'
 
 class SalonListView(ListView):
     model = Salon
@@ -54,18 +58,49 @@ class SalonListView(ListView):
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
-    form_class = CrearAlquilerForm
+    form_class = AlquilerForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        salon_pk = self.kwargs.get('salon_pk')
+        salon = Salon.objects.get(pk=salon_pk)
+        initial['salon'] = salon
+        initial['monto'] = salon.monto
+        initial['reserva'] = timezone.now().date()
+        return initial
     
-    def get_success_url(self):
-        return reverse_lazy('detallarAlquiler', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
+        salon_pk = self.kwargs.get('salon_pk')
+        salon = get_object_or_404(Salon, pk=salon_pk)
+
+        alquiler = form.save(commit=False)
+
+        alquiler.salon = salon
+        alquiler.monto = salon.monto
+        alquiler.reserva = timezone.now().date()
+
+        alquiler.save()
+
         messages.add_message(self.request, messages.SUCCESS, 'Alquiler registrado con éxito')
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('comprobante_senia', kwargs={'pk': self.object.pk})
+    
     def form_invalid(self, form):
+        print(self.request.POST)
         return super().form_invalid(form)
-
+def comprobante_senia(request, pk):
+    alquiler = get_object_or_404(Alquiler, pk=pk)
+    
+    context = {
+        'alquiler': alquiler,
+        # Puedes agregar otros datos que desees mostrar en el comprobante
+    }
+    
+    #return render(request, 'comprobante_senia.html', context)
+    return render(request, 'salones/comprobante_senia.html', context)
 class AlquilerUpdateView(UpdateView):
     model = Alquiler
     form_class = AlquilerForm
@@ -95,29 +130,6 @@ class ServicioCreateView(CreateView):
     form_class = ServicioForm
     # template_name = 'servicios/servicio_form.html' # template del form
     success_url = reverse_lazy('listarServicios')
-"""
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['titulo'] = "Registrar servicio"
-        context['ayuda'] = 'crear_servicio.html'
-        return context
-
-
-    def post(self, *args, **kwargs):
-        self.object = None
-        servicio_form = self.get_form()
-        
-
-        if servicio_form.is_valid():
-            servicio = servicio_form.save()
-            #messages.add_message(self.request, messages.SUCCESS, 'Servicio registrado con éxito')
-            if 'guardar' in self.request.POST:
-                return redirect('')
-            return redirect('')
-        #messages.add_message(self.request, messages.ERROR, servicio_form.errors)
-        return self.form_invalid(form=servicio_form)
-"""
 
 class ServicioUpdateView(UpdateView):
     model = Servicio
@@ -139,3 +151,33 @@ class ServicioDetailView(DetailView):
 class ServicioListView(ListView):
     model = Servicio
     paginate_by = 100 
+
+def elegir_forma_pago(request, pk):
+    alquiler = get_object_or_404(Alquiler, pk=pk)
+    
+    if request.method == 'POST':
+        forma_pago = request.POST.get('forma_pago')
+        if forma_pago == 'unico':
+            return redirect('pago_unico', pk=alquiler.pk)
+        elif forma_pago == 'cuotas':
+            return redirect('pago_cuotas', pk=alquiler.pk)
+
+    return render(request, 'salones/elegir_forma_pago.html', {'alquiler': alquiler})
+
+def pago_unico (request, pk):
+    alquiler = get_object_or_404(Alquiler, pk=pk)
+
+    if request.method == 'POST':
+        monto = request.POST.get('monto')
+        fecha_pago = timezone.now().date()
+        #fecha_pago = request.POST.get('pago')
+
+        PagoUnico.objects.create(
+            alquiler=alquiler,
+            monto=alquiler.monto,
+            pago=fecha_pago
+        )
+
+        messages.success(request, "Pago realizado con exito")
+        return redirect('detallarAlquiler', pk=alquiler.pk)
+    return render(request, 'salones/pago_unico.html', {'alquiler': alquiler})

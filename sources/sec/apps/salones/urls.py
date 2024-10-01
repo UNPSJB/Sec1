@@ -20,12 +20,15 @@ urlpatterns = [
 
     # ----------------- Alquileres -----------------
 
-    path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
+    path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquiler'),
     path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
     path('eliminarAlquiler/', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
     #path('eliminarAlquiler/<int:pk>', alquiler_eliminar, name='eliminarAlquiler'),
     path('detallarAlquiler/<int:pk>', AlquilerDetailView.as_view(), name='detallarAlquiler'),
     path('listarAlquileres/', AlquilerListView.as_view(), name='listarAlquileres'),
+    path('comprobante_senia/<int:pk>/', comprobante_senia, name='comprobante_senia'),
+    path('elegir_forma_pago/<int:pk>/', elegir_forma_pago, name='elegir_forma_pago'),
+    path('pago_unico/<int:pk>/', pago_unico, name='pago_unico'),
 
     # ----------------- Servicios -----------------
 

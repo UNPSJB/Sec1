@@ -3,44 +3,59 @@
 {% load static %}
 
 {% block container %}
-<div style="background-color:#0f66c3">
-  <div class="container">
-    <form action="#">
-        <div class="form first">
-        <header> Datos Alquiler </header>
-                <div class="fields">
-                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                    <div class="input-group py-2"> 
-                      <label><b> Número de alquiler: </b></label> &nbsp; {{alquiler.pk}}
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Fecha de reserva: </b></label> &nbsp; {{alquiler.reserva}}
-                    </div>
-                    <div class="input-group py-2" style="display: flex; flex-direction: colum ">
-                      <label><b> Fecha inicio: </b></label> &nbsp; {{alquiler.inicio}}
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Monto: </b></label> &nbsp; {{alquiler.salon.monto}} **revisar**
-                    </div>
-                  </div>
-                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                    <div class="input-group py-2">
-                        <label><b> Afiliado: </b></label> &nbsp; <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Salón: </b></label> &nbsp; <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Seña: </b></label> &nbsp; {{alquiler.senia}}
-                    </div>
-                  </div>
-                </div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <td><a href="#"class="btn btn-success">Editar</a></td>
-              <td><a href="#"class="btn btn-danger">Eliminar</a></td>
+<div class="container">
+  <form action="#">
+    <div class="form first">
+      <header class="text-center"> Datos Alquiler </header>
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+          <div class="card" style="width: 100%;">
+            <div class="card-header bg-primary text-white">
+              Detalles del Alquiler
             </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <b>Número de alquiler:</b> {{ alquiler.pk }}
+              </li>
+              <li class="list-group-item">
+                <b>Fecha de reserva:</b> {{ alquiler.reserva }}
+              </li>
+              <li class="list-group-item">
+                <b>Fecha inicio:</b> {{ alquiler.inicio }}
+              </li>
+              <li class="list-group-item">
+                <b>Monto:</b> ${{ alquiler.monto }}
+              </li>
+            </ul>
+          </div>
         </div>
-    </form>
-  </div>       
+        <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+          <div class="card" style="width: 100%;">
+            <div class="card-header bg-success text-white">
+              Información del Afiliado y Salón
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <b>Afiliado:</b> <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{ alquiler.afiliado }}</a>
+              </li>
+              <li class="list-group-item">
+                <b>Salón:</b> <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{ alquiler.salon }}</a>
+              </li>
+              <li class="list-group-item">
+                <b>Seña:</b> ${{ alquiler.senia }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <td><a href="{% url 'elegir_forma_pago' alquiler.pk %}" class="btn btn-primary">Pagar</a></td>
+        <td><a href="{% url 'comprobante_senia' pk=alquiler.pk %}" class="btn btn-success">Comprobante</a></td>
+        <td><a href="#" class="btn btn-success">Editar</a></td>
+        <td><a href="#" class="btn btn-danger">Eliminar</a></td>
+      </div>
+    </div>
+  </form>
 </div>
+
 {% endblock %}
