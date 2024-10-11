@@ -1,5 +1,5 @@
 {% extends 'list.html' %} 
-{% block ttitle %}Listado de Afiliados{% endblock %}
+{% block ttitle %}Listado de Afiliaciones Pendientes{% endblock %}
 {% block thead %}
 <tr>
   <th scope="col">numero</th>
@@ -7,7 +7,6 @@
   <th scope="col">apellido</th>
   <th scope="col">cuil</th>
   <th scope="col">telefono</th>
-  <th scope="col">estado</th>
 </tr>
 {% endblock %} {% block tbody %} {% for afiliado in object_list %}
 <tr class="bg-transition">
@@ -16,17 +15,10 @@
   <td>{{ afiliado.persona.apellido }}</td>
   <td>{{ afiliado.cuil }}</td>
   <td>{{ afiliado.persona.telefono }}</td>
-  <td>{{ afiliado.estado }}</td>
   <td>
-    {% if afiliado.estado == "Pendiente" %}
     <a href="{% url 'detallarSolicitud' afiliado.pk %}" class="btn btn-success">
       Ver
     </a>
-    {% else %}
-    <a href="{% url 'detallarAfiliado' afiliado.pk %}" class="btn btn-success">
-      Ver
-    </a>
-    {% endif %}
   </td>
 </tr>
 {% endfor %} {% endblock %}

@@ -1,4 +1,4 @@
-from .models import Persona, Vinculo
+from .models import Persona
 from django.forms import ModelForm, modelformset_factory, BaseModelFormSet, ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML
@@ -10,16 +10,19 @@ class PersonaForm(ModelForm):
         fields = '__all__'
         exclude=['persona', 'tipo']
         widgets = {
-            "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########', 'title': 'Debe ser un Dni Valido'}),
-            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
-            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
+            "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########', 'title': 'Debe ser un Dni Valido', 'oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
+            "nacimiento": forms.TextInput(attrs={'type': 'date'}),
+            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            "estadoCivil": forms.Select(attrs={'class': 'form-select'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
-            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
-            "nacimiento": forms.TextInput(attrs={'type': 'date'})
+            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono','oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"}),
+            "email": forms.TextInput(attrs={'placeholder': 'Ingrese E-mail'}),
         }
         labels = {
             'nacimiento': 'Fecha de nacimiento',
-            
+            'estadoCivil': 'Estado civil',
         }
 
     def __init__(self, *args, **kwargs):
@@ -32,34 +35,21 @@ class PersonaForm(ModelForm):
 class ModificarPersonaForm(ModelForm):
     class Meta:
         model = Persona
-        fields = '__all__'
-        exclude=['persona', 'tipo','dni']
+        fields = ['nombre', 'apellido', 'nacimiento','nacionalidad', 'estadoCivil', 'domicilio','telefono', 'email']
         widgets = {
-            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres'}),
-            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos'}),
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
+            "nacimiento": forms.TextInput(attrs={'type': 'date'}),
+            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            "estadoCivil": forms.Select(attrs={'class': 'form-select'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
-            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono'}),
-            "nacimiento": forms.TextInput(attrs={'type': 'date'})
+            "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono','oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"}),
+            "email": forms.TextInput(attrs={'placeholder': 'Ingrese E-mail'}),
         }
         labels = {
             'nacimiento': 'Fecha de nacimiento',
-            
+            'estadoCivil': 'Estado civil',
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_action = 'guardarAfiliado'
-        self.helper.layout = Layout(
-            Fieldset(
-                   "",
-                HTML(
-                    '<hr/>'),
-                    'nombre',
-                    'apellido',
-                    'nacimiento',    
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
 
 
 from django_select2 import forms as s2forms
@@ -71,29 +61,3 @@ class PersonaWidget(s2forms.ModelSelect2Widget):
         "apellido__icontains",
     ]
 
-class VinculoForm(forms.ModelForm):
-    class Meta:
-        model = Vinculo
-        fields = ("tipo",
-                  "vinculado")
-        widgets = {
-            'vinculado': PersonaWidget
-        }
-
-class BaseVinculoFormSet(BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.template = 'bootstrap5/table_inline_formset.html'
-        self.helper.add_input(Submit('submit', 'Guardar'))
-    
-    def clean(self):
-        personas = [p['vinculado'].id for p in self.cleaned_data if 'vinculado' in p.keys()]
-        if len(set(personas)) != len(personas):
-            raise ValidationError("Solo puede existir un tipo de relacion con una persona")
-        # Validar no tener vinculos recursivos
-
-VinculoFormSet = modelformset_factory(Vinculo, form=VinculoForm, formset=BaseVinculoFormSet,
-    extra=1,
-    can_delete=True
-)

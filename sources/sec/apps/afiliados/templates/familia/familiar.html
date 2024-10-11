@@ -1,0 +1,67 @@
+<form id="familiar-form"method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" id="hidden-action" value="{{ action }}">
+    <input type="hidden" name="dni" required="" id="id_dni" value="{{dni}}">
+    <input type="hidden" name="vinculante" required="" id="afiliado_id" value="{{afiliado.id}}">
+    <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.nombre.id_for_label}}" class="mb-3">
+            <label for="{{ persona_form.nombre.id_for_label }}" class="form-label">{{ persona_form.nombre.label|safe }}</label>
+            {{ persona_form.nombre }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.apellido.id_for_label}}" class="mb-3">
+            <label for="{{ persona_form.apellido.id_for_label }}" class="form-label">{{ persona_form.apellido.label|safe }}</label>
+            {{ persona_form.apellido }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            <div id="div_{{persona_form.nacimiento.id_for_label}}" class="mb-3">
+                <label for="{{ persona_form.nacimiento.id_for_label }}" class="form-label">{{ persona_form.nacimiento.label|safe }}</label>
+                {{ persona_form.nacimiento }}
+            </div>
+        </div>
+      </div>
+      <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.nacionalidad.id_for_label}}" class="mb-3">
+              <label for="{{ persona_form.nacionalidad.id_for_label }}" class="form-label">{{ persona_form.nacionalidad.label|safe }}</label>
+              {{ persona_form.nacionalidad }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{familiar_form.relacion.id_for_label}}" class="mb-3">
+            <label for="{{ familiar_form.relacion.id_for_label }}" class="form-label">{{ familiar_form.relacion.label|safe }}</label>
+            {{ familiar_form.relacion }}
+          </div>
+        </div>
+
+      </div>
+    {% if action == 'detail' %}
+        <button type="button" class="btn btn-primary" id="edit-button">Editar</button>
+    {% endif %}
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <input type="submit" class="btn btn-primary" value="Aceptar" id="btn-aceptar-comercio">
+    </div>
+</form>
+<script>
+  $('#familiar-form').on('submit', function(e) {
+    e.preventDefault(); // Prevenir el envío normal del formulario
+    var action = $('#hidden-action').val();
+    if (action== 'create' || action=='update'){
+        $.ajax({
+            url: "{% url 'crear_familiar' %}",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+              location.reload();  // Recarga la página actual
+            },
+            error: function() {
+                alert("Error al crear Familiar.");
+            }
+        });
+    }
+    $('#miModall').modal('hide');
+});
+</script>
