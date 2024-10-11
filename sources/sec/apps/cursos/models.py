@@ -1,6 +1,5 @@
 from django.db import models
 from apps.personas.models import Rol, Persona
-from apps.personas.models import Vinculo
 from datetime import date
 MAYEDAD = 18 
 
@@ -115,9 +114,10 @@ class Alumno (Rol):
     curso = models.ForeignKey(Curso, related_name= 'alumnos', on_delete = models.CASCADE)
     dictado = models.ForeignKey(Dictado, blank= True, null = True, on_delete = models.CASCADE)
 
+    """     
     def agregarResponsable (self, persona, tipoResponsable): 
         if ((date.today() - self.persona.nacimiento ) < MAYEDAD): 
-            return Vinculo.objects.create (tipo = tipoResponsable, vinculante = self, vinculado = persona)
+            return Vinculo.objects.create (tipo = tipoResponsable, vinculante = self, vinculado = persona) """
 
 
     """
@@ -152,7 +152,7 @@ class Alumno (Rol):
         self.save()
         persona.es_alumno = False
         persona.save() 
-
+""" 
     @property
     def responsable(self):
         # Un Responsables de alumno es su padre, su madre o un tutor
@@ -161,7 +161,7 @@ class Alumno (Rol):
         esMadre = models.Q(tipo = Vinculo.MADRE)
         vinculo = self.persona.vinculantes.filter(esPadre | esMadre | esTutor).first()
         return vinculo.vinculante if vinculo is not None else None
-
+ """
 Rol.register(Alumno)
 
 class PagoDictado (models.Model): 

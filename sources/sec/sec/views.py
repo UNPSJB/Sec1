@@ -37,9 +37,6 @@ def registro(request):
 # def listadoAlumnos(request):
 #     return render(request,"listadoAlumnos.html")
 
-def listadoDePendientes(request):
-    return render(request,"listadoPendientes.html")
-
 # def verAlumno(request):
 #     return render(request,"verAlumno.html")
 
@@ -54,6 +51,3 @@ def listadoDePendientes(request):
 
 # def verSalon(request):
 #     return render(request,"verSalon.html")
-
-# def verAfiliado(request):
-#     return render(request,"verAfiliado.html")

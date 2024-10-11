@@ -26,42 +26,30 @@ class Persona(models.Model):
     ROL_ALUMNO= 2
     ROL_PROFESOR= 3
     ROL_ENCARGADO= 4
+    ROL_FAMILIAR= 5
     dni = models.CharField(max_length=8, unique = True)
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
-    domicilio = models.CharField(max_length=50, null=True, blank=True)
-    telefono = models.CharField(max_length=50, null=True, blank=True)
-    familia = models.ManyToManyField('self', blank=True, through = 'Vinculo')
+    nacionalidad = models.CharField(max_length=50) #Hacer choices
+    ESTADO_CIVIL = [(0, "Casado/a"),(1, "Viudo/a"),(2, "Soltero/a"),(3, "Divorciado/a")] #Esto habria que hacerlo en otro lado
+    estadoCivil = models.PositiveSmallIntegerField(choices=ESTADO_CIVIL,null=True)
+    domicilio = models.CharField(max_length=50, null=True)
+    email = models.EmailField(max_length = 254)
+    telefono = models.CharField(max_length=15, null=True)
+    
     usuario = models.OneToOneField(User, null = True, blank = True,  on_delete = models.CASCADE) 
     es_afiliado = models.BooleanField(default = False) 
     es_alumno = models.BooleanField(default = False) 
     es_profesor=models.BooleanField(default=False)
     es_encargado=models.BooleanField(default=False)
+    es_familiar=models.BooleanField(default=False)
 
     objects = models.Manager()
     afiliados = PersonaRolManager.from_queryset(PersonaRolQuerySet)(1)
     profesores = PersonaRolManager.from_queryset(PersonaRolQuerySet)(3)
     alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
     encargados = EncargadoManager()
-
- 
-    def afiliar( self, afiliado):
-        assert not self.es_afiliado, "Ya soy afiliado" 
-        #if  fecha is None:
-        #   fecha= datetime.now()
-        #afiliado.desde = fecha 
-        afiliado.persona = self 
-        afiliado.save()
-        self.es_afiliado=True
-        self.save()
-
-    def desafiliar(self,afiliado, fecha):
-        assert afiliado.persona == self, "Afiliado no existe o es incorrecto"
-        afiliado.hasta = fecha
-        afiliado.save() 
-        self.es_afiliado = False
-        self.save()
 
     def serProfesor(self, profesor):
         assert not self.es_profesor, "Ya soy Profesor" 
@@ -70,7 +58,6 @@ class Persona(models.Model):
         profesor.save()
         self.es_profesor = True
         self.save()
-
 
     def serEncargado (self):
         assert not self.es_encargado, "Ya soy encargado" 
@@ -106,31 +93,17 @@ class Persona(models.Model):
     def es(self, ROL):
         return self.como(ROL) is not None
 
-class Vinculo (models.Model): 
-    CONYUGE = 0
-    HIJO = 1 
-    TUTOR = 2
-    PADRE = 3 
-    MADRE = 4
-    TIPO = [(0, "Conyuge"), (1,"Hijo"), (2,"Tutor"), (3, "Padre"), (4, "Madre")] 
-    tipo = models.PositiveSmallIntegerField(choices = TIPO)
-    vinculante = models.ForeignKey(Persona, related_name = "vinculados", on_delete = models.CASCADE) 
-    vinculado = models.ForeignKey(Persona, related_name = "vinculantes",  on_delete = models.CASCADE) 
-
-
-    def __str__(self):
-        return f"{self.vinculado} es {self.get_tipo_display()}"
 
 class Rol(models.Model):
     TIPO = 0
     TIPOS = []
     persona = models.ForeignKey(Persona, related_name="roles", on_delete=models.CASCADE)
     tipo = models.PositiveSmallIntegerField(choices=TIPOS)
-    desde = models.DateField(null= True, blank= True)
+    desde = models.DateField(default= datetime.now)
     hasta = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.persona} es {self.get_tipo_display()}"
+        return f"{self.persona}"
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -142,15 +115,12 @@ class Rol(models.Model):
             rol.persona = self
             rol.save()
     
-
-
     def sos(self, Klass):
         return any([isinstance(rol, Klass) for rol in self.roles_related()])
 
     def roles_related(self):
         return [rol.related() for rol in self.roles.all()]
 
-    
     def related(self):
         return self.__class__ != Rol and self or getattr(self, self.get_tipo_display())
 

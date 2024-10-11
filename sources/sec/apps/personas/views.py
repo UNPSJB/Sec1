@@ -60,19 +60,3 @@ class PersonaDetailView(DetailView):
 class PersonaListView(ListView):
     model = Persona
     paginate_by = 100 
-
-def FamiliaCreateView(request, pk):
-    persona = Persona.objects.get(pk=pk)
-    if request.method == 'POST':
-        formset = VinculoFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            vinculos = formset.save(commit=False)
-            for v in vinculos:
-                v.vinculante = persona
-                v.save()
-            for d in formset.deleted_objects:
-                d.delete()
-        print(formset.errors)
-    formset = VinculoFormSet(queryset=persona.vinculados.all())
-    return render(request, 'personas/vinculo_form.html', {
-        'formset': formset, 'persona': persona})
