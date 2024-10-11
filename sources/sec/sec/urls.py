@@ -17,20 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
+from django.contrib.auth import views as auth_views
+from .forms import LoginForm
 
 
 urlpatterns = [
     path('administrativo/', administrativo, name= 'administrativo'),
-    path('beneficios/', beneficios),
     path('contacto/', contacto, name= 'contacto'),
-    path('gimnasio/', gimnasio),
     path('', home, name= 'home'),
     path('personas/', include('apps.personas.urls')),
     # path('listadoSalones/', listadoSalones, name='listadoSalones'),
     # path('listadoAlumnos/', listadoAlumnos, name='listadoAlumnos'),
     # path('listadoAlquileres/', listadoAlquileres, name='listadoAlquileres'),
     # path('listadoCursos/', include('apps.cursos.urls')),
-    path('login/', login, name= 'login'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html', authentication_form=LoginForm), name='login'),  # Usamos la vista genérica
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'), 
     path('usuario/', usuario),
     path('admin/', admin.site.urls),
     path('registro/', registro, name= 'registro'),
