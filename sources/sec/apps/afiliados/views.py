@@ -11,11 +11,6 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 
-# Create your views here.
-def listadoAfiliados(request):
-    return render(request, 'listadoAfiliados.html', {})
-
-
 # ---------------------------- Afiliado de prueba View ------------------------------------ #
 def buscar_persona_para_afiliado(request):
     if request.method == 'POST':
@@ -200,14 +195,6 @@ def buscar_persona_para_familiar(request):
                         })
             persona_form = PersonaFamiliarForm(instance=persona)
             new_action = 'update'
-            """afiliados_existentes = Afiliado.objects.filter(persona=persona)
-            for afiliado_existente in afiliados_existentes:
-                if afiliado_existente.hasta is None:
-                    afiliacion_activa = model_to_dict(afiliado_existente)
-                    return JsonResponse({
-                        'dni': dni,
-                        'afiliacion_activa': afiliacion_activa,     
-                    }) """
         except Persona.DoesNotExist:
             # Si no existe, crea un nuevo formulario vacío
             persona_form = PersonaFamiliarForm()
@@ -255,20 +242,8 @@ def crear_familiar(request):
                 for error in field.errors:
                     print(f"Error en el campo '{field.label}': {error}")
                     messages.error(request, f"Error en el campo '{field.label}': {error}")
-            # return render(request, 'afiliados/crear_persona_y_afiliado.html', {
-            #     'persona_form': persona_form,
-            #     'afiliado_form': afiliado_form
-            # })
 
 # ---------------------------- Afiliado View ------------------------------------ #
-
-""" class AfiliadoCreateView(CreateView):
-
-    model = Afiliado
-    form_class = CrearAfiliadoForm
-
-    def get_success_url(self):
-        return reverse_lazy('detallarAfiliado', kwargs={'pk': self.object.pk}) """
     
 class AfiliadoUpdateView(UpdateView):
     model = Afiliado
@@ -291,15 +266,6 @@ class AfiliadoUpdateView(UpdateView):
         messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
-
-def afiliado_eliminar(request, pk):
-    a = Afiliado.objects.get(pk=pk)
-    a.delete()
-    return redirect('listarAfiliados') 
-
-class AfiliadoDeleteView(DeleteView):
-    model = Afiliado
-    success_url = reverse_lazy('')
 
 class AfiliadoDetailView(DetailView):
     model = Afiliado

@@ -120,13 +120,7 @@ $(document).ready(function() {
     // Manejar el clic en el botón de comercio
     $('#buscarComercio-form').on('submit', function(e) {
         e.preventDefault(); // Prevenir el envío normal del formulario
-        /* var comercioCuit = $('#comercioCuit').val(); // Obtén el valor del input
-        // Verifica que se haya ingresado un ID
-        if (!comercioCuit) {
-            alert("Por favor ingrese un Cuit.");
-            return;
-        }
- */
+
         // Realiza la solicitud AJAX
         $.ajax({
             url: "{% url 'buscar_comercio' %}",

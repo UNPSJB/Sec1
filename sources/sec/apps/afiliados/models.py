@@ -10,7 +10,7 @@ class Comercio(models.Model):
     domicilio = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'cuit={self.cuit}, razonSocial={self.razonSocial}, rama={self.rama}, domicilioEmpresa={self.domicilio}'
+        return f'cuit={self.cuit}, razonSocial={self.razonSocial}'
 
 
 class Afiliado(Rol):
