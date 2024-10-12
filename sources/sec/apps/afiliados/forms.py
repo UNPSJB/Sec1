@@ -148,7 +148,6 @@ class ModificarAfiliadoForm(forms.Form):
                 css_class='form-row'
             ),
             Row(
-                
                 Column('domicilio', css_class='form-group col-md-4 mb-0'),
                 Column('telefono', css_class='form-group col-md-4 mb-0'),
                 Column('email', css_class='form-group col-md-4 mb-0'),
@@ -162,6 +161,7 @@ class ModificarAfiliadoForm(forms.Form):
             ),
             ),
             Column('comercio'),
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 ModificarAfiliadoForm.base_fields.update(ModificarPersonaForm.base_fields)
