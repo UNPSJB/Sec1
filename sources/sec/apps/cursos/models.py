@@ -22,7 +22,7 @@ class Profesor(Rol):
     TIPO = Persona.ROL_PROFESOR
     especializacion = models.ForeignKey(Especialidad, on_delete = models.CASCADE)
     aniosExperiencia = models.PositiveIntegerField()
-    cbu = models.PositiveIntegerField( unique = True)
+    cbu = models.PositiveIntegerField(unique = True)
 
 
     def registrarAsistencia (self, fecha):
@@ -45,7 +45,7 @@ class Curso(models.Model):
     desde = models.DateField()
     hasta = models.DateField()
     cupo = models.PositiveIntegerField(help_text= 'Cupo minimo de alumnos para iniciar dictado')
-    modulos = models.PositiveIntegerField( help_text = 'Cantidad de horas. 1 modulo = 1 hora')
+    modulos = models.PositiveIntegerField(help_text = 'Cantidad de horas. 1 modulo = 1 hora')
     tipoModulo = models.PositiveSmallIntegerField(choices = TIPOMODULO)
     descuento = models.PositiveIntegerField()
     precio = models.PositiveIntegerField()
@@ -63,7 +63,7 @@ class Dictado(models.Model):
     aula = models.ForeignKey(Aula, on_delete = models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete = models.CASCADE)
     profesores = models.ManyToManyField(Profesor, through = 'Titularidad')
-    costo = models.FloatField(max_length=10)
+    costo = models.FloatField()
     cupo = models.PositiveIntegerField()
     inicio = models.DateField()
     fin = models.DateField() 
@@ -193,7 +193,7 @@ class Titularidad (models.Model):
 
 class Liquidacion (models.Model): 
     liquidacion = models.DateField()
-    monto = models.FloatField(max_length = 4) 
+    monto = models.FloatField() 
     titular = models.ForeignKey(Titularidad, on_delete = models.CASCADE)
 
     def __str__(self): 

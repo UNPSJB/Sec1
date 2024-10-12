@@ -52,7 +52,7 @@
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{% url 'crearAlquiler' %}" class="btn btn-success"> + </a>
+                  <a href="{% url 'crearAlquiler' salon.pk %}" class="btn btn-success"> + </a>
                 </div>
               </div>
             </div>
@@ -64,7 +64,6 @@
                         <th> Salón </th>
                         <th> Fecha Reserva </th>
                         <th> Fecha Inicio </th>
-                        <th> Servicios </th>
                         <th> Acciones </th>
                     </tr>
                 </thead>
@@ -77,7 +76,6 @@
                           <td> {{alquiler.salon.nombre}}</td>
                           <td> {{alquiler.reserva}} </td>
                           <td> {{alquiler.inicio}} </td>
-                          <td> <div> <input type="checkbox"> </div></td>
                           <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
                       </tr>
                       {% endfor %}

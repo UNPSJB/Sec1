@@ -20,7 +20,7 @@ class Salon(models.Model):
         self.save() 
 
     def __str__(self):
-        return f'{self.nombre} {self.direccion}'
+        return f'{self.nombre}'
 
 class Servicio(models.Model): 
     nombre = models.CharField(max_length=20)
@@ -34,19 +34,15 @@ class Servicio(models.Model):
 class Alquiler (models.Model): 
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)
     afiliado = models.ForeignKey(Afiliado, on_delete = models.CASCADE)
-    senia = models.FloatField(max_length = 8)
+    senia = models.FloatField()
     reserva = models.DateField() 
     inicio = models.DateField( null = True, blank = True)
-    monto = models.FloatField(max_length= 9)
-
-    def agregarAlquiler (self, salon, senia, reserva, inicio, afiliado): 
-        self.salon = salon 
-        self.afiliado = afiliado 
-        self.senia = senia 
-        self.reserva = reserva 
-        if (inicio): 
-            self.inicio = inicio
-        self.save()
+    monto = models.FloatField()
+    ESTADO_PAGO_CHOICES = [
+        ('PENDIENTE', 'Pendiente'),
+        ('PAGADO', 'Pagado'),
+    ]
+    estado_pago = models.CharField(max_length=10, choices=ESTADO_PAGO_CHOICES, default='PENDIENTE')
 
 class PagoAlquiler (models.Model): 
     TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
@@ -55,5 +51,13 @@ class PagoAlquiler (models.Model):
     monto = models.FloatField(max_length = 9)
     formaPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
     
-   
-
+class PagoUnico(models.Model):
+    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
+    pago = models.DateField()
+    monto = models.DecimalField(max_digits=9,decimal_places=2)
+    
+class PagoCuota(models.Model):
+    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
+    num_cuotas = models.IntegerField()
+    monto = models.DecimalField(max_digits=9,decimal_places=2)
+    pago = models.DateField()
