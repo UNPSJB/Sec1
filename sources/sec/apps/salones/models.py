@@ -8,9 +8,11 @@ from apps.afiliados.models import Afiliado
 class Salon(models.Model):
     nombre = models.CharField(max_length=30)
     direccion = models.CharField(max_length=30)
-    capacidad = models.PositiveIntegerField(max_length=4)
+    capacidad = models.PositiveIntegerField()
     monto = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
+    imagen = models.ImageField(upload_to='img/', null=True)
+    descripcion = models.TextField(null=True, blank=False)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 
     def alquilar(self, afiliado, senia, reserva, inicio,monto):

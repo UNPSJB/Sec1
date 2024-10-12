@@ -6,7 +6,9 @@ from django.contrib import admin
 
 urlpatterns = [
 
-    
+    # ----------------- Encargados -----------------
+    path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
+
     # ----------------- Salones -----------------
     
     path('listadoSalones/', views.listadoSalones, name='listadoSalones'),

@@ -11,6 +11,18 @@ def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
 
 
+# ---------------------------- Encargado View ------------------------------------ #
+class EncargadoCreateView(CreateView):
+    model = Persona
+    form_class = EncargadoForm
+    success_url = reverse_lazy('listarEncargados')  
+
+    def form_valid(self, form):
+        encargado = form.save(commit=False)
+        encargado.es_encargado = True  
+        encargado.save()  
+        return super().form_valid(form)
+
 # ---------------------------- Salon View ------------------------------------ #
 
 class SalonCreateView(CreateView):
@@ -65,7 +77,17 @@ class AlquilerCreateView(CreateView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
-
+    
+def comprobante_senia(request, pk):
+    alquiler = get_object_or_404(Alquiler, pk=pk)
+    
+    context = {
+        'alquiler': alquiler,
+        # Puedes agregar otros datos que desees mostrar en el comprobante
+    }
+    
+    #return render(request, 'comprobante_senia.html', context)
+    return render(request, 'salones/comprobante_senia.html', context)
 class AlquilerUpdateView(UpdateView):
     model = Alquiler
     form_class = AlquilerForm

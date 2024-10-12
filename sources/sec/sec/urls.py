@@ -19,6 +19,8 @@ from django.urls import path, include
 from .views import *
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -45,3 +47,6 @@ urlpatterns = [
     path('cursos/', include('apps.cursos.urls')),
     path("select2/", include("django_select2.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

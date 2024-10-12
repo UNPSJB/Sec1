@@ -138,9 +138,9 @@
     Gestión Salones
   </a>
   <ul class="dropdown-menu">
+
     <li>
-      <a class="dropdown-item" href="{% url 'crearSalon' %}"
-        ><i class="fa-solid fa-plus"></i> Agregar salón</a>
+      <a class="dropdown-item" href="{% url 'crearEncargado' %}">Agregar encargado</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
@@ -149,9 +149,17 @@
       >
     </li>
     <li class="dropdown-divider"></li>
+
+    <li>
+      <a class="dropdown-item" href="{% url 'crearSalon' %}"
+        ><i class="fa-solid fa-plus"></i> Agregar salón</a>
+    </li>
+   
+    <li class="dropdown-divider"></li>
+
     <li>
       <a class="dropdown-item" href="{% url 'listarSalones' %}"
-        ><i class="fa-solid fa-list"></i> Listado de salones</a
+        >Listado de salones</a
       >
     </li>
     <li class="dropdown-divider"></li>
