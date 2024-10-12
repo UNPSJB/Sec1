@@ -49,7 +49,7 @@ class ServicioForm(forms.ModelForm):
                 css_class='form-row'
             ),
             ),
-            
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 class AlquilerForm(forms.ModelForm):
@@ -190,7 +190,7 @@ class CrearAlquilerForm(forms.Form):
                 css_class='form-row'
             ),
             ),
-            
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 class PagoAlquilerForm(forms.ModelForm):
@@ -249,7 +249,7 @@ class SalonForm(forms.ModelForm):
                 css_class='form-row'
             ),
             ),
-            
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
         
 CrearAlquilerForm.base_fields.update(PersonaForm.base_fields)
