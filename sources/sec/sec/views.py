@@ -36,6 +36,7 @@ def home(request):
 def login(request):
     return render(request,"login.html")
 
+
 def usuario(request):
     return render(request,"usuario.html")
 

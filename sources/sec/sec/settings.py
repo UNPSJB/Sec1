@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
 
 
 LOGIN_REDIRECT_URL = '/administrativo/'  # Página a la que se redirige tras el login
-LOGOUT_REDIRECT_URL = '/login'  # Página a la que se redirige tras el logout
+LOGOUT_REDIRECT_URL = '/login/'  # Página a la que se redirige tras el logout
 
 LOGIN_URL = 'login'
 
