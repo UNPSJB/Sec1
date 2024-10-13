@@ -4,13 +4,10 @@
 
 {% block container %}
 <div class="py-4">
-    <div class="container py-3" style="background-color: white">
+    <div class="container py-3" style="background-color: white ; border-radius: 6px;">
       <div class="row">
-        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
-          <img src="{% static 'img/persona.png' %}" class="img-thumbnail" alt="persona">
-        </div>
         <div class="col sm-12 col-md-4 col-lg-4 py-3">
-          <label><b>DATOS PERSONALES</b></label>
+          <label><h2><b>DATOS PERSONALES</b></h2></label>
           <div class="input-group py-2">
             <label><b> Nombre: </b></label> &nbsp; {{afiliado.persona.nombre}}
           </div>
@@ -21,21 +18,13 @@
             <label><b> DNI: </b></label> &nbsp; {{afiliado.persona.dni}}
           </div>
           <div class="input-group py-2">
-            <label><b> ID: </b></label> &nbsp; {{afiliado.id}}
-          </div>
-          <div class="input-group py-2">
             <label><b> Fecha Nacimiento: </b></label> &nbsp; {{afiliado.persona.nacimiento}}
           </div>
+          <div class="input-group py-2">
+            <label><b> Estado: </b></label> &nbsp; {{afiliado.estado}}
+          </div> 
         </div>
         <div class="col sm-12 col-md-4 col-lg-4 py-3">
-          {% if afiliado.estado == "Activo" %}
-          <div class="col sm-12 col-md-12 col-lg-12">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <td><a href="{% url 'modificarAfiliado' object.pk %}"class="btn btn-success">Editar</a></td>
-              <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal-{{ afiliado.id }}">Desafiliar</a></td>
-            </div>
-          </div>
-          {% endif %}
           <div class="input-group py-2">
             <label><b> CUIL: </b></label> &nbsp; {{afiliado.cuil}}
           </div>
@@ -51,10 +40,15 @@
           <div class="input-group py-2">
             <label><b> Teléfono: </b></label> &nbsp; {{afiliado.persona.telefono}}
           </div>  
-          <div class="input-group py-2">
-            <label><b> Estado: </b></label> &nbsp; {{afiliado.estado}}
-          </div> 
-        </div>
+          </div>
+          {% if afiliado.estado == "Activo" %}
+            <div class="col sm-12 col-md-12 col-lg-12">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <td><a href="{% url 'modificarAfiliado' object.pk %}"class="btn btn-success">Editar</a></td>
+                <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal-{{ afiliado.id }}">Desafiliar</a></td>
+              </div>
+            </div>
+          {% endif %}
       </div>
       <div class="container-listados my-3"> 
         <div class="table-responsive card shadow p-3"> 

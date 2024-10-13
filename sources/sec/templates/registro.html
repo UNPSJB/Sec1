@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block itemNavbar %}
+<li class="nav-item">
+  <a class="nav-link text-white" aria-current="page" href="{% url 'login' %}"> Iniciar Sesión </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link text-white" aria-current="page" href="{% url 'registro' %}"> Registrate </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link text-white" href="{% url 'contacto' %}">Contacto</a>
+</li>
+{% endblock %}
+{% block container %}
+<div style="background-color:#0f66c3">
+    <div class="container">
+        <header> Registro </header>
+        <form action="#">
+            <div class="form first">
+                <div class="datos curso">
+                    <div class="fields">
+
+                        <div class="input-field">
+                          <label> Usuario </label>
+                          <input type="text" placeholder="Ingrese usuario" required>
+                        </div>
+
+                        <div class="input-field">
+                          <label> DNI </label>
+                          <input type="text" placeholder="Ingrese número de documento" required>
+                        </div>
+    
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                          <label> Contraseña </label>
+                          <input type="password" placeholder="Ingrese su contraseña" required>
+                        </div>
+    
+                        <div class="input-field" style="display: flex; flex-direction: colum ">
+                            <label> Contraseña </label>
+                            <input type="password" placeholder="Repita su contraseña" required>
+                          </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{% url 'administrativo' %}" class="btn text-white" style="background-color: rgb(6, 161, 6)"> Registrarse </a>
+                </div>
+            </div>
+        </form>
+      </div> 
+  </div>
+  {% endblock %}

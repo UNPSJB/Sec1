@@ -4,8 +4,8 @@
 
 {% block container %}
 
-<div class="py-4" style="background-color: #0f66c3">
-    <div class="container py-3" style="background-color: white">
+<div class="py-4">
+    <div class="container py-3" style="background-color: white ; border-radius: 6px">
       <div class="row">
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
           <img src="{{ salon.imagen.url }}" alt="{{ salon.nombre }}"class="img-thumbnail" style="width: 100%; height: 100%;object-fit: cover;"/> 
@@ -28,7 +28,7 @@
                   height: 300px; /* Altura del mapa */
                   width: 100%;   /* Ancho del mapa */
               }
-          </style>
+            </style>
           <div id="map" data-direccion="{{ salon.direccion|escapejs }}" data-nombre="{{ salon.nombre|escapejs }}" ></div>
           </div>
         </div>
@@ -63,7 +63,7 @@
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{% url 'crearAlquiler' salon.pk %}" class="btn btn-success"> + </a>
+                  <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
                 </div>
               </div>
             </div>
@@ -99,4 +99,7 @@
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="{% static 'js/mapa.js' %}"></script>
+
+
+
 {% endblock %}

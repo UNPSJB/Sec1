@@ -14,7 +14,6 @@
                             <th scope="col">nombre</th>
                             <th scope="col">descripcion</th>
                             <th scope="col">obligatorio</th>
-                            <th scope="col">salon</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -24,10 +23,8 @@
                             <td>{{ servicio.nombre }}</td>
                             <td>{{ servicio.descripcion }}</td>
                             <td>{{ servicio.obligatorio }}</td>
-                            <td>{{ servicio.salon }}</td>
                             <td><a href="#"class="btn btn-success">Editar</a></td>
-                            <td><a href="{% url 'eliminarServicio' servicio.pk %}"class="btn btn-danger">Eliminar</a></td>             
-                                                                       
+                            <td><a href="{% url 'eliminarServicio' servicio.pk %}"class="btn btn-danger">Eliminar</a></td>                                                         
                           </tr>
                           {% endfor %}  
                       </tbody>
