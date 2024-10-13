@@ -91,7 +91,7 @@ class ServicioForm(forms.ModelForm):
     class Meta:
         model = Servicio
         fields = "__all__"
-        #exclude = ['salon']
+        exclude = ['salon']
 
         widgets = {
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
@@ -116,10 +116,6 @@ class ServicioForm(forms.ModelForm):
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('descripcion', css_class='form-group col-md-4 mb-0'),
                     Column('obligatorio', css_class='form-group col-md-4 mb-0'),
-                    css_class='form-row'
-                ),
-                Row(
-                    Column('salon', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
             ),
@@ -203,6 +199,13 @@ class PagoAlquilerForm(forms.ModelForm):
         #exclude = ['salon']
 
 class SalonForm(forms.ModelForm):
+
+    servicios = forms.ModelMultipleChoiceField(
+        queryset=Servicio.objects.filter(obligatorio=False),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Servicios'
+    )
     
     class Meta:
         model = Salon
@@ -250,17 +253,19 @@ class SalonForm(forms.ModelForm):
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
                     Column('imagen',css_class = 'form-group col-md-4 mb-0'),
-
-                css_class='form-row'
+                    Column('servicios', css_class='form-group col-md-10 mb-0'),  
+                    css_class='form-row'
                 ),
-            Row(
-                Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
-                css_class='form-row'
+                Row(
+                    Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
+                    css_class='form-row'
 
 
             )
             ),
         HTML('<hr/>'),
-            Submit('submit', 'Guardar', css_class='button white'),)
+            Submit('submit', 'Guardar', css_class='button white'),
+        )
 
 
+   

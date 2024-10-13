@@ -4,7 +4,13 @@ from django.db import models
 from apps.personas.models import Persona
 from apps.afiliados.models import Afiliado
 
+class Servicio(models.Model): 
+    nombre = models.CharField(max_length=20)
+    descripcion = models.CharField(max_length=120)
+    obligatorio = models.BooleanField(default = False)
 
+    def __str__(self):
+        return f'{self.nombre}'
 class Salon(models.Model):
     nombre = models.CharField(max_length=30)
     direccion = models.CharField(max_length=30)
@@ -14,6 +20,7 @@ class Salon(models.Model):
     imagen = models.ImageField(upload_to='static/img', null=True)
     descripcion = models.TextField(null=True, blank=False)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
+    servicios = models.ManyToManyField(Servicio)
 
     def alquilar(self, afiliado, senia, reserva, inicio,monto):
         alquiler = Alquiler.objects.create(alquiler, self, senia, reserva, inicio, afiliado, monto)
@@ -22,14 +29,7 @@ class Salon(models.Model):
     def __str__(self):
         return f'{self.nombre}'
 
-class Servicio(models.Model): 
-    nombre = models.CharField(max_length=20)
-    descripcion = models.CharField(max_length=120)
-    obligatorio = models.BooleanField(default = False)
-    salon = models.ForeignKey(Salon, on_delete = models.CASCADE, related_name='servicios')
 
-    def __str__(self):
-        return f'{self.nombre}'
 
 class Alquiler (models.Model): 
     salon = models.ForeignKey(Salon, on_delete = models.CASCADE)

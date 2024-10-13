@@ -27,6 +27,14 @@ class EncargadoCreateView(CreateView):
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
+    
+
+class EncargadoListView(ListView):
+    model = Persona
+    paginate_by = 100 
+
+    def get_queryset(self):
+        return Persona.objects.filter(es_encargado=1).order_by('dni')
 
 # ---------------------------- Salon View ------------------------------------ #
 
@@ -39,6 +47,11 @@ class SalonCreateView(CreateView):
         return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
+        salon = form.save(commit=False)  
+        salon.save() 
+        servicios_obligatorios = Servicio.objects.filter(obligatorio=True)
+        for servicio in servicios_obligatorios:
+            salon.servicios.add(servicio) 
         messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
         return super().form_valid(form)
 

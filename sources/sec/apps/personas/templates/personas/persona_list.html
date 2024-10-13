@@ -1,0 +1,24 @@
+{% extends 'list.html' %} 
+
+{% block ttitle %} Listado de Personas {% endblock %}
+
+{% block thead %}
+<tr>
+    <th scope="col">dni</th>
+    <th scope="col">nombre</th>
+    <th scope="col">apellido</th>
+    <th scope="col">telefono</th>
+</tr>
+{% endblock %}
+
+{% block tbody %}
+{% for persona in object_list %}
+<tr>
+    <td>{{ persona.dni }}</td>
+    <td>{{ persona.nombre }}</td>
+    <td>{{ persona.apellido }}</td>
+    <td>{{ persona.telefono }}</td>
+</tr>
+{% endfor %}
+{% endblock %}
+   

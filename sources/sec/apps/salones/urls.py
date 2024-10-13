@@ -8,6 +8,8 @@ urlpatterns = [
 
     # ----------------- Encargados -----------------
     path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
+    path('listarEncargados/', EncargadoListView.as_view(), name='listarEncargados'),
+
 
     # ----------------- Salones -----------------
     
@@ -22,7 +24,8 @@ urlpatterns = [
 
     # ----------------- Alquileres -----------------
 
-    path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquiler'),
+    path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
+    #path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquiler'),
     path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
     path('eliminarAlquiler/', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
     #path('eliminarAlquiler/<int:pk>', alquiler_eliminar, name='eliminarAlquiler'),
