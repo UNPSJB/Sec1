@@ -11,7 +11,7 @@ class Salon(models.Model):
     capacidad = models.PositiveIntegerField()
     monto = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
-    imagen = models.ImageField(upload_to='img/', null=True)
+    imagen = models.ImageField(upload_to='static/img', null=True)
     descripcion = models.TextField(null=True, blank=False)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
 

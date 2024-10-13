@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import os
+from django.conf import settings
 from .forms import *
 from .models import *
 from django.contrib import messages
@@ -57,6 +59,7 @@ class SalonDeleteView(DeleteView):
     model = Salon
     success_url = reverse_lazy('listarSalones')
 
+
 class SalonDetailView(DetailView):
     model = Salon
     context_object_name = 'salon'
@@ -64,6 +67,8 @@ class SalonDetailView(DetailView):
 class SalonListView(ListView):
     model = Salon
     paginate_by = 100 
+    context_object_name = 'salones'
+
 
 # ---------------------------- Alquiler View ------------------------------------ #
 
@@ -103,6 +108,7 @@ class AlquilerCreateView(CreateView):
     def form_invalid(self, form):
         print(self.request.POST)
         return super().form_invalid(form)
+    
 def comprobante_senia(request, pk):
         alquiler = get_object_or_404(Alquiler, pk=pk)
         
