@@ -6,7 +6,7 @@ from .models import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import DetailView, ListView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, get_list_or_404
@@ -14,6 +14,7 @@ from django.http import JsonResponse
 
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
+
 
 
 # ---------------------------- Encargado View ------------------------------------ #
@@ -32,6 +33,7 @@ class EncargadoCreateView(CreateView):
 class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
+    template_name = '../salones/templates/salones/encargado_list.html'
 
     def get_queryset(self):
         return Persona.objects.filter(es_encargado=1).order_by('dni')
@@ -49,9 +51,6 @@ class SalonCreateView(CreateView):
     def form_valid(self, form):
         salon = form.save(commit=False)  
         salon.save() 
-        servicios_obligatorios = Servicio.objects.filter(obligatorio=True)
-        for servicio in servicios_obligatorios:
-            salon.servicios.add(servicio) 
         messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
         return super().form_valid(form)
 
@@ -72,6 +71,7 @@ class SalonDeleteView(DeleteView):
     model = Salon
     success_url = reverse_lazy('listarSalones')
 
+#TODO: Modificar el delete para que solo haga baja logica
 
 class SalonDetailView(DetailView):
     model = Salon
@@ -159,8 +159,22 @@ class ServicioCreateView(CreateView):
 
     model = Servicio
     form_class = ServicioForm
-    # template_name = 'servicios/servicio_form.html' # template del form
     success_url = reverse_lazy('listarServicios')
+
+    def form_valid(self, form):
+        salon_id = self.request.POST.get('salon')  
+        salon = get_object_or_404(Salon, pk=salon_id)  
+
+        servicio = form.save(commit=False)
+        print(servicio.disponible)
+        servicio.salon = salon  
+        servicio.save()  
+        messages.add_message(self.request, messages.SUCCESS, 'El servicio ha sido agregado con éxito.')
+
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detallarSalon', kwargs={'pk': self.object.salon.pk})
 
 class ServicioUpdateView(UpdateView):
     model = Servicio
@@ -172,10 +186,39 @@ def servicio_eliminar(request, pk):
     a.delete()
     return redirect('listarServicios') 
 
+
+def cambiar_estado(request):
+    if request.method == 'POST':
+        servicio_id = request.POST.get('id')
+
+        # Buscar el servicio por ID
+        servicio = Servicio.objects.get(id=servicio_id)
+        
+        # Cambiar el estado de disponibilidad
+        servicio.disponible = not servicio.disponible
+        servicio.save()
+
+        # Retornar el nuevo estado en la respuesta
+        return JsonResponse({'nuevo_estado': servicio.disponible})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
 class ServicioDeleteView(DeleteView):
     model = Servicio
     success_url = reverse_lazy('listarServicios')
 
+    #TODO: Cambiar el delete de alguna forma para que solo haga baja logica y no elimine de la base de datos
+    def delete(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        
+        self.object.disponible = False
+        self.object.save()  
+
+        messages.add_message(self.request, messages.SUCCESS, 'Servicio dado de baja correctamente.')
+
+        return redirect(reverse('listarServicios'))
+    
 class ServicioDetailView(DetailView):
     model = Servicio
 

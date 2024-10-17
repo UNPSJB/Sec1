@@ -43,4 +43,6 @@ urlpatterns = [
     #path('eliminarServicio/<int:pk>', servicio_eliminar, name='eliminarServicio'),
     path('detallarServicio/<int:pk>', ServicioDetailView.as_view(), name='detallarServicio'),
     path('listarServicios/', ServicioListView.as_view(), name='listarServicios'),
+    path('cambiarEstadoServicio/', views.cambiar_estado, name='cambiarEstadoServicio'),
+
 ]

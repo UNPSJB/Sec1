@@ -1,13 +1,15 @@
 {% extends 'list.html' %} 
 
-{% block ttitle %} Listado de Personas {% endblock %}
+{% block ttitle %} Listado de Encargados {% endblock %}
 
 {% block thead %}
 <tr>
-    <th scope="col">dni</th>
-    <th scope="col">nombre</th>
-    <th scope="col">apellido</th>
-    <th scope="col">telefono</th>
+    <th scope="col">DNI</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">Apellido</th>
+    <th scope="col">Telefono</th>
+    <th scope="col">Domicilio</th>
+    <th scope="col"> Acciones</th>
 </tr>
 {% endblock %}
 
@@ -18,6 +20,11 @@
     <td>{{ persona.nombre }}</td>
     <td>{{ persona.apellido }}</td>
     <td>{{ persona.telefono }}</td>
+    <td>{{ persona.domicilio }}</td>
+    <td><a href="#"class="btn btn-success">Editar</a></td>
+    <!--TODO: Definir la ruta para eliminar al encargado pero que en realidad sea baja logica, es decir, marcar es_encargado = Fals-->
+
+
 </tr>
 {% endfor %}
 {% endblock %}

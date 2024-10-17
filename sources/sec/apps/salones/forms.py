@@ -96,6 +96,8 @@ class ServicioForm(forms.ModelForm):
         widgets = {
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
             "descripcion": forms.TextInput(attrs={'placeholder': 'Ingrese descripción'}),
+             "precio": forms.TextInput(attrs={'placeholder': 'Ingrese precio'}),
+
         }
 
     def is_valid(self) -> bool:
@@ -115,6 +117,8 @@ class ServicioForm(forms.ModelForm):
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                    Column('precio', css_class='form-group col-md-4 mb-0'),
+
                     Column('obligatorio', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
@@ -200,11 +204,10 @@ class PagoAlquilerForm(forms.ModelForm):
 
 class SalonForm(forms.ModelForm):
 
-    servicios = forms.ModelMultipleChoiceField(
-        queryset=Servicio.objects.filter(obligatorio=False),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label='Servicios'
+    encargado = forms.ModelChoiceField(
+        queryset=Persona.objects.filter(es_encargado=True),  
+        required=True, 
+        label='Encargado'
     )
     
     class Meta:
@@ -241,7 +244,6 @@ class SalonForm(forms.ModelForm):
             HTML(
                 '<hr/>'),
             Fieldset(
-                "Datos del salon",
                     "Datos del salon",
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
@@ -253,7 +255,6 @@ class SalonForm(forms.ModelForm):
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
                     Column('imagen',css_class = 'form-group col-md-4 mb-0'),
-                    Column('servicios', css_class='form-group col-md-10 mb-0'),  
                     css_class='form-row'
                 ),
                 Row(
