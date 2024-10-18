@@ -66,22 +66,26 @@ class SalonCreateView(CreateView):
     def form_invalid(self, form):
         return super().form_invalid(form)
     
-
-def cambiar_estado(request):
+def cambiar_estado_salon(request):
     if request.method == 'POST':
         salon_id = request.POST.get('id')
 
-        # Buscar el servicio por ID
+        # Buscar el salón por ID
         salon = Salon.objects.get(id=salon_id)
         
         # Cambiar el estado de disponibilidad
         salon.disponible = not salon.disponible
         salon.save()
 
-        # Retornar el nuevo estado en la respuesta
-        return JsonResponse({'nuevo_estado': salon.disponible})
+        # Retornar el nuevo estado y el ID del salón en la respuesta
+        return JsonResponse({
+            'nuevo_estado': salon.disponible,
+            'salon_id': salon.id,
+            'nombre': salon.nombre, 
+        })
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
@@ -102,6 +106,36 @@ class SalonDeleteView(DeleteView):
 class SalonDetailView(DetailView):
     model = Salon
     context_object_name = 'salon'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Por defecto, solo enviamos los servicios disponibles
+        mostrar_todos = self.request.GET.get('mostrar_todos', 'false') == 'true'
+        if not mostrar_todos:
+            context['servicios'] = self.object.servicio_set.filter(disponible=True)
+        else:
+            context['servicios'] = self.object.servicio_set.all()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        # Si es una solicitud AJAX, devolver JSON
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            self.object = self.get_object()
+            mostrar_todos = request.GET.get('mostrar_todos', 'false') == 'true'
+            servicios = self.object.servicio_set.all() if mostrar_todos else self.object.servicio_set.filter(disponible=True)
+            
+            data = [{
+                'id': servicio.id,
+                'nombre': servicio.nombre,
+                'descripcion': servicio.descripcion,
+                'precio': servicio.precio,
+                'obligatorio': servicio.obligatorio,
+                'disponible': servicio.disponible
+            } for servicio in servicios]
+            
+            return JsonResponse({'servicios': data})
+            
+        return super().get(request, *args, **kwargs)
 
 class SalonListView(ListView):
     model = Salon

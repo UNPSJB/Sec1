@@ -53,14 +53,14 @@ class Alquiler (models.Model):
     reserva = models.DateField() 
     inicio = models.DateField()
     monto = models.FloatField()
-    activo = models.BooleanField()
+    activo = models.BooleanField(default=True)
     
 class PagoAlquiler(models.Model):
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    cuotas = models.IntegerField() #numero de cuotas totales/ seleccionables
+    cuotas = models.IntegerField(default=1) #numero de cuotas totales/ seleccionables
     monto = models.DecimalField(max_digits=9,decimal_places=2)
     pago = models.DateField( null = True, blank = True)
-    numero = models.IntegerField() #numero de cuota
+    numero = models.IntegerField(default=1) #numero de cuota
 
 # TODO: tener un solo modelo de pago para posteriormente filtrar alquileres inpagos
 # TODO: hacer bajas logicas en lugar de deletes

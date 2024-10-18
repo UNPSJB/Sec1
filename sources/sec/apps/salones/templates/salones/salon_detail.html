@@ -34,9 +34,25 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
           <div class="col sm-12 col-md-12 col-lg-12">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <td><a href="{% url 'modificarSalon' salon.pk %}"class="btn btn-success">Editar</a></td>
-              <button class="btn btn-danger cambiar-estado-salon" data-id="{{ salon.pk }}" data-nombre="{{ salon.nombre}}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModalSalon">Deshabilitar</button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end" data-salon-botones="{{ salon.pk }}" data-url-modificar="{% url 'modificarSalon' salon.pk %}">
+              {% if salon.disponible %}
+                  <a href="{% url 'modificarSalon' salon.pk %}" class="btn btn-success">Editar</a>
+                  <button class="btn btn-danger cambiar-estado-salon" 
+                          data-id="{{ salon.pk }}" 
+                          data-nombre="{{ salon.nombre }}" 
+                          data-disponible="true" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#deshabilitarModalSalon">
+                      Deshabilitar
+                  </button>
+              {% else %}
+                  <button class="btn btn-success cambiar-estado-salon" 
+                          data-id="{{ salon.pk }}" 
+                          data-nombre="{{ salon.nombre }}" 
+                          data-disponible="false">
+                      Habilitar
+                  </button>
+              {% endif %}
             </div>
           </div>
           <div class="input-group py-2">
@@ -45,108 +61,113 @@
           <div class="input-group py-2">
             <label><b> Encargado: </b></label> &nbsp; {{salon.encargado}}
           </div>
+          <div class="input-group py-2">
+            <label><b> Disponible: </b></label> &nbsp;  
+            <span data-salon-disponible="{{ salon.pk }}">{{salon.disponible|yesno:"Si,No"}}</span>
+
+          </div>
         </div>
       </div> 
-
-      <!-- Listado de servicios-->
-      <div class="container-listados my-3"> 
-        <div class="table-responsive card shadow p-3"> 
-            <div class="row">
-              <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                <h3> Listado de Servicios </h3>
-              </div>
-              <div class="col sm-12 col-md-8 col-lg-8 py-3">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
+      
+      <div class="listados-container">
+        <!-- Listado de servicios-->
+        <div class="container-listados my-3"> 
+          <div class="table-responsive card shadow p-3"> 
+              <div class="row">
+                <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                  <h3> Listado de Servicios </h3>
+                </div>
+                <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="serviciosNoDisponibles">
-              <label class="form-check-label" for="serviciosNoDisponibles" style="margin-left: 10px;">Mostrar todos los servicios</label>
-            </div>
-
-            <table  class="table table-striped table-responsive dataTable">
-                <thead>
-                    <tr>
-                        <th> Nombre </th>
-                        <th> Descripcion </th>
-                        <th> Precio </th>
-                        <th> Obligatorio </th>
-                        <th> Disponible </th>
-                        <th> Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                      {%for servicio in salon.servicio_set.all %}
-                      <tr id="servicio-row-{{ servicio.id }}" class="servicio-row" data-disponible="{{ servicio.disponible }}">
-                          <td> {{servicio.nombre}}</td>
-                          <td> {{servicio.descripcion}}</td>
-                          <td> {{servicio.precio}}</td>
-                          <td> {{servicio.obligatorio|yesno:"Si,No"}}</td>
-                          <td id="servicio-disponible-{{ servicio.id}}"> {{servicio.disponible|yesno:"Si,No"}}</td>
-                          <td >
-                            <div class="btn-group" role="group">
-                              {% if servicio.disponible %}
-                                  <button class="btn btn-success editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
-                                  <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
-                              {% else %}
-                                  <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
-                              {% endif %}
-                          </div>
-                          </td>
-
-                      </tr>
-                      {% endfor %}
-                </tbody>
-            </table>
-          </div> 
-      </div>
-
-      <!-- Listado de alquileres-->
-      <div class="container-listados my-3"> 
-        <div class="table-responsive card shadow p-3"> 
-            <div class="row">
-              <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                <h3> Listado Alquileres </h3>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="serviciosNoDisponibles">
+                <label class="form-check-label" for="serviciosNoDisponibles" style="margin-left: 10px;">Mostrar todos los servicios</label>
               </div>
-              <div class="col sm-12 col-md-8 col-lg-8 py-3">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
-                </div>
-              </div>
-            </div>
-            <table class="table table-striped table-responsive dataTable">
-                <thead>
-                    <tr>
-                        <th> Nro Alquiler </th>
-                        <th> Afiliado </th>
-                        <th> Salón </th>
-                        <th> Fecha Reserva </th>
-                        <th> Fecha Inicio </th>
-                        <th> Acciones </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <div>
-                      {%for alquiler in salon.alquiler_set.all %}
+
+              <table  class="table table-striped table-responsive dataTable">
+                  <thead>
                       <tr>
-                          <td> {{alquiler.pk}}</td>
-                          <td> {{alquiler.afiliado}}</td>
-                          <td> {{alquiler.salon.nombre}}</td>
-                          <td> {{alquiler.reserva}} </td>
-                          <td> {{alquiler.inicio}} </td>
-                          <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                          <th> Nombre </th>
+                          <th> Descripcion </th>
+                          <th> Precio </th>
+                          <th> Obligatorio </th>
+                          <th> Disponible </th>
+                          <th> Acciones</th>
                       </tr>
-                      {% endfor %}
-                    </div>
-                </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                        {%for servicio in servicios %}
+                        <tr id="servicio-row-{{ servicio.id }}" class="servicio-row" data-disponible="{{ servicio.disponible }}">
+                            <td> {{servicio.nombre}}</td>
+                            <td> {{servicio.descripcion}}</td>
+                            <td> {{servicio.precio}}</td>
+                            <td> {{servicio.obligatorio|yesno:"Si,No"}}</td>
+                            <td id="servicio-disponible-{{ servicio.id}}"> {{servicio.disponible|yesno:"Si,No"}}</td>
+                            <td >
+                              <div class="btn-group" role="group">
+                                {% if servicio.disponible %}
+                                    <button class="btn btn-success editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
+                                    <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
+                                {% else %}
+                                    <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
+                                {% endif %}
+                            </div>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+              </table>
+            </div> 
+        </div>
+
+        <!-- Listado de alquileres-->
+        <div class="container-listados my-3"> 
+          <div class="table-responsive card shadow p-3"> 
+              <div class="row">
+                <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                  <h3> Listado Alquileres </h3>
+                </div>
+                <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
+                  </div>
+                </div>
+              </div>
+              <table class="table table-striped table-responsive dataTable">
+                  <thead>
+                      <tr>
+                          <th> Nro Alquiler </th>
+                          <th> Afiliado </th>
+                          <th> Salón </th>
+                          <th> Fecha Reserva </th>
+                          <th> Fecha Inicio </th>
+                          <th> Acciones </th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <div>
+                        {%for alquiler in salon.alquiler_set.all %}
+                        <tr>
+                            <td> {{alquiler.pk}}</td>
+                            <td> {{alquiler.afiliado}}</td>
+                            <td> {{alquiler.salon.nombre}}</td>
+                            <td> {{alquiler.reserva}} </td>
+                            <td> {{alquiler.inicio}} </td>
+                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                        </tr>
+                        {% endfor %}
+                      </div>
+                  </tbody>
+              </table>
           </div> 
+        </div>
       </div>
-    </div>
-    </div>
 </div>
 
 {% endblock %}
@@ -163,13 +184,13 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="deshabilitarModalLabelSalon">Confirmar deshabilitación</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modalSalon" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               ¿Estás seguro de deshabilitar el salon: <strong id="salonNombre"></strong>?
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modalSalon">Cerrar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="button" class="btn btn-danger" id="confirmarDeshabilitarSalon">Deshabilitar</button>
           </div>
       </div>
@@ -267,121 +288,277 @@
   <script src=https://cdn.datatables.net/2.1.8/js/dataTables.js></script>
 
 
+
   <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    const checkbox = document.getElementById('serviciosNoDisponibles');
-    const servicioRows = document.querySelectorAll('.servicio-row');
-    
-    // Función para normalizar el valor de disponibilidad
-    function isDisponible(value) {
-        const normalizedValue = String(value).toLowerCase();
-        return normalizedValue === 'true' || normalizedValue === 'True' || normalizedValue === 'si' || normalizedValue === 'yes';
+    document.addEventListener('DOMContentLoaded', function() {
+    let salonADeshabilitar = null;
+
+    const salonContainer = document.querySelector('[data-salon-disponible]');
+    if (salonContainer) {
+        const salonId = salonContainer.getAttribute('data-salon-disponible');
+        const disponible = salonContainer.textContent.trim() === "Si";
+        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
+        const nombre = botonesContainer.querySelector('.cambiar-estado-salon')?.getAttribute('data-nombre');
+        
+        actualizarInterfazSalon(salonId, nombre, disponible);
     }
-    
-    // Función para mostrar/ocultar servicios
-    function toggleServicios() {
-        const mostrarTodos = checkbox.checked;
-        servicioRows.forEach(row => {
-            const disponible = isDisponible(row.dataset.disponible);
-            row.style.display = (mostrarTodos || disponible) ? '' : 'none';
+
+    function actualizarInterfazSalon(salonId, nombre, disponible) {
+        // Actualizar el indicador de disponibilidad
+        const disponibleIndicador = document.querySelector(`[data-salon-disponible="${salonId}"]`);
+        if (disponibleIndicador) {
+            disponibleIndicador.textContent = disponible ? "Si" : "No";
+        }
+
+        // Actualizar los botones
+        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
+        if (botonesContainer) {
+            if (disponible) {
+              const urlModificar = botonesContainer.getAttribute('data-url-modificar');
+                botonesContainer.innerHTML = `
+                    <a href="${urlModificar}" class="btn btn-success">Editar</a>
+                    <button class="btn btn-danger cambiar-estado-salon" 
+                            data-id="${salonId}" 
+                            data-nombre="${nombre}" 
+
+                            data-disponible="true" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deshabilitarModalSalon">
+                        Deshabilitar
+                    </button>
+                `;
+                document.querySelector('.listados-container').style.display = 'block'; // Cambia el selector según tu estructura
+            } else {
+                botonesContainer.innerHTML = `
+                    <button class="btn btn-success cambiar-estado-salon" 
+                            data-id="${salonId}" 
+                            data-disponible="false">
+                        Habilitar
+                    </button>
+                `;
+                document.querySelector('.listados-container').style.display = 'none'; // Cambia el selector según tu estructura
+
+            }
+        }
+    }
+
+    function cambiarEstadoSalon(button) {
+        const salonId = button.getAttribute('data-id');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const cambiarEstadoUrl = "{% url 'cambiarEstadoSalon' %}";
+
+
+        fetch(cambiarEstadoUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: `id=${salonId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            actualizarInterfazSalon(data.salon_id, data.nombre, data.nuevo_estado);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Hubo un error al cambiar el estado del salón.');
         });
     }
-    
-    // Establecer estado inicial del checkbox y aplicar visibilidad
-    checkbox.checked = false;
-    toggleServicios();
-    
-    // Escuchar cambios en el checkbox
-    checkbox.addEventListener('change', toggleServicios);
-    
-    // Variable para almacenar el servicio que se va a deshabilitar
-    let servicioADeshabilitar = null;
-    
-    // Manejador para el botón de cambiar estado
-    $(document).on('click', '.cambiar-estado', function(e) {
-        const button = $(this);
-        const servicioId = button.data('id');
-        const esDeshabilitacion = button.data('disponible') === true;
-        
-        if (esDeshabilitacion) {
-            // Si es una deshabilitación, guardamos el servicio y mostramos el modal
-            servicioADeshabilitar = button;
-            // Obtener el nombre del servicio de la fila
-            const nombreServicio = button.closest('tr').find('td:first').text().trim();
-            $('#servicioNombre').text(nombreServicio);
-            // El modal se mostrará automáticamente por el data-bs-target
-            return;
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('cambiar-estado-salon')) {
+            const button = e.target;
+            const esDeshabilitacion = button.getAttribute('data-disponible') === 'true';
+
+            if (esDeshabilitacion) {
+                salonADeshabilitar = button;
+                const nombreSalon = button.getAttribute('data-nombre');
+                document.getElementById('salonNombre').textContent = nombreSalon;
+                return;
+            }
+
+            cambiarEstadoSalon(button);
         }
-        
-        // Si es una habilitación, procedemos normalmente
-        cambiarEstadoServicio(button);
     });
-    
+
     // Manejador para el botón de confirmar deshabilitación
-    $('#confirmarDeshabilitar').on('click', function() {
-        if (servicioADeshabilitar) {
-            cambiarEstadoServicio(servicioADeshabilitar);
-            $('#deshabilitarModal').modal('hide');
-            servicioADeshabilitar = null;
-        }
-    });
-    
-    // Función para cambiar el estado del servicio
-    function cambiarEstadoServicio(button) {
-        const servicioId = button.data('id');
-        
-        $.ajax({
-            url: '{% url "cambiarEstadoServicio" %}',
-            type: 'POST',
-            data: {
-                'id': servicioId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                const nuevoEstado = response.nuevo_estado;
-                const disponibilidadTexto = nuevoEstado ? "Si" : "No";
-                const row = $(`#servicio-row-${servicioId}`);
-                
-                // Actualizar el texto de disponibilidad
-                $(`#servicio-disponible-${servicioId}`).html(disponibilidadTexto);
-                
-                // Actualizar el atributo data-disponible
-                row.attr('data-disponible', nuevoEstado);
-                
-                // Actualizar los botones
-                if (nuevoEstado) {
-                    button.closest('td').html(`
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-success editar-servicio me-3" data-id="${servicioId}">Editar</button>
-                            <button class="btn btn-danger cambiar-estado" data-id="${servicioId}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
-                        </div>
-                    `);
-                } else {
-                    button.closest('td').html(`
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-success cambiar-estado" data-id="${servicioId}" data-disponible="false">Habilitar</button>
-                        </div>
-                    `);
+    const confirmarBtn = document.getElementById('confirmarDeshabilitarSalon');
+    if (confirmarBtn) {
+        confirmarBtn.addEventListener('click', function() {
+            if (salonADeshabilitar) {
+                cambiarEstadoSalon(salonADeshabilitar);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('deshabilitarModalSalon'));
+                if (modal) {
+                    modal.hide();
                 }
-                
-                // Actualizar la visibilidad de la fila
-                const mostrarTodos = checkbox.checked;
-                row.css('display', (mostrarTodos || nuevoEstado) ? '' : 'none');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error en la solicitud AJAX:', error);
-                alert('Hubo un error al cambiar el estado del servicio.');
+                salonADeshabilitar = null;
             }
         });
     }
-});
 
+  });
+    
+  </script>
 
+  <script>
+    // Esperar a que el DataTable esté inicializado desde dataTable.js
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('serviciosNoDisponibles');
+        const tabla = document.querySelector('.dataTable');
+        let dataTableInstance;
 
+        // Función para obtener la instancia existente de DataTable
+        function obtenerDataTable() {
+            if ($.fn.DataTable.isDataTable(tabla)) {
+                dataTableInstance = $(tabla).DataTable();
+                return true;
+            }
+            return false;
+        }
 
+        // Función que intenta obtener DataTable cada 100ms
+        function esperarDataTable(callback, intentos = 0) {
+            if (obtenerDataTable()) {
+                callback();
+            } else if (intentos < 50) { // Máximo 5 segundos de espera
+                setTimeout(() => esperarDataTable(callback, intentos + 1), 100);
+            } else {
+                console.error('No se pudo obtener la instancia de DataTable');
+            }
+        }
 
+        function actualizarTabla(servicios) {
+            if (!dataTableInstance) {
+                console.error('DataTable no está inicializado');
+                return;
+            }
+
+            // Destruir los event listeners anteriores para evitar duplicados
+            $(tabla).find('.cambiar-estado, .editar-servicio').off();
+
+            // Limpiar la tabla
+            dataTableInstance.clear();
+            
+            // Preparar los datos para DataTable
+            const nuevosDatos = servicios.map(servicio => [
+                servicio.nombre,
+                servicio.descripcion,
+                servicio.precio,
+                servicio.obligatorio ? 'Si' : 'No',
+                servicio.disponible ? 'Si' : 'No',
+                `<div class="btn-group" role="group">
+                    ${servicio.disponible ? 
+                        `<button class="btn btn-success editar-servicio me-3" data-id="${servicio.id}">Editar</button>
+                        <button class="btn btn-danger cambiar-estado" data-id="${servicio.id}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>` :
+                        `<button class="btn btn-success cambiar-estado" data-id="${servicio.id}" data-disponible="false">Habilitar</button>`
+                    }
+                </div>`
+            ]);
+            
+            // Agregar los nuevos datos y redibujar
+            dataTableInstance.rows.add(nuevosDatos).draw();
+
+            // Actualizar los atributos de las filas
+            dataTableInstance.rows().every(function(rowIdx) {
+                const servicio = servicios[rowIdx];
+                const node = this.node();
+                node.id = `servicio-row-${servicio.id}`;
+                node.className = 'servicio-row';
+                node.setAttribute('data-disponible', servicio.disponible);
+            });
+        }
+        
+        function cargarServicios() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('mostrar_todos', checkbox.checked);
+            
+            fetch(url.toString(), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                actualizarTabla(data.servicios);
+            })
+            .catch(error => {
+                console.error('Error al cargar los servicios:', error);
+                alert('Error al cargar los servicios. Por favor, intente nuevamente.');
+            });
+        }
+
+        function cambiarEstadoServicio(button) {
+            const servicioId = button.data('id');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            $.ajax({
+              url: '{% url "cambiarEstadoServicio" %}',  // Ajusta esta URL según tu configuración
+                type: 'POST',
+                data: {
+                    'id': servicioId,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+                success: function(response) {
+                    cargarServicios();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error en la solicitud AJAX:', error);
+                    alert('Hubo un error al cambiar el estado del servicio.');
+                }
+            });
+        }
+
+        // Inicializar todo después de que DataTable esté listo
+        esperarDataTable(() => {
+            // Establecer estado inicial del checkbox
+            checkbox.checked = false;
+            
+            // Configurar el event listener del checkbox
+            checkbox.addEventListener('change', cargarServicios);
+
+            // Configurar los event listeners para los botones usando delegación de eventos
+            $(document).on('click', '.cambiar-estado', function(e) {
+                const button = $(this);
+                const esDeshabilitacion = button.data('disponible') === true;
+                
+                if (esDeshabilitacion) {
+                    window.servicioADeshabilitar = button;
+                    const nombreServicio = button.closest('tr').find('td:first').text().trim();
+                    $('#servicioNombre').text(nombreServicio);
+                    return;
+                }
+                
+                cambiarEstadoServicio(button);
+            });
+
+            // Configurar el manejador para el botón de confirmar deshabilitación
+            $('#confirmarDeshabilitar').on('click', function() {
+                if (window.servicioADeshabilitar) {
+                    cambiarEstadoServicio(window.servicioADeshabilitar);
+                    $('#deshabilitarModal').modal('hide');
+                    window.servicioADeshabilitar = null;
+                }
+            });
+
+            // Cargar los datos iniciales
+            cargarServicios();
+        });
+    });
 </script>
+
+
+
   
+
   
 {% endblock %}
 

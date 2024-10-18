@@ -23,7 +23,7 @@ urlpatterns = [
     #path('eliminarSalon/<int:pk>', salon_eliminar, name='eliminarSalon'),
     path('detallarSalon/<int:pk>', SalonDetailView.as_view(), name='detallarSalon'),
     path('listarSalones/', SalonListView.as_view(), name='listarSalones'),
-    #path('cambiarEstadoSalon/', views.cambiar_estado, name='cambiarEstadoSalon'),
+    path('cambiarEstadoSalon/', views.cambiar_estado_salon, name='cambiarEstadoSalon'),
 
 
     # ----------------- Alquileres -----------------
