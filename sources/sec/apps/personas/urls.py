@@ -14,6 +14,5 @@ urlpatterns = [
     #path('eliminarPersona/', persona_eliminar, name='eliminarPersona'),
     #path('detallarPersona/', PersonaDetailView.as_view(), name='detallarPersona'),
     #path('listarPersonas/', PersonaListView.as_view(), name='listarPersonas'),
-    path('<int:pk>/familia', FamiliaCreateView, name='familiaPersona'),
 ]
 

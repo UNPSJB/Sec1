@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -138,6 +139,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+
+LOGIN_REDIRECT_URL = '/administrativo/'  # Página a la que se redirige tras el login
+LOGOUT_REDIRECT_URL = '/login/'  # Página a la que se redirige tras el logout
+
+LOGIN_URL = 'login'
 
 #Para el diagrama de clases
 GRAPH_MODELS = {

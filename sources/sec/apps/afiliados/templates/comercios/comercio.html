@@ -1,0 +1,65 @@
+<form id="comercio-form"method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action-comercio" id="hidden-action-comercio" value="{{ action }}">
+    <input type="hidden" name="cuit" required="" id="id_cuit" value="{{cuit}}">
+    <input type="hidden" name="id-comercio" id="id_id-comercio" value="{{id}}">
+      <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{comercio_form.razonSocial.id_for_label}}" class="mb-3">
+            <label for="{{ comercio_form.razonSocial.id_for_label }}" class="form-label">{{ comercio_form.razonSocial.label|safe }}</label>
+            {{ comercio_form.razonSocial }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{comercio_form.rama.id_for_label}}" class="mb-3">
+            <label for="{{ comercio_form.rama.id_for_label }}" class="form-label">{{ comercio_form.rama.label|safe }}</label>
+            {{ comercio_form.rama }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            <div id="div_{{comercio_form.domicilio.id_for_label}}" class="mb-3">
+                <label for="{{ comercio_form.domicilio.id_for_label }}" class="form-label">{{ comercio_form.domicilio.label|safe }}</label>
+                {{ comercio_form.domicilio }}
+            </div>
+        </div>
+      </div>
+    {% if action == 'detail' %}
+        <button type="button" class="btn btn-primary" id="edit-button">Editar</button>
+    {% endif %}
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <input type="submit" class="btn btn-primary" value="Aceptar" id="btn-aceptar-comercio">
+    </div>
+</form>
+    <script>
+        $(document).ready(function() {
+            $('#edit-button').on('click', function() {
+                // Habilitar todos los campos de entrada, selección y textarea en el formulario
+                $('#comercio-form input, #comercio-form select, #comercio-form textarea').prop('disabled', false);
+                $('#hidden-action-comercio').val('update');
+            });
+            $('#comercio-form').on('submit', function(e) {
+                e.preventDefault(); // Prevenir el envío normal del formulario
+                var action = $('#hidden-action-comercio').val();
+                if (action == 'detail') {
+                    var razonSocial = $('#id_razonSocial').val();
+                    $('#comercioSelect').val(razonSocial);
+                    var id = $('#id_id-comercio').val();
+                    $('#id_comercio').val(id);
+                }else if (action== 'create' || action=='update'){
+                    $.ajax({
+                        url: "{% url 'crear_comercio' %}",
+                        type: "POST",
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            $('#comercioSelect').val(response.razonSocial);
+                            $('#id_comercio').val(response.id);
+                        },
+                        error: function() {
+                            alert("Error al crear empresa.");
+                        }
+                    });
+                }
+                $('#miModall').modal('hide');
+            });
+        });
+    </script>

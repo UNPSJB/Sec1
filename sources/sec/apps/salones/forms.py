@@ -1,6 +1,7 @@
 from dataclasses import fields
 from sqlite3 import Row
-from django import forms
+from django import forms 
+import datetime
 
 from apps.personas.models import Persona
 from apps.personas.forms import PersonaForm
@@ -12,17 +13,90 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from datetime import date
 from django.utils import timezone
+class EncargadoForm(forms.ModelForm):
+    class Meta: 
+        model = Persona
+        fields = ['dni', 'nombre', 'apellido', 'telefono', 'domicilio', 'nacimiento']
+        labels = {
+            'dni': 'DNI',
+            'nombre': 'Nombre',
+            'apellido': 'Apellido',
+            'telefono': 'Teléfono',
+            'domicilio': 'Domicilio',
+            'nacimiento': 'Fecha de nacimiento',
+        }
+
+        hoy = datetime.date.today()
+        fecha_limite = hoy - datetime.timedelta(days=18*365) 
+
+        widgets = {
+            'nacimiento': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def clean_dni(self):
+        dni = self.cleaned_data['dni']
+        if not dni.isdigit() or len(dni) != 8:
+            raise forms.ValidationError("El DNI debe ser un número de 8 dígitos")
+        return dni
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        if telefono and not telefono.isdigit():
+            raise forms.ValidationError("El teléfono debe contener solo números")
+        return telefono
+
+    def clean_nacimiento(self):
+        nacimiento = self.cleaned_data['nacimiento']
+        hoy = datetime.date.today()
+        fecha_limite = hoy - datetime.timedelta(days=18*365)
+
+        if nacimiento > fecha_limite:
+            raise forms.ValidationError("Debes ser mayor de 18 años para registrarte.")
+        
+        return nacimiento
+
+
+
+    def is_valid(self) -> bool:
+        valid = super().is_valid()
+        return valid
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('<h2><center>Registrar encargado</center></h2>'),
+            HTML('<hr/>'),
+            Fieldset(
+                "Datos del encargado",
+                Row(
+                    Column('dni', css_class='form-group col-md-4 mb-0'),
+                    Column('nombre', css_class='form-group col-md-4 mb-0'),
+                    Column('apellido', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('telefono', css_class='form-group col-md-5 mb-0'),
+                    Column('domicilio', css_class='form-group col-md-5 mb-0'),
+                    Column('nacimiento', css_class='form-group col-md-5 mb-0'),
+                    css_class='form-row'
+                )
+            ),
+            Submit('submit', 'Guardar', css_class='button white'),
+        )
 
 class ServicioForm(forms.ModelForm):
 
     class Meta:
         model = Servicio
         fields = "__all__"
-        #exclude = ['salon']
+        exclude = ['salon']
 
         widgets = {
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
             "descripcion": forms.TextInput(attrs={'placeholder': 'Ingrese descripción'}),
+             "precio": forms.TextInput(attrs={'placeholder': 'Ingrese precio'}),
+
         }
 
     def is_valid(self) -> bool:
@@ -42,15 +116,13 @@ class ServicioForm(forms.ModelForm):
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                    Column('precio', css_class='form-group col-md-4 mb-0'),
+
                     Column('obligatorio', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
-                Row(
-                    Column('salon', css_class='form-group col-md-4 mb-0'),
-                    css_class='form-row'
-                ),
             ),
-
+            
             Submit('submit', 'Guardar', css_class='button white'),)
 
 
@@ -90,6 +162,12 @@ class PagoAlquilerForm(forms.ModelForm):
         #exclude = ['salon']
 
 class SalonForm(forms.ModelForm):
+
+    encargado = forms.ModelChoiceField(
+        queryset=Persona.objects.filter(es_encargado=True),  
+        required=True, 
+        label='Encargado'
+    )
     
     class Meta:
         model = Salon
@@ -125,7 +203,7 @@ class SalonForm(forms.ModelForm):
             HTML(
                 '<hr/>'),
             Fieldset(
-                "Datos del salon",
+                    "Datos del salon",
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('direccion', css_class='form-group col-md-4 mb-0'),
@@ -135,10 +213,19 @@ class SalonForm(forms.ModelForm):
                 Row(
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
+                    Column('imagen',css_class = 'form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
+                Row(
+                    Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
+                    css_class='form-row'
+
+
+            )
             ),
+        HTML('<hr/>'),
+            Submit('submit', 'Guardar', css_class='button white'),
+        )
 
-            Submit('submit', 'Guardar', css_class='button white'),)
 
-
+   

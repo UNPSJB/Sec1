@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import os
+from django.conf import settings
 from .forms import *
 from .models import *
 from django.contrib import messages
@@ -12,9 +14,38 @@ from django.http import JsonResponse
 from django_select2.forms import ModelSelect2Widget
 from datetime import datetime
 
+#TODO: Ver como hacer los editar para salones, encargados y servicios
+
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
 
+
+
+# ---------------------------- Encargado View ------------------------------------ #
+class EncargadoCreateView(CreateView):
+    model = Persona
+    form_class = EncargadoForm
+    success_url = reverse_lazy('listarEncargados')  
+
+    def form_valid(self, form):
+        encargado = form.save(commit=False)
+        encargado.es_encargado = True  
+        encargado.save()  
+        return super().form_valid(form)
+
+
+def eliminar_encargado(request, pk):
+    encargado = get_object_or_404(Persona, pk=pk)
+    encargado.es_encargado = False
+    encargado.save()
+    return JsonResponse({'status': 'success'})
+class EncargadoListView(ListView):
+    model = Persona
+    paginate_by = 100 
+    template_name = '../salones/templates/salones/encargado_list.html'
+
+    def get_queryset(self):
+        return Persona.objects.filter(es_encargado=1).order_by('dni')
 
 # ---------------------------- Salon View ------------------------------------ #
 
@@ -27,12 +58,30 @@ class SalonCreateView(CreateView):
         return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
+        salon = form.save(commit=False)  
+        salon.save() 
         messages.add_message(self.request, messages.SUCCESS, 'Salon registrado con éxito')
         return super().form_valid(form)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
     
+
+def cambiar_estado(request):
+    if request.method == 'POST':
+        salon_id = request.POST.get('id')
+
+        # Buscar el servicio por ID
+        salon = Salon.objects.get(id=salon_id)
+        
+        # Cambiar el estado de disponibilidad
+        salon.disponible = not salon.disponible
+        salon.save()
+
+        # Retornar el nuevo estado en la respuesta
+        return JsonResponse({'nuevo_estado': salon.disponible})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
@@ -47,6 +96,9 @@ class SalonDeleteView(DeleteView):
     model = Salon
     success_url = reverse_lazy('listarSalones')
 
+
+
+
 class SalonDetailView(DetailView):
     model = Salon
     context_object_name = 'salon'
@@ -54,6 +106,8 @@ class SalonDetailView(DetailView):
 class SalonListView(ListView):
     model = Salon
     paginate_by = 100 
+    context_object_name = 'salones'
+
 
 # ---------------------------- Alquiler View ------------------------------------ #
 # TODO: Mejorar el calendario para incluir la cola de espera
@@ -124,6 +178,7 @@ def obtener_dias_ocupados(request, salon_pk):
 
     return JsonResponse(fechas_ocupadas, safe=False)
     
+    
 def comprobante_senia(request, pk):
     alquiler = get_object_or_404(Alquiler, pk=pk)
     
@@ -183,8 +238,22 @@ class ServicioCreateView(CreateView):
 
     model = Servicio
     form_class = ServicioForm
-    # template_name = 'servicios/servicio_form.html' # template del form
     success_url = reverse_lazy('listarServicios')
+
+    def form_valid(self, form):
+        salon_id = self.request.POST.get('salon')  
+        salon = get_object_or_404(Salon, pk=salon_id)  
+
+        servicio = form.save(commit=False)
+        print(servicio.disponible)
+        servicio.salon = salon  
+        servicio.save()  
+        messages.add_message(self.request, messages.SUCCESS, 'El servicio ha sido agregado con éxito.')
+
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detallarSalon', kwargs={'pk': self.object.salon.pk})
 
 class ServicioUpdateView(UpdateView):
     model = Servicio
@@ -195,6 +264,24 @@ def servicio_eliminar(request, pk):
     a = Servicio.objects.get(pk=pk)
     a.delete()
     return redirect('listarServicios') 
+
+
+def cambiar_estado(request):
+    if request.method == 'POST':
+        servicio_id = request.POST.get('id')
+
+        # Buscar el servicio por ID
+        servicio = Servicio.objects.get(id=servicio_id)
+        
+        # Cambiar el estado de disponibilidad
+        servicio.disponible = not servicio.disponible
+        servicio.save()
+
+        # Retornar el nuevo estado en la respuesta
+        return JsonResponse({'nuevo_estado': servicio.disponible})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 
 class ServicioDeleteView(DeleteView):
     model = Servicio

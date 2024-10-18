@@ -1,0 +1,26 @@
+{% extends 'persona_list.html' %} 
+{% block ttitle %} Listado de Encargados {% endblock %}
+
+{% block thead %}
+<tr>
+  <th scope="col">dni</th>
+  <th scope="col">nombre</th>
+  <th scope="col">apellido</th>
+  <th scope="col">telefono</th>
+  <th scope="col">domicilio</th>
+  <th scope="col">Es encargado</th>
+</tr>
+{% endblock %} 
+
+{% block tbody %} 
+{% for encargado in object_list %}
+<tr class="bg-transition">
+  <td>{{ encargado.dni }}</td>
+  <td>{{ encargado.nombre }}</td>
+  <td>{{ encargado.apellido }}</td>
+  <td>{{ encargado.telefono }}</td>
+  <td>{{ encargado.domicilio }}</td>
+  <td>{{ encargado.es_encargado }}</td>
+</tr>
+{% endfor %}
+{% endblock %}

@@ -5,19 +5,20 @@ from django import forms
 from apps.personas.models import Persona
 from apps.personas.forms import PersonaForm, ModificarPersonaForm
 from django.forms import ValidationError
-from .models import Afiliado, Empresa
+from .models import Afiliado, Comercio, Familiar
+from apps.personas.models import Persona 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from django.forms.models import model_to_dict
 from datetime import date
 
-class EmpresaForm(forms.ModelForm):
+class ComercioForm(forms.ModelForm):
     class Meta:
-        model = Empresa
+        model = Comercio
         fields = "__all__"
 
         widgets = {
-            "cuit": forms.TextInput(attrs={'placeholder': 'Ingrese cuit'}),
+            "cuit": forms.TextInput(attrs={'placeholder': 'Ingrese cuit','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
             "razonSocial": forms.TextInput(attrs={'placeholder': 'Ingrese razón social'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
             "rama": forms.TextInput(attrs={'placeholder': 'Ingrese rama de la empresa'}),
@@ -26,151 +27,87 @@ class EmpresaForm(forms.ModelForm):
             'razonSocial': 'Razon social',
             'domicilio': 'Domicilio de la empresa',
         }
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
+            # Si se está pasando una instancia, agregar el atributo disabled
+            if instance:
+                self.fields[field].widget.attrs['disabled'] = 'disabled'
+
+
+class FamiliarForm(forms.ModelForm):
+    class Meta:
+        model = Familiar
+        fields = "__all__"
+        exclude = ['persona','tipo','desde']
+
+        widgets = {
+            "afiliado": forms.HiddenInput,
+            "relacion": forms.Select(attrs={'class': 'form-select'}),
+        }
+        labels = {
+            'relacion': 'Tipo de relacion',
+        }
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
+
+
+class PersonaFamiliarForm(forms.ModelForm):
+    class Meta:
+        model = Persona
+        fields = ['dni', 'nombre', 'apellido', 'nacimiento', 'nacionalidad']
+        widgets = {
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
+            "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
+            "nacimiento": forms.TextInput(attrs={'type': 'date'}),
+            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+        }
+        labels = {
+            'nacimiento': 'Fecha de nacimiento',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
+
 
 class AfiliadoForm(forms.ModelForm):
-    
     class Meta:
         model = Afiliado
         fields = "__all__"
-        exclude = ['persona','tipo', 'familia', 'empresa']
+        exclude = ['persona','tipo', 'familia','desde','hasta','alta']
         
         widgets = {
             "ingresoTrabajo": forms.TextInput(attrs={'type': 'date'}),
-            "cuil": forms.TextInput(attrs={'placeholder': 'Ingrese cuil'}),
-            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
-            #"estadoCivil": forms.TextInput(attrs={'placeholder': 'Ingrese estado civil'}),
-            "email": forms.TextInput(attrs={'placeholder': 'Ingrese E-mail'}),
-            "jornadaLaboral": forms.TextInput(attrs={'placeholder': 'Ingrese jornada laboral'}),
-            "sueldo": forms.TextInput(attrs={'placeholder': 'Ingrese sueldo'}),
+            "cuil": forms.TextInput(attrs={'placeholder': 'Ingrese cuil','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "jornadaLaboral": forms.TextInput(attrs={'placeholder': 'Ingrese jornada laboral','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "sueldo": forms.TextInput(attrs={'placeholder': 'Ingrese sueldo','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "comercio": forms.HiddenInput
         }
         labels = {
-            'domicilio': 'Domicilio',
             'ingresoTrabajo': 'Fecha de ingreso al trabajo',
-            'estadoCivil': 'Estado civil',
             'jornadaLaboral': 'Jornada laboral',
         }
 
-class CrearAfiliadoForm(forms.Form):
-
-    def clean_dni(self):
-        try:
-            persona = Persona.objects.get(dni=self.cleaned_data['dni'])
-            afiliado = Afiliado.objects.get(persona=persona, hasta=None)
-        except Persona.DoesNotExist:
-            persona = None
-        except Afiliado.DoesNotExist:
-            afiliado = None
-        
-        if persona is not None and afiliado is not None:
-            raise ValidationError("Ya existe un afiliado activo con ese DNI")
-        return self.cleaned_data['dni']
-    
-    def clean_nacimiento(self):
-        fecha_nacimiento = self.cleaned_data['nacimiento']
-        if fecha_nacimiento:               
-            if fecha_nacimiento >= date.today():
-                raise forms.ValidationError("La fecha de nacimiento debe ser anterior a la fecha actual.")
-        return self.cleaned_data['nacimiento']
-    
-    def clean_ingresoTrabajo(self):
-        fecha_ingresoTrabajo = self.cleaned_data['ingresoTrabajo']
-        if fecha_ingresoTrabajo:               
-            if fecha_ingresoTrabajo > date.today():
-                raise forms.ValidationError("La fecha de ingreso al trabajo tiene que ser valida")
-        return self.cleaned_data['ingresoTrabajo']
-
-    def is_valid(self) -> bool:
-        #personaForm = PersonaForm(self.data)
-        afiliadoForm = AfiliadoForm(self.data)
-        valid = super().is_valid() and afiliadoForm.is_valid()
-        if not valid:
-            self.errors.update(afiliadoForm.errors)
-        return valid 
-
-    def save(self, commit=False):
-        try:
-            persona = Persona.objects.get(dni=self.cleaned_data['dni'])
-        except Persona.DoesNotExist:
-            persona = None
-
-        if persona is None:
-            personaForm = PersonaForm(data=self.cleaned_data)
-            persona = personaForm.save()
-        afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        afiliado = afiliadoForm.save(commit=False)
-
-        try:
-            empresa = Empresa.objects.get(cuit=self.cleaned_data['cuit'])
-        except Empresa.DoesNotExist:
-            empresa = None
-
-        if empresa is None:
-            empresaForm = EmpresaForm(data=self.cleaned_data)
-            empresa = empresaForm.save(commit=True)
-        
-        #TODO: clean empresa  para garantizzar la referancia 
-        afiliado.empresa = empresa
-        persona.afiliar(afiliado)
-        return afiliado
-        
-    def __init__(self, instance=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Afiliado</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                   "Datos Personales",
-            Row(
-                Column('dni', css_class='form-group col-md-4 mb-0'),
-                Column('nombre', css_class='form-group col-md-4 mb-0'),
-                Column('apellido', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
-                Column('cuil', css_class='form-group col-md-4 mb-0'),
-                Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
-                Column('domicilio', css_class='form-group col-md-4 mb-0'),
-                Column('telefono', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('email', css_class='form-group col-md-4 mb-0'),
-                Column('jornadaLaboral', css_class='form-group col-md-4 mb-0'),
-                Column('sueldo', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('ingresoTrabajo', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            HTML('<hr/>'),   
-            Fieldset(
-                    "Datos de Empresa",
-            Row(
-                Column('cuit', css_class='form-group col-md-4 mb-0'),
-                Column('razonSocial', css_class='form-group col-md-4 mb-0'),
-                Column('domicilio', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('rama', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
 
-CrearAfiliadoForm.base_fields.update(PersonaForm.base_fields)
-CrearAfiliadoForm.base_fields.update(AfiliadoForm.base_fields)
-CrearAfiliadoForm.base_fields.update(EmpresaForm.base_fields)     
 
 class ModificarAfiliadoForm(forms.Form):
     def is_valid(self) -> bool:
@@ -211,7 +148,6 @@ class ModificarAfiliadoForm(forms.Form):
                 css_class='form-row'
             ),
             Row(
-                
                 Column('domicilio', css_class='form-group col-md-4 mb-0'),
                 Column('telefono', css_class='form-group col-md-4 mb-0'),
                 Column('email', css_class='form-group col-md-4 mb-0'),
@@ -224,6 +160,8 @@ class ModificarAfiliadoForm(forms.Form):
                 css_class='form-row'
             ),
             ),
+            Column('comercio'),
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 ModificarAfiliadoForm.base_fields.update(ModificarPersonaForm.base_fields)

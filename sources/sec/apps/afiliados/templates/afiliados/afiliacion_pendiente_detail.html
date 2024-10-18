@@ -1,0 +1,232 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="card-title mb-4">DATOS PERSONALES</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <strong>Nombre:</strong> {{afiliado.persona.nombre}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Apellido:</strong> {{afiliado.persona.apellido}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>DNI:</strong> {{afiliado.persona.dni}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>ID:</strong> {{afiliado.id}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Fecha Nacimiento:</strong> {{afiliado.persona.nacimiento}}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <strong>CUIL:</strong> {{afiliado.cuil}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Nacionalidad:</strong> {{afiliado.persona.nacionalidad}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Estado Civil:</strong> {{afiliado.persona.get_estadoCivil_display}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Domicilio:</strong> {{afiliado.persona.domicilio}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Teléfono:</strong> {{afiliado.persona.telefono}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="card-title">Familiares</h3>
+                <button data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn btn-success">+</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Relación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for familiar in afiliado.familiares.all %}
+                        <tr>
+                            <td>{{familiar.persona.dni}}</td>
+                            <td>{{familiar.persona.nombre}}</td>
+                            <td>{{familiar.persona.apellido}}</td>
+                            <td>{{familiar.persona.nacimiento}}</td>
+                            <td>{{familiar.get_relacion_display}}</td>
+                            <td>
+                                <button id="btn-eliminar" data-id="{{ familiar.id }}" data-nombre="{{ familiar.persona.nombre }}" data-apellido="{{ familiar.persona.apellido }}" class="btn btn-danger btn-sm">-</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-4">
+        <form id="form-aceptar-{{ afiliado.id }}" method="POST" action="{% url 'aceptar_solicitud' afiliado.id %}" class="me-2">
+            {% csrf_token %}
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ afiliado.id }}">Aceptar</button>
+        </form>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rechazoModal-{{ afiliado.id }}">Rechazar</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal Familia-->
+<div class="modal fade" id="modalFamilia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar Familiar</h1>
+        <input type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="familia" class="form-label">Dni de familiar</label>
+          <form id="buscarFamiliar-form"method="get">  
+          <div class="input-group ">
+              <input type="text" class="form-control" id="dniFamiliar" name="dni" placeholder="Ingrese el DNI" pattern="(\d{7}|\d{8})" minlength="7" maxlength="8" required="" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              <button class="btn btn-primary btn-lg" id="buscar_persona" type="submit">Siguiente</button>
+            </div>
+          </form>
+        <div id="resultadoBusqueda" class="mt-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal quitar Familiar-->
+<div class="modal fade" id="modalQuitarFamiliar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Quitar Familiar</h1>
+        <input type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p id="nombre-familiar"></p>
+          <form id="quitarFamiliar-form" method="post" action="{% url 'quitarFamiliar' %}">
+            {% csrf_token %}
+            <input type="hidden" id="id-familiar" name="familiar_id">  
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success" form="quitarFamiliar-form">Aceptar</button>
+    </div>
+    </div>
+  </div>
+</div>
+<!-- Modal confirmacion-->
+<div class="modal fade" id="confirmModal-{{ afiliado.id }}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar Aceptación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              ¿Estás seguro de que deseas aceptar esta solicitud?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" form="form-aceptar-{{ afiliado.id }}">Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal rechazo-->
+<div class="modal fade" id="rechazoModal-{{ afiliado.id }}" tabindex="-1" aria-labelledby="rechazoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="rechazoModalLabel">Confirmar Rechazo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              Indique el motivo de rechazo
+              <form id="form-rechazar-{{ afiliado.id }}" method="POST" action="{% url 'rechazar_solicitud' %}">
+                {% csrf_token %}
+                <input type="hidden" name="afiliado_id" required="" value="{{afiliado.id}}">
+                <textarea name="motivo" class="form-control" required="" maxlength="100"></textarea>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" form="form-rechazar-{{ afiliado.id }}">Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrajs %} 
+<script>
+$(document).ready(function() {
+  // Manejar el clic en el botón de familiar
+  $('#buscarFamiliar-form').on('submit', function(e) {
+      e.preventDefault(); // Prevenir el envío normal del formulario
+      
+      // Realiza la solicitud AJAX
+      $.ajax({
+        url: "{% url 'buscarPersonaParaFamiliar' %}",
+        type: 'GET',  // O 'POST' según lo que necesites
+        data: $(this).serialize(),
+        success: function(response) {
+          // Maneja la respuesta aquí
+          if (response.denegado) {
+            $('#resultadoBusqueda').html(response.mensaje);
+        }else{
+          $('#resultadoBusqueda').html(response);
+          var afiliadoId = "{{afiliado.id}}";
+          $('#afiliado_id').val(afiliadoId)
+        }
+        },
+        error: function() {
+              $('#resultadoBusqueda').html(`
+                  <div class="alert alert-danger">
+                      No se pudo encontrar la persona.
+                  </div>
+              `);
+          }
+      });
+  });
+  $('#btn-eliminar').on('click', function() {
+        // Obtener el ID del elemento a eliminar
+        let id = $(this).data('id');
+        let nombre = $(this).data('nombre');
+        let apellido = $(this).data('apellido');
+        // Abrir el modal
+        $('#nombre-familiar').html(`Esta seguro que desea quitar a ${nombre} ${apellido}`);
+        $('#id-familiar').val(id);
+        $('#modalQuitarFamiliar').modal('show');
+    });
+});
+</script>
+{% endblock %}

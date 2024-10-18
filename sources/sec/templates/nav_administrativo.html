@@ -11,7 +11,7 @@
   <ul class="dropdown-menu">
     <li>
       <a class="dropdown-item" href="{% url 'crearAfiliado' %}"
-        ><i class="fa-solid fa-plus"></i> Agregar afiliado</a
+        ><i class="fa-solid fa-user-plus"></i> Agregar afiliado</a
       >
     </li>
     <li class="dropdown-divider"></li>
@@ -22,7 +22,7 @@
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'pendientes' %}"
+      <a class="dropdown-item" href="{% url 'afiliacionesPendientes' %}"
         ><i class="fa-regular fa-clock"></i> Listado de Pendientes</a
       >
     </li>
@@ -40,12 +40,13 @@
   </a>
   <ul class="dropdown-menu">
     <li>
-      <a class="dropdown-item" href="{% url 'crearAlumno' %}">Agregar alumno</a>
+      <a class="dropdown-item" href="{% url 'crearAlumno' %}"
+        ><i class="fa-solid fa-user-plus"></i> Agregar alumno</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarAlumnos' %}"
-        >Listado de alumnos</a
+        ><i class="fa-solid fa-list"></i> Listado de alumnos</a
       >
     </li>
   </ul>
@@ -62,40 +63,42 @@
   </a>
   <ul class="dropdown-menu">
     <li>
-      <a class="dropdown-item" href="{% url 'crearCurso' %}">Crear curso</a>
+      <a class="dropdown-item" href="{% url 'crearCurso' %}"
+        ><i class="fa-solid fa-plus"></i> Crear curso</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'listarCursos' %}"
-        >Listado de cursos</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'crearAula' %}">Crear aula</a>
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'listarAulas' %}"
-        >Listado de aulas</a
-      >
+      <a class="dropdown-item" href="{% url 'crearAula' %}"
+        ><i class="fa-solid fa-plus"></i> Crear aula</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'crearEspecialidad' %}"
-        >Crear especialidad</a
+        ><i class="fa-solid fa-plus"></i> Crear especialidad</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarCursos' %}"
+        ><i class="fa-solid fa-list"></i> Listado de cursos</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarAulas' %}"
+        ><i class="fa-solid fa-list"></i> Listado de aulas</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarEspecialidades' %}"
-        >Listado de especialidades</a
+        ><i class="fa-solid fa-list"></i> Listado de especialidades</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarPagosDictados' %}"
-        >Listado de pagos dictados</a
+        ><i class="fa-solid fa-list"></i> Listado de pagos dictados</a
       >
     </li>
   </ul>
@@ -113,13 +116,13 @@
   <ul class="dropdown-menu">
     <li>
       <a class="dropdown-item" href="{% url 'crearProfesor' %}"
-        >Agregar profesor</a
+        ><i class="fa-solid fa-user-plus"></i> Agregar profesor</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarProfesores' %}"
-        >Listado de profesores</a
+        ><i class="fa-solid fa-list"></i> Listado de profesores</a
       >
     </li>
   </ul>
@@ -135,25 +138,34 @@
     Gestión Salones
   </a>
   <ul class="dropdown-menu">
+
     <li>
-      <a class="dropdown-item" href="{% url 'crearSalon' %}">Agregar salón</a>
+      <a class="dropdown-item" href="{% url 'crearEncargado' %}">
+        <i class="fa-solid fa-plus"></i> Agregar encargado</a>
     </li>
     <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'crearSalon' %}"
+        ><i class="fa-solid fa-plus"></i> Agregar salón</a>
+    </li>
+   
+    <li class="dropdown-divider"></li>
+
     <li>
       <a class="dropdown-item" href="{% url 'listarSalones' %}"
-        >Listado de salones</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'crearServicio' %}"
-        >Agregar servicio</a
+        ><i class="fa-solid fa-list"></i> Listado de salones</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarServicios' %}"
-        >Listado de Servicios</a
+        ><i class="fa-solid fa-list"></i> Listado de servicios</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarEncargados' %}"
+        ><i class="fa-solid fa-list"></i> Listado de encargados</a
       >
     </li>
   </ul>
@@ -171,8 +183,10 @@
   <ul class="dropdown-menu">
     <li>
       <a class="dropdown-item" href="{% url 'listarAlquileres' %}"
-        >Listado de alquileres</a
-      >
+        ><i class="fa-solid fa-list"></i> Listado de alquileres</a>
     </li>
   </ul>
+  <li class="nav-item"> <a class="nav-link text-white" href = "{% url 'logout' %}" role="button"
+     ><i class="fa-solid fa-right-to-bracket"></i></a>
+  </li>
 </li>
