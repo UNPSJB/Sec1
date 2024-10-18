@@ -21,11 +21,86 @@
     <td>{{ persona.apellido }}</td>
     <td>{{ persona.telefono }}</td>
     <td>{{ persona.domicilio }}</td>
-    <td><a href="#"class="btn btn-success">Editar</a></td>
-    <!--TODO: Definir la ruta para eliminar al encargado pero que en realidad sea baja logica, es decir, marcar es_encargado = Fals-->
+    <td>
+        <a href="{% url 'modificarEncargado' persona.pk %}"class="btn btn-success">Editar</a>
+        <button class="btn btn-danger eliminarEncargado" data-id="{{ persona.pk }}" data-nombre="{{ persona.nombre }}" data-bs-toggle="modal" data-bs-target="#eliminarEncargado">
+         Eliminar
+        </button>
+    
+    </td>
 
 
 </tr>
 {% endfor %}
 {% endblock %}
-   
+
+
+{% block modal %}
+
+<!-- Modal de eliminacion del encargado -->
+<div class="modal fade" id="eliminarEncargado" tabindex="-1" aria-labelledby="eliminarEncargadoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarEncargadoLabel">Confirmar deshabilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de eliminar el encargado: <strong id="encargadoNombre"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="confirmarEliminacionEncargado">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('eliminarEncargado');
+        modal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const nombre = button.getAttribute('data-nombre');
+            const id = button.getAttribute('data-id');
+            const modalBody = modal.querySelector('#encargadoNombre');
+            modalBody.textContent = nombre;
+
+            const confirmarButton = modal.querySelector('#confirmarEliminacionEncargado');
+            confirmarButton.setAttribute('data-id', id);
+        });
+
+        const confirmarButton = document.getElementById('confirmarEliminacionEncargado');
+        confirmarButton.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+
+            // Aquí puedes hacer una solicitud AJAX o redirigir a la URL de eliminación
+            fetch(`/salones/eliminarEncargado/${id}`, { // Asegúrate de que la URL sea correcta
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', // Asegúrate de incluir el token CSRF
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: id })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Cerrar el modal y refrescar la página o eliminar el elemento del DOM
+                    $('#eliminarEncargado').modal('hide');
+                    location.reload(); // O actualiza el DOM según sea necesario
+                } else {
+                    // Manejar errores
+                    alert('Error al eliminar el encargado.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

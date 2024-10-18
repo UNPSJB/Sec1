@@ -36,7 +36,7 @@
           <div class="col sm-12 col-md-12 col-lg-12">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <td><a href="{% url 'modificarSalon' salon.pk %}"class="btn btn-success">Editar</a></td>
-              <button class="btn btn-danger cambiar-estado-salon" data-id="{{ salon.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModalSalon">Deshabilitar</button>
+              <button class="btn btn-danger cambiar-estado-salon" data-id="{{ salon.pk }}" data-nombre="{{ salon.nombre}}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModalSalon">Deshabilitar</button>
             </div>
           </div>
           <div class="input-group py-2">
@@ -156,21 +156,21 @@
 
 {% block modal %}
 
-
+<!-- TODO: Arreglar el modal del salon y hacer que al deshabilitarse, se oculten ambos listados -->
 <!-- Modal de eliminacion de salon -->
 <div class="modal fade" id="deshabilitarModalSalon" tabindex="-1" aria-labelledby="deshabilitarModalLabelSalon" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="deshabilitarModalLabelSalon">Confirmar deshabilitación</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modalSalon" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               ¿Estás seguro de deshabilitar el salon: <strong id="salonNombre"></strong>?
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-danger" id="confirmarDeshabilitar">Deshabilitar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modalSalon">Cerrar</button>
+              <button type="button" class="btn btn-danger" id="confirmarDeshabilitarSalon">Deshabilitar</button>
           </div>
       </div>
   </div>
@@ -375,6 +375,8 @@
         });
     }
 });
+
+
 
 
 

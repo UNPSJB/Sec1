@@ -12,6 +12,8 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.http import JsonResponse
 
+#TODO: Ver como hacer los editar para salones, encargados y servicios
+
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
 
@@ -28,8 +30,13 @@ class EncargadoCreateView(CreateView):
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
-    
 
+
+def eliminar_encargado(request, pk):
+    encargado = get_object_or_404(Persona, pk=pk)
+    encargado.es_encargado = False
+    encargado.save()
+    return JsonResponse({'status': 'success'})
 class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
@@ -87,7 +94,8 @@ class SalonDeleteView(DeleteView):
     model = Salon
     success_url = reverse_lazy('listarSalones')
 
-#TODO: Modificar el delete para que solo haga baja logica
+
+
 
 class SalonDetailView(DetailView):
     model = Salon
@@ -224,17 +232,6 @@ class ServicioDeleteView(DeleteView):
     model = Servicio
     success_url = reverse_lazy('listarServicios')
 
-    #TODO: Cambiar el delete de alguna forma para que solo haga baja logica y no elimine de la base de datos
-    def delete(self, request, *args, **kwargs): 
-        self.object = self.get_object()
-        
-        self.object.disponible = False
-        self.object.save()  
-
-        messages.add_message(self.request, messages.SUCCESS, 'Servicio dado de baja correctamente.')
-
-        return redirect(reverse('listarServicios'))
-    
 class ServicioDetailView(DetailView):
     model = Servicio
 

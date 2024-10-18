@@ -9,6 +9,8 @@ urlpatterns = [
     # ----------------- Encargados -----------------
     path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
     path('listarEncargados/', EncargadoListView.as_view(), name='listarEncargados'),
+    path('modificarEncargado/<int:pk>', EncargadoCreateView.as_view(), name='modificarEncargado'),
+    path('eliminarEncargado/<int:pk>', eliminar_encargado, name='eliminarEncargado'),
 
 
     # ----------------- Salones -----------------
@@ -21,6 +23,8 @@ urlpatterns = [
     #path('eliminarSalon/<int:pk>', salon_eliminar, name='eliminarSalon'),
     path('detallarSalon/<int:pk>', SalonDetailView.as_view(), name='detallarSalon'),
     path('listarSalones/', SalonListView.as_view(), name='listarSalones'),
+    #path('cambiarEstadoSalon/', views.cambiar_estado, name='cambiarEstadoSalon'),
+
 
     # ----------------- Alquileres -----------------
 
@@ -44,7 +48,6 @@ urlpatterns = [
     path('detallarServicio/<int:pk>', ServicioDetailView.as_view(), name='detallarServicio'),
     path('listarServicios/', ServicioListView.as_view(), name='listarServicios'),
     path('cambiarEstadoServicio/', views.cambiar_estado, name='cambiarEstadoServicio'),
-    path('cambiarEstadoSalon/', views.cambiar_estado, name='cambiarEstadoSalon'),
 
 
 ]
