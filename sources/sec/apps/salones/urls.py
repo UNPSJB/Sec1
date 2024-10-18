@@ -22,13 +22,18 @@ urlpatterns = [
 
     path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquiler'),
     path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
-    path('eliminarAlquiler/', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
+    path('eliminarAlquiler/<int:pk>', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
     #path('eliminarAlquiler/<int:pk>', alquiler_eliminar, name='eliminarAlquiler'),
     path('detallarAlquiler/<int:pk>', AlquilerDetailView.as_view(), name='detallarAlquiler'),
     path('listarAlquileres/', AlquilerListView.as_view(), name='listarAlquileres'),
     path('comprobante_senia/<int:pk>/', comprobante_senia, name='comprobante_senia'),
-    path('elegir_forma_pago/<int:pk>/', elegir_forma_pago, name='elegir_forma_pago'),
-    path('pago_unico/<int:pk>/', pago_unico, name='pago_unico'),
+    path('registrar_pago/<int:pago_id>', registrar_pago, name='registrar_pago'),
+    #path('alquiler/<int:alquiler_id>/pago_cuotas/', pago_cuotas, name='pago_cuotas'),
+    path('crear_cuotas/<int:alquiler_id>/', crear_cuotas, name='crear_cuotas'),
+    path('salon/<int:salon_pk>/lista_espera/<str:inicio>/', ListaEsperaView.as_view(), name='lista_espera'),
+    path('alquiler/<int:alquiler_id>/cuotas/', PagoAlquilerListView.as_view(), name='listar_cuotas'),
+    path('buscar_afiliado/', buscar_afiliado, name='buscar_afiliado'),
+    path('obtener_dias_ocupados/<int:salon_pk>/', obtener_dias_ocupados, name='obtener_dias_ocupados'),
 
     # ----------------- Servicios -----------------
 

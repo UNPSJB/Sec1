@@ -13,7 +13,6 @@ from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from datetime import date
 from django.utils import timezone
 
-
 class ServicioForm(forms.ModelForm):
 
     class Meta:
@@ -56,26 +55,22 @@ class ServicioForm(forms.ModelForm):
 
 
 class AlquilerForm(forms.ModelForm):
+    """ afiliado = forms.ModelChoiceField(queryset= Afiliado.objects.filter(desde__isnull = True),
+                                      widget=forms.Select(attrs={'class': 'select2'})) """
+   
+    dni = forms.CharField(max_length=8, label='DNI', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el DNI'}))
+    afiliado_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Alquiler
-        fields = ['afiliado', 'inicio', 'senia']
+        fields = ['inicio']
 
         widgets = {
-            "reserva": forms.TextInput(attrs={'type': 'date'}),
-            "inicio": forms.TextInput(attrs={'type': 'date'}),
-            "senia": forms.TextInput(attrs={'placeholder': 'Ingrese monto de la seña'}),
+            "inicio": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {
-            'senia': 'Seña',
-            'reserva': 'Fecha de reserva',
             'inicio': 'Fecha de inicio'
         }
-
-    def clean_senia(self):
-        senia = self.cleaned_data['senia']
-        if senia < 0 or senia > 99999999.99:
-            raise forms.ValidationError("La senia no es valida")
-        return senia
 
     def clean_inicio(self):
         inicio = self.cleaned_data.get('inicio')

@@ -4,11 +4,13 @@ from .models import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import DetailView, ListView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.http import JsonResponse
+from django_select2.forms import ModelSelect2Widget
+from datetime import datetime
 
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
@@ -54,7 +56,7 @@ class SalonListView(ListView):
     paginate_by = 100 
 
 # ---------------------------- Alquiler View ------------------------------------ #
-
+# TODO: Mejorar el calendario para incluir la cola de espera
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
@@ -66,41 +68,94 @@ class AlquilerCreateView(CreateView):
         salon = Salon.objects.get(pk=salon_pk)
         initial['salon'] = salon
         initial['monto'] = salon.monto
+        initial['senia'] = (salon.monto * 10) / 100
         initial['reserva'] = timezone.now().date()
         return initial
     
-
     def form_valid(self, form):
         salon_pk = self.kwargs.get('salon_pk')
         salon = get_object_or_404(Salon, pk=salon_pk)
-
         alquiler = form.save(commit=False)
+
+        inicio = form.cleaned_data['inicio']
+        alquiler_existente = Alquiler.objects.filter(
+            salon=salon,
+            inicio=inicio,
+            activo=True
+        ).exists()
 
         alquiler.salon = salon
         alquiler.monto = salon.monto
+        alquiler.senia = (salon.monto * 10) / 100 #ver si le cobro seña a los que estan el lista de espera
         alquiler.reserva = timezone.now().date()
 
-        alquiler.save()
+        afiliado_id = self.request.POST.get('afiliado_id')
+        if afiliado_id:
+            afiliado = get_object_or_404(Afiliado, id=afiliado_id)
+            alquiler.afiliado = afiliado
 
-        messages.add_message(self.request, messages.SUCCESS, 'Alquiler registrado con éxito')
-        return super().form_valid(form)
+        if alquiler_existente:
+            alquiler.activo = False
+            alquiler.save()         
+            messages.add_message(self.request, messages.SUCCESS, 'Añadido a la lista de espera')
+            return self.redirect_to_waitlist(salon_pk, inicio)
+        else:
+            alquiler.activo = True
+            alquiler.save()
+            messages.add_message(self.request, messages.SUCCESS, 'Alquiler registrado con éxito')
+            return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('comprobante_senia', kwargs={'pk': self.object.pk})
+
+    def redirect_to_waitlist(self, salon_pk, inicio):
     
+        return redirect(reverse('lista_espera', kwargs={
+            'salon_pk': salon_pk, 
+            'inicio': inicio
+        }))
+
     def form_invalid(self, form):
-        print(self.request.POST)
         return super().form_invalid(form)
+
+def obtener_dias_ocupados(request, salon_pk):
+    alquileres = Alquiler.objects.filter(salon_id=salon_pk).values('inicio')
+    fechas_ocupadas = [alquiler['inicio'].strftime('%Y-%m-%d') for alquiler in alquileres]
+
+    return JsonResponse(fechas_ocupadas, safe=False)
+    
 def comprobante_senia(request, pk):
     alquiler = get_object_or_404(Alquiler, pk=pk)
     
     context = {
         'alquiler': alquiler,
-        # Puedes agregar otros datos que desees mostrar en el comprobante
     }
-    
-    #return render(request, 'comprobante_senia.html', context)
+
     return render(request, 'salones/comprobante_senia.html', context)
+
+def buscar_afiliado(request):
+    dni = request.GET.get('dni')
+    try:
+        persona = Persona.objects.get(dni=dni)
+        
+        afiliado = Afiliado.objects.filter(persona=persona, hasta__isnull=True).first()
+
+        if afiliado:  
+            data = {
+                'afiliado_id': afiliado.id,
+                'nombre_afiliado': f"{persona.nombre} {persona.apellido}"
+            }
+        else:
+            data = {
+                'error': 'Afiliado no valido'
+            }
+
+    except (Persona.DoesNotExist, Afiliado.DoesNotExist):
+        data = {'error': 'No se encontró un afiliado con ese DNI.'}
+
+    return JsonResponse(data)
+
+
 class AlquilerUpdateView(UpdateView):
     model = Alquiler
     form_class = AlquilerForm
@@ -123,7 +178,7 @@ class AlquilerListView(ListView):
     paginate_by = 100 
 
 # ---------------------------- Servicio View ------------------------------------ #
-
+# TODO: Hacer bajas logicas
 class ServicioCreateView(CreateView):
 
     model = Servicio
@@ -152,32 +207,61 @@ class ServicioListView(ListView):
     model = Servicio
     paginate_by = 100 
 
-def elegir_forma_pago(request, pk):
-    alquiler = get_object_or_404(Alquiler, pk=pk)
+def crear_cuotas(request, alquiler_id):
+    alquiler = get_object_or_404(Alquiler, id=alquiler_id)
+    cuotas = int(request.POST.get('cuotas'))
     
-    if request.method == 'POST':
-        forma_pago = request.POST.get('forma_pago')
-        if forma_pago == 'unico':
-            return redirect('pago_unico', pk=alquiler.pk)
-        elif forma_pago == 'cuotas':
-            return redirect('pago_cuotas', pk=alquiler.pk)
+    monto_total = alquiler.monto
+    monto_por_cuota = monto_total / cuotas
 
-    return render(request, 'salones/elegir_forma_pago.html', {'alquiler': alquiler})
-
-def pago_unico (request, pk):
-    alquiler = get_object_or_404(Alquiler, pk=pk)
-
-    if request.method == 'POST':
-        monto = request.POST.get('monto')
-        fecha_pago = timezone.now().date()
-        #fecha_pago = request.POST.get('pago')
-
-        PagoUnico.objects.create(
+    for numero_cuota in range(1, cuotas + 1):
+        PagoAlquiler.objects.create(
             alquiler=alquiler,
-            monto=alquiler.monto,
-            pago=fecha_pago
+            cuotas=cuotas,
+            monto=monto_por_cuota,
+            pago= None,
+            numero=numero_cuota
         )
 
-        messages.success(request, "Pago realizado con exito")
-        return redirect('detallarAlquiler', pk=alquiler.pk)
-    return render(request, 'salones/pago_unico.html', {'alquiler': alquiler})
+    return redirect('detallarAlquiler', pk=alquiler_id)
+
+#Se paga una cuota
+def registrar_pago(request, pago_id):
+    pago = get_object_or_404(PagoAlquiler, id=pago_id)
+    pago.pago = datetime.now()
+    pago.save()
+    messages.success(request, f'Pago de la cuota N°{pago.numero} ha sido realizado exitosamente.')
+    return redirect('detallarAlquiler', pk=pago.alquiler.id)
+
+class PagoAlquilerListView(ListView):
+    model = PagoAlquiler
+    template_name = 'salones/listar_cuotas.html'
+    
+    def get_queryset(self):
+        alquiler_id = self.kwargs['alquiler_id']
+        cuotas = PagoAlquiler.objects.filter(alquiler_id=alquiler_id)
+        return cuotas
+
+class ListaEsperaView(ListView):
+    model = Alquiler
+    template_name = 'salones/lista_espera.html'
+
+    def get_queryset(self):
+        salon_pk = self.kwargs.get('salon_pk')
+        inicio = self.kwargs.get('inicio')
+
+        lista_espera = Alquiler.objects.filter(
+            salon_id=salon_pk,
+            inicio=inicio,
+            activo=False
+        )
+        return lista_espera
+
+def cancelar_alquiler(alquiler_id):
+    alquiler = get_object_or_404(Alquiler, pk=alquiler_id)
+    alquiler.activo = False
+    alquiler.save()
+
+# TODO: Arreglar la creacion de cuotas, intentar poner un if empty llamar a crear cuotas
+
+# TODO: Implementar cola de espera, cambiar al afiliado actual y elegir uno en espera

@@ -1,5 +1,10 @@
 {% extends 'main.html' %}
 {% load static %}
+
+{% block extracss %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="{% static 'estilos/calendario.css' %}" rel="stylesheet">
+{% endblock %}
 {% block container %}
 
 <h2 class="text-center">Registrar alquiler</h2>
@@ -10,32 +15,125 @@
         <legend>Datos alquiler</legend>
         <div class="mb-4">
             <h6>Nombre del salon: {{ form.initial.salon }}</h6>
+            <h6>Senia requerida (10% del monto del salon): {{ form.initial.senia }}</h6>
         </div>
         <div class="container-fluid row">
-            <div class="col-auto">
-                <label for="id-afiliado">Afiliado</label>
-                <select id="id-afiliado" name="afiliado" class="form-control required">
-                    {% for afiliado in form.afiliado.field.queryset %}
-                    <option value="{{ afiliado.pk }}" {% if afiliado.pk == form.afiliado.value %}selected{% endif %}>
-                        {{ afiliado }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="col-3">
+                <label for="id_dni">DNI</label>
+                {{ form.dni }}
             </div>
 
-            <div class="col-auto">
-                <label for="id_inicio">Fecha Inicio</label>
-                <input type="date" id="id_inicio" name="inicio" value="{{ form.inicio.value }}"
-                    class="form-control required">
+            <div class="col-3">
+                <label for="id_afiliado">Afiliado</label>
+                <input type="text" id="id_afiliado_nombre" class="form-control" readonly>
+                <input type="hidden" id="id_afiliado" name="afiliado_id">
             </div>
 
-            <div class="col-auto">
-                <label for="id-senia">Seña</label>
-                <input type="number" id="id-senia" name="senia" value="{{ form.senia.value }}"
-                    class="form-control required">
+            <input type="hidden" id="id_inicio" name="inicio">
+            <input type="hidden" id="id_salon" value="{{ form.initial.salon.id }}">
+            <div id="calendar-container" style="width: 50%; height: 600px;  margin: auto; margin-top: -140px;">
+                <div id="calendar"></div>
             </div>
         </div>
     </fieldset>
     <button type="submit" class="btn btn-success">Guardar</button>
 </form>
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<script>
+
+    document.getElementById('id_dni').addEventListener('blur', function () {
+        let dni = this.value;
+
+        if (dni) {
+            fetch('/salones/buscar_afiliado/?dni=' + dni)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.afiliado_id) {
+                        document.getElementById('id_afiliado').value = data.afiliado_id;
+                        document.getElementById('id_afiliado_nombre').value = data.nombre_afiliado;
+                    } else {
+                        document.getElementById('id_afiliado_nombre').value = '';
+                        alert("No se encontró ningún afiliado con ese DNI.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al buscar el afiliado:', error);
+                })
+        }
+    });
+
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var salonId = document.getElementById('id_salon').value;
+        console.log('entro al script y la id es: ',salonId)
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var selectedDate = null;
+        var previousDayEl = null;
+
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            height: 400,
+            validRange: {
+                start: today
+            },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                
+                fetch('/salones/obtener_dias_ocupados/'+ salonId +'/')
+                .then(response => response.json())
+                .then(data => {
+                    const eventos = data.map(fecha => ({
+                        title: 'Ocupado',
+                        start: fecha,
+                        allDay: true,
+                        backgroundColor: 'purple',
+                        borderColor: 'purple' 
+
+                    }));
+                    console.log("Eventos para FullCalendar:", eventos);
+                    successCallback(eventos);
+                })
+                .catch(error => {
+                    console.error('Error al obtener los días ocupados:', error);
+                    failureCallback(error);
+                });
+            },
+            eventContent: function(arg) {
+                var eventText = document.createElement('div');
+                eventText.innerHTML = arg.event.title;
+                eventText.style.fontSize = '12px';
+                return { domNodes: [eventText] };
+            },
+            dateClick: function(info) {
+                if (previousDayEl) {
+                    previousDayEl.style.backgroundColor = '';
+                }
+
+                
+                selectedDate = info.dateStr;
+                previousDayEl = info.dayEl;
+                info.dayEl.style.backgroundColor = 'lightblue';
+
+                document.getElementById('id_inicio').value = selectedDate; 
+            }
+        });
+    
+        calendar.render();
+    });
+</script>
 {% endblock %}

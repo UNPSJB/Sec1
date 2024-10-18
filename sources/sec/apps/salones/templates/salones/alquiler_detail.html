@@ -26,6 +26,9 @@
               <li class="list-group-item">
                 <b>Monto:</b> ${{ alquiler.monto }}
               </li>
+              <li class="list-group-item">
+                <b>Estado:</b> {{ alquiler.estado_pago }}
+              </li>
             </ul>
           </div>
         </div>
@@ -41,21 +44,112 @@
               <li class="list-group-item">
                 <b>Salón:</b> <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{ alquiler.salon }}</a>
               </li>
-              <li class="list-group-item">
-                <b>Seña:</b> ${{ alquiler.senia }}
-              </li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <td><a href="{% url 'elegir_forma_pago' alquiler.pk %}" class="btn btn-primary">Pagar</a></td>
-        <td><a href="{% url 'comprobante_senia' pk=alquiler.pk %}" class="btn btn-success">Comprobante</a></td>
-        <td><a href="#" class="btn btn-success">Editar</a></td>
-        <td><a href="#" class="btn btn-danger">Eliminar</a></td>
+      <div class="gap-2 d-md-flex justify-content-md-end" style="height: 40px;">
+        <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn btn-primary">Ver Cuotas</a>
+        <button type="button" class="btn btn-primary" style="height: 40px; width: 80px; margin-top: -0px;"
+          data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
+        <a href="#" class="btn btn-success">Editar</a>
+        <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary">
+        En Espera
+        </a>
+        <a href="{% url 'eliminarAlquiler' alquiler.pk %}" class="btn btn-danger">Eliminar</a>
+      </div>
+
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
+      ComprobanteSeña
+    </button>
+</div>
+</form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="comprobanteModalLabel">Comprobante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="comprobanteContent">
+        <div class="card-body">
+          <h4 class="card-title">Detalle</h4>
+          <p><strong>Afiliado:</strong> {{ alquiler.afiliado }}</p>
+          <p><strong>Salón:</strong> {{ alquiler.salon.nombre }}</p>
+          <p><strong>Fecha de Inicio:</strong> {{ alquiler.inicio }}</p>
+          <p><strong>Seña:</strong> {{ alquiler.senia }}</p>
+          <p><strong>Monto Total:</strong> {{ alquiler.monto }}</p>
+          <p><strong>Fecha de Reserva:</strong> {{ alquiler.reserva }}</p>
+        </div>
+      </div>
+      <input type="hidden" id="id_alquiler" value="{{ alquiler.pk }}">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="downloadButton">Descargar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("downloadButton").addEventListener("click", function () {
+      var element = document.getElementById('comprobanteContent');
+      html2pdf()
+        .from(element)
+        .set({
+          margin: 1,
+          filename: 'comprobante.pdf',
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        })
+        .save();
+    });
+  });
+</script>
+
+<!-- Modal para seleccionar la cantidad de cuotas -->
+<div class="modal fade" id="crearCuotasModal" tabindex="-1" role="dialog" aria-labelledby="crearCuotasModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearCuotasModalLabel">Selecciona la cantidad de cuotas</h5>
+      </div>
+      <div class="modal-body">
+        <form id="crearCuotasForm" method="POST" action="{% url 'crear_cuotas' alquiler.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="cuotas">Cuotas:</label>
+            <select class="form-control" id="cuotas" name="cuotas">
+              <option value="1">1 Cuota</option>
+              <option value="3">3 Cuotas</option>
+              <option value="6">6 Cuotas</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarCrearCuotas">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('confirmarCrearCuotas').addEventListener('click', function () {
+
+    var form = document.getElementById('crearCuotasForm');
+
+    form.submit(); // Esto enviará el formulario al backend
+  });
+</script>
 
 {% endblock %}

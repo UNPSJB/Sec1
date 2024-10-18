@@ -34,28 +34,17 @@ class Alquiler (models.Model):
     afiliado = models.ForeignKey(Afiliado, on_delete = models.CASCADE)
     senia = models.FloatField()
     reserva = models.DateField() 
-    inicio = models.DateField( null = True, blank = True)
+    inicio = models.DateField()
     monto = models.FloatField()
-    ESTADO_PAGO_CHOICES = [
-        ('PENDIENTE', 'Pendiente'),
-        ('PAGADO', 'Pagado'),
-    ]
-    estado_pago = models.CharField(max_length=10, choices=ESTADO_PAGO_CHOICES, default='PENDIENTE')
+    activo = models.BooleanField()
+    
+class PagoAlquiler(models.Model):
+    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
+    cuotas = models.IntegerField() #numero de cuotas totales/ seleccionables
+    monto = models.DecimalField(max_digits=9,decimal_places=2)
+    pago = models.DateField( null = True, blank = True)
+    numero = models.IntegerField() #numero de cuota
 
-class PagoAlquiler (models.Model): 
-    TIPOPAGO = [(0, "debito"), (1, "credito"), (2, "efectivo")]
-    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    pago = models.DateField() 
-    monto = models.FloatField(max_length = 9)
-    formaPago = models.PositiveSmallIntegerField(choices = TIPOPAGO)
-    
-class PagoUnico(models.Model):
-    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    pago = models.DateField()
-    monto = models.DecimalField(max_digits=9,decimal_places=2)
-    
-class PagoCuota(models.Model):
-    alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    num_cuotas = models.IntegerField()
-    monto = models.DecimalField(max_digits=9,decimal_places=2)
-    pago = models.DateField()
+# TODO: tener un solo modelo de pago para posteriormente filtrar alquileres inpagos
+# TODO: hacer bajas logicas en lugar de deletes
+# TODO: ver si es mejor una funcion para saber si un alquiler esta pagado

@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block container %}
+<div class="table-responsive card shadow p-3">
+    <h3>Listado de cuotas</h3>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Número de Cuota</th>
+                <th scope="col">Monto</th>
+                <th scope="col">Fecha de Pago</th>
+                <th scope="col">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cuota in object_list %}
+            <tr class="bg-transition">
+                <td>{{ cuota.numero }}</td>
+                <td>{{ cuota.monto }}</td>
+                <td>{{ cuota.pago }}</td>
+                <td style="padding: 0; ">
+                    {% if not cuota.pago %}
+                    <!-- Botón para pagar -->
+                    <form method="post" action="{% url 'registrar_pago' pago_id=cuota.id %}" style="padding: 0; margin: 0; height: 40px; width: 20px">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm" style="height: 30px; width: 80px; margin-top:10px;  margin-left: -12px;">Pagar</button>
+                    </form>
+                    {% else %}
+                    <span class="text-success">Pagada</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay cuotas registradas para este alquiler.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
