@@ -57,6 +57,22 @@ class SalonCreateView(CreateView):
     def form_invalid(self, form):
         return super().form_invalid(form)
     
+
+def cambiar_estado(request):
+    if request.method == 'POST':
+        salon_id = request.POST.get('id')
+
+        # Buscar el servicio por ID
+        salon = Salon.objects.get(id=salon_id)
+        
+        # Cambiar el estado de disponibilidad
+        salon.disponible = not salon.disponible
+        salon.save()
+
+        # Retornar el nuevo estado en la respuesta
+        return JsonResponse({'nuevo_estado': salon.disponible})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm

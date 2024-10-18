@@ -44,5 +44,7 @@ urlpatterns = [
     path('detallarServicio/<int:pk>', ServicioDetailView.as_view(), name='detallarServicio'),
     path('listarServicios/', ServicioListView.as_view(), name='listarServicios'),
     path('cambiarEstadoServicio/', views.cambiar_estado, name='cambiarEstadoServicio'),
+    path('cambiarEstadoSalon/', views.cambiar_estado, name='cambiarEstadoSalon'),
+
 
 ]

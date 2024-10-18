@@ -36,7 +36,7 @@
           <div class="col sm-12 col-md-12 col-lg-12">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <td><a href="{% url 'modificarSalon' salon.pk %}"class="btn btn-success">Editar</a></td>
-              <td><a href="{% url 'eliminarSalon' salon.pk %}"class="btn btn-danger">Eliminar</a></td>
+              <button class="btn btn-danger cambiar-estado-salon" data-id="{{ salon.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModalSalon">Deshabilitar</button>
             </div>
           </div>
           <div class="input-group py-2">
@@ -57,10 +57,16 @@
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button type="button" data-toggle="modal" data-target="#crearServicioModal" class="btn btn-success"> + </button>
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
                 </div>
               </div>
             </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="serviciosNoDisponibles">
+              <label class="form-check-label" for="serviciosNoDisponibles" style="margin-left: 10px;">Mostrar todos los servicios</label>
+            </div>
+
             <table  class="table table-striped table-responsive dataTable">
                 <thead>
                     <tr>
@@ -74,7 +80,7 @@
                 </thead>
                 <tbody>
                       {%for servicio in salon.servicio_set.all %}
-                      <tr id="servicio-row-{{ servicio.id }}">
+                      <tr id="servicio-row-{{ servicio.id }}" class="servicio-row" data-disponible="{{ servicio.disponible }}">
                           <td> {{servicio.nombre}}</td>
                           <td> {{servicio.descripcion}}</td>
                           <td> {{servicio.precio}}</td>
@@ -84,7 +90,7 @@
                             <div class="btn-group" role="group">
                               {% if servicio.disponible %}
                                   <button class="btn btn-success editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
-                                  <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true">Deshabilitar</button>
+                                  <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
                               {% else %}
                                   <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
                               {% endif %}
@@ -150,42 +156,93 @@
 
 {% block modal %}
 
-<!-- Modal de servicio-->
 
-<div class="modal fade" id="crearServicioModal" tabindex="-1" role="dialog" aria-labelledby="crearServicioLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<!-- Modal de eliminacion de salon -->
+<div class="modal fade" id="deshabilitarModalSalon" tabindex="-1" aria-labelledby="deshabilitarModalLabelSalon" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="deshabilitarModalLabelSalon">Confirmar deshabilitación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              ¿Estás seguro de deshabilitar el salon: <strong id="salonNombre"></strong>?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-danger" id="confirmarDeshabilitar">Deshabilitar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<!-- Modal de eliminacion de servicio -->
+<div class="modal fade" id="deshabilitarModal" tabindex="-1" aria-labelledby="deshabilitarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deshabilitarModalLabel">Confirmar deshabilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de deshabilitar el servicio: <strong id="servicioNombre"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="confirmarDeshabilitar">Deshabilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de servicio-->
+<div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="crearServicioLabel">Registrar Servicio</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h1 class="modal-title fs-5" id="crearServicioLabel">Registrar Servicio</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="formServicio" method="POST" action="{% url 'crearServicio' %}">
           {% csrf_token %}
           <input type="hidden" name="salon" value="{{ salon.pk }}">
-          <div class="form-group">
-            <label for="nombreServicio">Nombre</label>
-            <input type="text" class="form-control" id="nombreServicio" name="nombre" placeholder="Ingrese nombre del servicio" required>
-            <label for="descripcionServicio">Descripción</label>
-            <input type="text" class="form-control" id="descripcionServicio" name="descripcion" placeholder="Ingrese descripción" required>
-          </div>
-          <div class="form-group">
-            <label for="precioServicio">Precio</label>
-            <input type="text" class="form-control" id="precioServicio" name="precio" placeholder="Ingrese precio" required>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="nombreServicio">Nombre</label>
+                <input type="text" class="form-control" id="nombreServicio" name="nombre" placeholder="Ingrese nombre del servicio" required>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="descripcionServicio">Descripción</label>
+                <textarea class="form-control" id="descripcionServicio" name="descripcion" placeholder="Ingrese descripción" rows="3" required></textarea>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="precioServicio">Precio</label>
+                <input type="text" class="form-control" id="precioServicio" name="precio" placeholder="Ingrese precio" required>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="obligatorioServicio">Obligatorio</label>
-            <select class="form-control" id="obligatorioServicio" name="obligatorio" required>
-              <option value="True">Sí</option>
-              <option value="False">No</option>
-            </select>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="obligatorioServicio" name="obligatorio">
+            <label class="form-check-label" for="obligatorioServicio">Obligatorio</label>
           </div>
-          <button type="submit" class="btn btn-primary">Guardar</button>
-        </form>
+
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -203,7 +260,6 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="{% static 'js/mapa.js' %}"></script>
   <script src="{% static 'js/dataTable.js' %}"></script>
-  <script src="{% static 'js/cambiar_estado_servicio.js' %}"></script>
 
 
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -212,50 +268,118 @@
 
 
   <script>
-    $(document).on('click', '.cambiar-estado', function() {
-      const button = $(this);
-      const servicioId = button.data('id');
-
-      // Realizar una solicitud AJAX al servidor
-      $.ajax({
-          url: '{% url "cambiarEstadoServicio" %}',  // Cambia esta URL a la ruta correcta
-          type: 'POST',
-          data: {
-              'id': servicioId,
-              'csrfmiddlewaretoken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
-          },
-          success: function(response) {
-              // Actualizar la celda de disponibilidad
-              const nuevoEstado = response.nuevo_estado; // true o false
-              const disponibilidadTexto = nuevoEstado ? "Si" : "No"; // Texto a mostrar
-              const disponibleData = nuevoEstado ? "true" : "false"; // Estado a pasar al botón
-
-              // Actualizar el HTML de la celda correspondiente
-              $(`#servicio-disponible-${servicioId}`).html(disponibilidadTexto);
-
-              if (nuevoEstado) {
-                // Si el servicio está habilitado
-                button.closest('td').html(`
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-success editar-servicio me-3" data-id="${servicioId}">Editar</button>
-                        <button class="btn btn-danger cambiar-estado" data-id="${servicioId}" data-disponible="true">Deshabilitar</button>
-                    </div>
-                `);
-            } else {
-                // Si el servicio está deshabilitado
-                button.closest('td').html(`
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-success cambiar-estado" data-id="${servicioId}" data-disponible="false">Habilitar</button>
-                    </div>
-                `);
-            }
-          },
-          error: function(xhr, status, error) {
-              console.log('Error en la solicitud AJAX:', error);
-          }
-      });
+   document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('serviciosNoDisponibles');
+    const servicioRows = document.querySelectorAll('.servicio-row');
+    
+    // Función para normalizar el valor de disponibilidad
+    function isDisponible(value) {
+        const normalizedValue = String(value).toLowerCase();
+        return normalizedValue === 'true' || normalizedValue === 'True' || normalizedValue === 'si' || normalizedValue === 'yes';
+    }
+    
+    // Función para mostrar/ocultar servicios
+    function toggleServicios() {
+        const mostrarTodos = checkbox.checked;
+        servicioRows.forEach(row => {
+            const disponible = isDisponible(row.dataset.disponible);
+            row.style.display = (mostrarTodos || disponible) ? '' : 'none';
+        });
+    }
+    
+    // Establecer estado inicial del checkbox y aplicar visibilidad
+    checkbox.checked = false;
+    toggleServicios();
+    
+    // Escuchar cambios en el checkbox
+    checkbox.addEventListener('change', toggleServicios);
+    
+    // Variable para almacenar el servicio que se va a deshabilitar
+    let servicioADeshabilitar = null;
+    
+    // Manejador para el botón de cambiar estado
+    $(document).on('click', '.cambiar-estado', function(e) {
+        const button = $(this);
+        const servicioId = button.data('id');
+        const esDeshabilitacion = button.data('disponible') === true;
+        
+        if (esDeshabilitacion) {
+            // Si es una deshabilitación, guardamos el servicio y mostramos el modal
+            servicioADeshabilitar = button;
+            // Obtener el nombre del servicio de la fila
+            const nombreServicio = button.closest('tr').find('td:first').text().trim();
+            $('#servicioNombre').text(nombreServicio);
+            // El modal se mostrará automáticamente por el data-bs-target
+            return;
+        }
+        
+        // Si es una habilitación, procedemos normalmente
+        cambiarEstadoServicio(button);
     });
-  </script>
+    
+    // Manejador para el botón de confirmar deshabilitación
+    $('#confirmarDeshabilitar').on('click', function() {
+        if (servicioADeshabilitar) {
+            cambiarEstadoServicio(servicioADeshabilitar);
+            $('#deshabilitarModal').modal('hide');
+            servicioADeshabilitar = null;
+        }
+    });
+    
+    // Función para cambiar el estado del servicio
+    function cambiarEstadoServicio(button) {
+        const servicioId = button.data('id');
+        
+        $.ajax({
+            url: '{% url "cambiarEstadoServicio" %}',
+            type: 'POST',
+            data: {
+                'id': servicioId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                const nuevoEstado = response.nuevo_estado;
+                const disponibilidadTexto = nuevoEstado ? "Si" : "No";
+                const row = $(`#servicio-row-${servicioId}`);
+                
+                // Actualizar el texto de disponibilidad
+                $(`#servicio-disponible-${servicioId}`).html(disponibilidadTexto);
+                
+                // Actualizar el atributo data-disponible
+                row.attr('data-disponible', nuevoEstado);
+                
+                // Actualizar los botones
+                if (nuevoEstado) {
+                    button.closest('td').html(`
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-success editar-servicio me-3" data-id="${servicioId}">Editar</button>
+                            <button class="btn btn-danger cambiar-estado" data-id="${servicioId}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
+                        </div>
+                    `);
+                } else {
+                    button.closest('td').html(`
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-success cambiar-estado" data-id="${servicioId}" data-disponible="false">Habilitar</button>
+                        </div>
+                    `);
+                }
+                
+                // Actualizar la visibilidad de la fila
+                const mostrarTodos = checkbox.checked;
+                row.css('display', (mostrarTodos || nuevoEstado) ? '' : 'none');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud AJAX:', error);
+                alert('Hubo un error al cambiar el estado del servicio.');
+            }
+        });
+    }
+});
+
+
+
+</script>
+  
   
 {% endblock %}
 

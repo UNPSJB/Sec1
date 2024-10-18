@@ -22,6 +22,10 @@ class Salon(models.Model):
         alquiler = Alquiler.objects.create(alquiler, self, senia, reserva, inicio, afiliado, monto)
         self.save() 
 
+    def cambiar_estado(self):
+        self.disponible = not self.disponible
+        self.save()
+
     def __str__(self):
         return f'{self.nombre}'
     
