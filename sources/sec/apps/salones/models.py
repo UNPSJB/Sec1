@@ -14,6 +14,7 @@ class Salon(models.Model):
     monto = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     imagen = models.ImageField(upload_to='static/img', null=True)
+    #TODO: Asociar 2 imagenes mas
     descripcion = models.TextField(null=True, blank=False)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
     disponible = models.BooleanField(default=True)

@@ -18,7 +18,7 @@ urlpatterns = [
     path('listadoSalones/', views.listadoSalones, name='listadoSalones'),
 
     path('crearSalon/', SalonCreateView.as_view(), name='crearSalon'),
-    path('modificarSalon/<int:pk>', SalonCreateView.as_view(), name='modificarSalon'),
+    path('modificarSalon/<int:pk>', SalonUpdateView.as_view(), name='modificarSalon'),
     path('eliminarSalon/<int:pk>', SalonDeleteView.as_view(), name='eliminarSalon'),
     #path('eliminarSalon/<int:pk>', salon_eliminar, name='eliminarSalon'),
     path('detallarSalon/<int:pk>', SalonDetailView.as_view(), name='detallarSalon'),

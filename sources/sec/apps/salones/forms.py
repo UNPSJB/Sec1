@@ -89,7 +89,7 @@ class ServicioForm(forms.ModelForm):
 
     class Meta:
         model = Servicio
-        fields = "__all__"
+        fields = ['nombre', 'descripcion', 'precio', 'obligatorio']
         exclude = ['salon']
 
         widgets = {
@@ -171,11 +171,11 @@ class SalonForm(forms.ModelForm):
     
     class Meta:
         model = Salon
-        fields = "__all__"
+        fields = ['nombre', 'direccion', 'capacidad', 'monto', 'encargado', 'imagen', 'descripcion']
         exclude = ['afiliado']
 
         labels = {
-            'monto': 'Monto',
+            'monto': 'Monto (en pesos)',
         }
 
     def clean_capacidad(self):

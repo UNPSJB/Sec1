@@ -39,6 +39,7 @@ def eliminar_encargado(request, pk):
     encargado.es_encargado = False
     encargado.save()
     return JsonResponse({'status': 'success'})
+
 class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
@@ -86,6 +87,7 @@ def cambiar_estado_salon(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+#TODO: Ver que sucede al darle click y arreglar el problema
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
@@ -279,7 +281,6 @@ class ServicioCreateView(CreateView):
         salon = get_object_or_404(Salon, pk=salon_id)  
 
         servicio = form.save(commit=False)
-        print(servicio.disponible)
         servicio.salon = salon  
         servicio.save()  
         messages.add_message(self.request, messages.SUCCESS, 'El servicio ha sido agregado con éxito.')
