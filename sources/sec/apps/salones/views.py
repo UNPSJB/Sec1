@@ -110,7 +110,7 @@ class SalonListView(ListView):
 
 
 # ---------------------------- Alquiler View ------------------------------------ #
-# TODO: Mejorar el calendario para incluir la cola de espera
+
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
@@ -350,5 +350,17 @@ def cancelar_alquiler(alquiler_id):
     alquiler.save()
 
 # TODO: Arreglar la creacion de cuotas, intentar poner un if empty llamar a crear cuotas
+
+# TODO: Implementar cola de espera, cambiar al afiliado actual y elegir uno en espera
+
+# TODO: poner un numero con colores para indicar la cantidad de alquileres que tener en un dia en el salon
+
+# TODO: Hacer desaparecer el boton de crear cuotas si esats ya estan creadas
+
+# TODO: poner modales donde toca
+
+# TODO: permitir ver los modales 
+
+# TODO: Deshabilitar el pago de la 2da cuota si no esta la anterior
 
 # TODO: Implementar cola de espera, cambiar al afiliado actual y elegir uno en espera
