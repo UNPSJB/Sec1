@@ -94,10 +94,8 @@ class EncargadoForm(forms.ModelForm):
 
     def clean_domicilio(self):
         domicilio = self.cleaned_data['domicilio']
-        # Allow letters, numbers, and spaces only
         if not re.match("^[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]+$", domicilio):
             raise forms.ValidationError("El domicilio no debe contener símbolos.")
-        # Ensure it ends with a number
         if not re.search(r'\d+$', domicilio):
             raise forms.ValidationError("El domicilio debe contener un número al final.")
         return domicilio
@@ -216,11 +214,13 @@ class SalonForm(forms.ModelForm):
     
     class Meta:
         model = Salon
-        fields = ['nombre', 'direccion', 'capacidad', 'monto', 'encargado', 'imagen', 'descripcion']
+        fields = ['nombre', 'direccion', 'capacidad', 'monto', 'encargado', 'imagen', 'imagen2', 'imagen3', 'descripcion']
         exclude = ['afiliado']
 
         labels = {
             'monto': 'Monto (en pesos)',
+            'imagen2': 'Imagen 2',
+            'imagen3': 'Imagen 3',
         }
 
         widgets = {
@@ -283,10 +283,12 @@ class SalonForm(forms.ModelForm):
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
                     Column('imagen',css_class = 'form-group col-md-4 mb-0'),
+                    Column('imagen2',css_class = 'form-group col-md-4 mb-0'),
+                    Column('imagen3',css_class = 'form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
                 Row(
-                    Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
+                    Column('descripcion', css_class = 'form-group col-md-11 mb-0'),
                     css_class='form-row'
 
 

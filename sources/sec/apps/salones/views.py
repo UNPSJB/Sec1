@@ -43,7 +43,6 @@ def eliminar_encargado(request, pk):
 class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
-    template_name = '../salones/templates/salones/encargado_list.html'
 
     def get_queryset(self):
         return Persona.objects.filter(es_encargado=1).order_by('dni')
