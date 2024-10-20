@@ -13,6 +13,9 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from datetime import date
 from django.utils import timezone
+
+import re
+
 class EncargadoForm(forms.ModelForm):
     class Meta: 
         model = Persona
@@ -31,6 +34,28 @@ class EncargadoForm(forms.ModelForm):
 
         widgets = {
             'nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'nombre': forms.TextInput(attrs={
+                'pattern': '[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*',
+                'onkeypress': 'return /[a-zA-ZñÑáéíóúÁÉÍÓÚ ]/.test(event.key)',
+                'oninput': 'this.value = this.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+            }),
+            'apellido': forms.TextInput(attrs={
+                'pattern': '[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*',
+                'onkeypress': 'return /[a-zA-ZñÑáéíóúÁÉÍÓÚ ]/.test(event.key)',
+                'oninput': 'this.value = this.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+            }),
+            'dni': forms.TextInput(attrs={
+                'pattern': '[0-9]{8}',
+                'maxlength': '8',
+                'onkeypress': 'return /[0-9]/.test(event.key)',
+            }),
+            'domicilio': forms.TextInput(attrs={
+            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+            }),
+            "telefono": forms.TextInput(attrs={
+                'oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"
+            }),
         }
 
     def clean_dni(self):
@@ -54,8 +79,26 @@ class EncargadoForm(forms.ModelForm):
             raise forms.ValidationError("Debes ser mayor de 18 años para registrarte.")
         
         return nacimiento
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        if not re.match("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$", nombre):
+            raise forms.ValidationError("Nombre incorrecto.")
+        return nombre.capitalize()
 
+    def clean_apellido(self):
+        apellido = self.cleaned_data['apellido']
+        if not re.match("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$", apellido):
+            raise forms.ValidationError("Apellido incorrecto.")
+        return apellido.capitalize()
 
+    def clean_domicilio(self):
+        domicilio = self.cleaned_data['domicilio']
+        if not re.match("^[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]+$", domicilio):
+            raise forms.ValidationError("El domicilio no debe contener símbolos.")
+        if not re.search(r'\d+$', domicilio):
+            raise forms.ValidationError("El domicilio debe contener un número al final.")
+        return domicilio
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
@@ -89,7 +132,7 @@ class ServicioForm(forms.ModelForm):
 
     class Meta:
         model = Servicio
-        fields = "__all__"
+        fields = ['nombre', 'descripcion', 'precio', 'obligatorio']
         exclude = ['salon']
 
         widgets = {
@@ -171,11 +214,37 @@ class SalonForm(forms.ModelForm):
     
     class Meta:
         model = Salon
-        fields = "__all__"
+        fields = ['nombre', 'direccion', 'capacidad', 'monto', 'encargado', 'imagen', 'imagen2', 'imagen3', 'descripcion']
         exclude = ['afiliado']
 
         labels = {
-            'monto': 'Monto',
+            'monto': 'Monto (en pesos)',
+            'imagen2': 'Imagen 2',
+            'imagen3': 'Imagen 3',
+        }
+
+        widgets = {
+            'capacidad': forms.NumberInput(attrs={
+                'min': 0,
+                'max': 9999,
+                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");'
+            }),
+            'monto': forms.NumberInput(attrs={
+                'min': 0,
+                'max': 999999999,
+                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");'
+            }),
+            'nombre': forms.TextInput(attrs={
+            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*',
+            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+            }),
+            'direccion': forms.TextInput(attrs={
+            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+            }),
+            'descripcion': forms.TextInput(attrs={
+            'oninput': 'this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);'
+            }),
         }
 
     def clean_capacidad(self):
@@ -214,10 +283,12 @@ class SalonForm(forms.ModelForm):
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
                     Column('imagen',css_class = 'form-group col-md-4 mb-0'),
+                    Column('imagen2',css_class = 'form-group col-md-4 mb-0'),
+                    Column('imagen3',css_class = 'form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
                 Row(
-                    Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
+                    Column('descripcion', css_class = 'form-group col-md-11 mb-0'),
                     css_class='form-row'
 
 

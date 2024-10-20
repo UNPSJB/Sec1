@@ -14,6 +14,8 @@ class Salon(models.Model):
     monto = models.FloatField(max_length=9)
     encargado = models.ForeignKey(Persona, on_delete = models.CASCADE)
     imagen = models.ImageField(upload_to='static/img', null=True)
+    imagen2 = models.ImageField(upload_to='static/img', null=True)
+    imagen3 = models.ImageField(upload_to='static/img', null=True)
     descripcion = models.TextField(null=True, blank=False)
     afiliado = models.ManyToManyField(Afiliado, through = 'Alquiler')
     disponible = models.BooleanField(default=True)
@@ -53,14 +55,14 @@ class Alquiler (models.Model):
     reserva = models.DateField() 
     inicio = models.DateField()
     monto = models.FloatField()
-    activo = models.BooleanField()
+    activo = models.BooleanField(default=True)
     
 class PagoAlquiler(models.Model):
     alquiler = models.ForeignKey(Alquiler, on_delete = models.CASCADE)
-    cuotas = models.IntegerField() #numero de cuotas totales/ seleccionables
+    cuotas = models.IntegerField(default=1) #numero de cuotas totales/ seleccionables
     monto = models.DecimalField(max_digits=9,decimal_places=2)
     pago = models.DateField( null = True, blank = True)
-    numero = models.IntegerField() #numero de cuota
+    numero = models.IntegerField(default=1) #numero de cuota
 
 # TODO: tener un solo modelo de pago para posteriormente filtrar alquileres inpagos
 # TODO: hacer bajas logicas en lugar de deletes
