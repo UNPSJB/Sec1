@@ -92,7 +92,6 @@
         </div>
     </div>
       
-      <!-- TODO: Modificar el JavaScript para que bloquee los botones de agregar y editar cuando el salon este deshabilitado-->
       <div class="listados-container">
         <!-- Listado de servicios-->
         <div class="container-listados my-3"> 
@@ -102,9 +101,9 @@
                   <h3> Listado de Servicios </h3>
                 </div>
                 <div class="col sm-12 col-md-8 col-lg-8 py-3">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
-                  </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
+                    </div>
                 </div>
               </div>
 
@@ -134,10 +133,10 @@
                             <td id="servicio-disponible-{{ servicio.id}}"> {{servicio.disponible|yesno:"Si,No"}}</td>
                             <td >
                               <div class="btn-group" role="group">
-                                {% if servicio.disponible %}
+                                {% if servicio.disponible and salon.disponible %}
                                     <button class="btn btn-success editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
                                     <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
-                                {% else %}
+                                {% elif salon.disponible %}
                                     <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
                                 {% endif %}
                               </div>
@@ -159,7 +158,7 @@
                 </div>
                 <div class="col sm-12 col-md-8 col-lg-8 py-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
+                        <a id="btnCrearAlquiler" href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
                   </div>
                 </div>
               </div>
@@ -183,7 +182,10 @@
                             <td> {{alquiler.salon.nombre}}</td>
                             <td> {{alquiler.reserva}} </td>
                             <td> {{alquiler.inicio}} </td>
-                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                            <td>
+                                    <a  href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a>
+                            </td>
+
                         </tr>
                         {% endfor %}
                       </div>
@@ -350,127 +352,15 @@
   <script src=https://cdn.datatables.net/2.1.8/js/dataTables.js></script>
 
 
-  <!-- TODO: Modificar el script para que se oculten los botones de agregar y de editar y deshabilitar cuando el salon no este disponible-->
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    let salonADeshabilitar = null;
-
-    const salonContainer = document.querySelector('[data-salon-disponible]');
-    if (salonContainer) {
-        const salonId = salonContainer.getAttribute('data-salon-disponible');
-        const disponible = salonContainer.textContent.trim() === "Si";
-        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
-        const nombre = botonesContainer.querySelector('.cambiar-estado-salon')?.getAttribute('data-nombre');
-        
-        actualizarInterfazSalon(salonId, nombre, disponible);
-    }
-
-    function actualizarInterfazSalon(salonId, nombre, disponible) {
-        // Actualizar el indicador de disponibilidad
-        const disponibleIndicador = document.querySelector(`[data-salon-disponible="${salonId}"]`);
-        if (disponibleIndicador) {
-            disponibleIndicador.textContent = disponible ? "Si" : "No";
-        }
-
-        // Actualizar los botones
-        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
-        if (botonesContainer) {
-            if (disponible) {
-              const urlModificar = botonesContainer.getAttribute('data-url-modificar');
-                botonesContainer.innerHTML = `
-                    <a href="${urlModificar}" class="btn btn-success">Editar</a>
-                    <button class="btn btn-danger cambiar-estado-salon" 
-                            data-id="${salonId}" 
-                            data-nombre="${nombre}" 
-
-                            data-disponible="true" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#deshabilitarModalSalon">
-                        Deshabilitar
-                    </button>
-                `;
-            } else {
-                botonesContainer.innerHTML = `
-                    <button class="btn btn-success cambiar-estado-salon" 
-                            data-id="${salonId}" 
-                            data-disponible="false">
-                        Habilitar
-                    </button>
-                `;
-
-            }
-        }
-    }
-
-    function cambiarEstadoSalon(button) {
-        const salonId = button.getAttribute('data-id');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const cambiarEstadoUrl = "{% url 'cambiarEstadoSalon' %}";
-
-
-        fetch(cambiarEstadoUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken
-            },
-            body: `id=${salonId}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            actualizarInterfazSalon(data.salon_id, data.nombre, data.nuevo_estado);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Hubo un error al cambiar el estado del salón.');
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('cambiar-estado-salon')) {
-            const button = e.target;
-            const esDeshabilitacion = button.getAttribute('data-disponible') === 'true';
-
-            if (esDeshabilitacion) {
-                salonADeshabilitar = button;
-                const nombreSalon = button.getAttribute('data-nombre');
-                document.getElementById('salonNombre').textContent = nombreSalon;
-                return;
-            }
-
-            cambiarEstadoSalon(button);
-        }
-    });
-
-    // Manejador para el botón de confirmar deshabilitación
-    const confirmarBtn = document.getElementById('confirmarDeshabilitarSalon');
-    if (confirmarBtn) {
-        confirmarBtn.addEventListener('click', function() {
-            if (salonADeshabilitar) {
-                cambiarEstadoSalon(salonADeshabilitar);
-                const modal = bootstrap.Modal.getInstance(document.getElementById('deshabilitarModalSalon'));
-                if (modal) {
-                    modal.hide();
-                }
-                salonADeshabilitar = null;
-            }
-        });
-    }
-
-  });
-    
-  </script>
-
-  <script>
-    // Esperar a que el DataTable esté inicializado desde dataTable.js
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkbox = document.getElementById('serviciosNoDisponibles');
-        const tabla = document.querySelector('.dataTable');
+        document.addEventListener('DOMContentLoaded', function() {
+        let salonADeshabilitar = null;
+        let servicioADeshabilitar = null;
+        let salonActualDisponible = false;
         let dataTableInstance;
+        const tabla = document.querySelector('.dataTable');
+        const checkbox = document.getElementById('serviciosNoDisponibles');
 
         // Función para obtener la instancia existente de DataTable
         function obtenerDataTable() {
@@ -492,19 +382,87 @@
             }
         }
 
+        // Función para actualizar la visibilidad de todos los botones controlados por salon.disponible
+            function actualizarVisibilidadBotones(disponible) {
+                salonActualDisponible = disponible;
+                
+                // Botón de crear servicio
+                const btnCrearServicio = document.querySelector('[data-bs-target="#crearServicioModal"]');
+                if (btnCrearServicio) {
+                    btnCrearServicio.style.display = disponible ? 'inline-block' : 'none';
+                    btnCrearServicio.offsetHeight;  // Forzar redibujar
+
+                }
+
+                // Botón de crear alquiler
+                const btnCrearAlquiler = document.getElementById('btnCrearAlquiler'); // Seleccionar el botón por ID
+                if (btnCrearAlquiler) {
+                    btnCrearAlquiler.style.display = disponible ? 'inline-block' : 'none';
+                    btnCrearAlquiler.offsetHeight;  // Forzar redibujar
+
+                }
+
+                // Botones de "Ver" en la lista de alquileres
+                const botonesVerAlquiler = document.querySelectorAll('[href*="detallarAlquiler"]');
+                botonesVerAlquiler.forEach(btn => {
+                    btn.style.display = disponible ? 'inline-block' : 'none';
+                    btn.offsetHeight;  // Forzar redibujar
+
+                });
+        }
+
+        function actualizarInterfazSalon(salonId, nombre, disponible) {
+        // Actualizar el estado global de disponibilidad
+            actualizarVisibilidadBotones(disponible);
+
+            // Actualizar el indicador de disponibilidad
+            const disponibleIndicador = document.querySelector(`[data-salon-disponible="${salonId}"]`);
+            if (disponibleIndicador) {
+                disponibleIndicador.textContent = disponible ? "Si" : "No";
+            }
+
+            // Actualizar los botones del salón
+            const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
+            if (botonesContainer) {
+                if (disponible) {
+                    const urlModificar = botonesContainer.getAttribute('data-url-modificar');
+                    botonesContainer.innerHTML = `
+                        <a href="${urlModificar}" class="btn btn-success">Editar</a>
+                        <button class="btn btn-danger cambiar-estado-salon" 
+                                data-id="${salonId}" 
+                                data-nombre="${nombre}" 
+                                data-disponible="true" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deshabilitarModalSalon">
+                            Deshabilitar
+                        </button>
+                    `;
+                } else {
+                    botonesContainer.innerHTML = `
+                        <button class="btn btn-success cambiar-estado-salon" 
+                                data-id="${salonId}" 
+                                data-disponible="false">
+                            Habilitar
+                        </button>
+                    `;
+                }
+            }
+
+        
+    }
         function actualizarTabla(servicios) {
             if (!dataTableInstance) {
                 console.error('DataTable no está inicializado');
                 return;
             }
 
-            // Destruir los event listeners anteriores para evitar duplicados
+            // Destruir los event listeners anteriores
             $(tabla).find('.cambiar-estado, .editar-servicio').off();
 
             // Limpiar la tabla
             dataTableInstance.clear();
             
-            // Preparar los datos para DataTable
+            // Preparar los datos considerando el estado del salón
             const nuevosDatos = servicios.map(servicio => [
                 servicio.nombre,
                 servicio.descripcion,
@@ -512,10 +470,12 @@
                 servicio.obligatorio ? 'Si' : 'No',
                 servicio.disponible ? 'Si' : 'No',
                 `<div class="btn-group" role="group">
-                    ${servicio.disponible ? 
-                        `<button class="btn btn-success editar-servicio me-3" data-id="${servicio.id}">Editar</button>
-                        <button class="btn btn-danger cambiar-estado" data-id="${servicio.id}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>` :
-                        `<button class="btn btn-success cambiar-estado" data-id="${servicio.id}" data-disponible="false">Habilitar</button>`
+                    ${salonActualDisponible ? 
+                        (servicio.disponible ? 
+                            `<button class="btn btn-success editar-servicio me-3" data-id="${servicio.id}">Editar</button>
+                            <button class="btn btn-danger cambiar-estado" data-id="${servicio.id}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>` :
+                            `<button class="btn btn-success cambiar-estado" data-id="${servicio.id}" data-disponible="false">Habilitar</button>`
+                        ) : ''
                     }
                 </div>`
             ]);
@@ -532,7 +492,7 @@
                 node.setAttribute('data-disponible', servicio.disponible);
             });
         }
-        
+
         function cargarServicios() {
             const url = new URL(window.location.href);
             url.searchParams.set('mostrar_todos', checkbox.checked);
@@ -562,7 +522,7 @@
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             $.ajax({
-              url: '{% url "cambiarEstadoServicio" %}',  // Ajusta esta URL según tu configuración
+                url: '{% url "cambiarEstadoServicio" %}',
                 type: 'POST',
                 data: {
                     'id': servicioId,
@@ -578,7 +538,35 @@
             });
         }
 
-        // Inicializar todo después de que DataTable esté listo
+        function cambiarEstadoSalon(button) {
+            const salonId = button.getAttribute('data-id');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const cambiarEstadoUrl = "{% url 'cambiarEstadoSalon' %}";
+
+            fetch(cambiarEstadoUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: `id=${salonId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                actualizarInterfazSalon(data.salon_id, data.nombre, data.nuevo_estado);
+                // Recargar la tabla de servicios para actualizar los botones
+                cargarServicios();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al cambiar el estado del salón.');
+            });
+        }
+
+        // Inicialización
         esperarDataTable(() => {
             // Establecer estado inicial del checkbox
             checkbox.checked = false;
@@ -586,13 +574,14 @@
             // Configurar el event listener del checkbox
             checkbox.addEventListener('change', cargarServicios);
 
-            // Configurar los event listeners para los botones usando delegación de eventos
+            
+            // Configurar los event listeners para los botones de servicio usando delegación de eventos
             $(document).on('click', '.cambiar-estado', function(e) {
                 const button = $(this);
                 const esDeshabilitacion = button.data('disponible') === true;
                 
                 if (esDeshabilitacion) {
-                    window.servicioADeshabilitar = button;
+                    servicioADeshabilitar = button;
                     const nombreServicio = button.closest('tr').find('td:first').text().trim();
                     $('#servicioNombre').text(nombreServicio);
                     return;
@@ -601,14 +590,55 @@
                 cambiarEstadoServicio(button);
             });
 
-            // Configurar el manejador para el botón de confirmar deshabilitación
+            
+            // Configurar el manejador para el botón de confirmar deshabilitación de servicio
             $('#confirmarDeshabilitar').on('click', function() {
-                if (window.servicioADeshabilitar) {
-                    cambiarEstadoServicio(window.servicioADeshabilitar);
+                if (servicioADeshabilitar) {
+                    cambiarEstadoServicio(servicioADeshabilitar);
                     $('#deshabilitarModal').modal('hide');
-                    window.servicioADeshabilitar = null;
+                    servicioADeshabilitar = null;
                 }
             });
+
+            // Event listener para los botones del salón
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('cambiar-estado-salon')) {
+                    const button = e.target;
+                    const esDeshabilitacion = button.getAttribute('data-disponible') === 'true';
+
+                    if (esDeshabilitacion) {
+                        salonADeshabilitar = button;
+                        const nombreSalon = button.getAttribute('data-nombre');
+                        document.getElementById('salonNombre').textContent = nombreSalon;
+                        return;
+                    }
+
+                    cambiarEstadoSalon(button);
+                }
+            });
+
+            // Manejador para el botón de confirmar deshabilitación de salón
+            const confirmarBtn = document.getElementById('confirmarDeshabilitarSalon');
+            if (confirmarBtn) {
+                confirmarBtn.addEventListener('click', function() {
+                    if (salonADeshabilitar) {
+                        cambiarEstadoSalon(salonADeshabilitar);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deshabilitarModalSalon'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                        salonADeshabilitar = null;
+                    }
+                });
+            }
+
+            // Inicialización del estado del salón
+            const salonContainer = document.querySelector('[data-salon-disponible]');
+            if (salonContainer) {
+                const disponible = salonContainer.textContent.trim() === "Si";
+                actualizarVisibilidadBotones(disponible);
+            }
+
 
             // Cargar los datos iniciales
             cargarServicios();

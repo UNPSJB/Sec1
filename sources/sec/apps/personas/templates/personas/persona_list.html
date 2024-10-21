@@ -3,6 +3,8 @@
 {% block ttitle %} Listado de Encargados {% endblock %}
 
 {% block thead %}
+<div id="messageArea"></div>
+
 <tr>
     <th scope="col">DNI</th>
     <th scope="col">Nombre</th>
@@ -28,9 +30,11 @@
         </button>
     
     </td>
-
-
 </tr>
+
+
+
+
 {% endfor %}
 {% endblock %}
 
@@ -57,10 +61,27 @@
 </div>
 {% endblock %}
 
+{% block extracss %}
+    <style>
+        #messageArea .alert {
+            opacity: 1;
+            visibility: visible;
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 1rem;
+        }
+
+        #messageArea .alert.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            margin-top: -58px; /* Ajusta este valor según la altura de tu alerta */
+        }
+    </style>
+{% endblock %}
+
 {% block extrajs %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('eliminarEncargado');
         modal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
@@ -71,33 +92,70 @@
 
             const confirmarButton = modal.querySelector('#confirmarEliminacionEncargado');
             confirmarButton.setAttribute('data-id', id);
+            
+            document.getElementById('messageArea').innerHTML = '';
         });
 
         const confirmarButton = document.getElementById('confirmarEliminacionEncargado');
         confirmarButton.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
 
-            // Aquí puedes hacer una solicitud AJAX o redirigir a la URL de eliminación
-            fetch(`/salones/eliminarEncargado/${id}`, { // Asegúrate de que la URL sea correcta
+            fetch(`/salones/eliminarEncargado/${id}`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}', // Asegúrate de incluir el token CSRF
+                    'X-CSRFToken': '{{ csrf_token }}',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ id: id })
             })
-            .then(response => {
-                if (response.ok) {
-                    // Cerrar el modal y refrescar la página o eliminar el elemento del DOM
-                    $('#eliminarEncargado').modal('hide');
-                    location.reload(); // O actualiza el DOM según sea necesario
+            .then(response => response.json())
+            .then(data => {
+                $('#eliminarEncargado').modal('hide');
+
+                const messageArea = document.getElementById('messageArea');
+                const alertClass = data.status === 'success' ? 'alert-success' : 'alert-danger';
+                const message = data.status === 'success' 
+                    ? 'Encargado eliminado exitosamente.'
+                    : data.message || 'Error al eliminar el encargado.';
+
+                messageArea.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+
+                if (data.status === 'success') {
+                    setTimeout(() => {
+                        const alert = messageArea.querySelector('.alert');
+                        if (alert) {
+                            alert.classList.add('fade-out');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 300); // Reducido de 500ms a 300ms
+                        }
+                    }, 1000); // Reducido de 2000ms a 1000ms
                 } else {
-                    // Manejar errores
-                    alert('Error al eliminar el encargado.');
+                    setTimeout(() => {
+                        const alert = messageArea.querySelector('.alert');
+                        if (alert) {
+                            alert.classList.add('fade-out');
+                            setTimeout(() => {
+                                messageArea.innerHTML = '';
+                            }, 300); // Reducido de 500ms a 300ms
+                        }
+                    }, 1500); // Reducido de 3000ms a 1500ms
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                const messageArea = document.getElementById('messageArea');
+                messageArea.innerHTML = `<div class="alert alert-danger">Error al eliminar el encargado.</div>`;
+                
+                setTimeout(() => {
+                    const alert = messageArea.querySelector('.alert');
+                    if (alert) {
+                        alert.classList.add('fade-out');
+                        setTimeout(() => {
+                            messageArea.innerHTML = '';
+                        }, 300); // Reducido de 500ms a 300ms
+                    }
+                }, 1500); // Reducido de 3000ms a 1500ms
             });
         });
     });

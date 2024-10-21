@@ -27,18 +27,41 @@ class EncargadoCreateView(CreateView):
     form_class = EncargadoForm
     success_url = reverse_lazy('listarEncargados')  
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Registrar encargado'
+        return kwargs
+
     def form_valid(self, form):
         encargado = form.save(commit=False)
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
+    
+
 
 
 def eliminar_encargado(request, pk):
     encargado = get_object_or_404(Persona, pk=pk)
+    if Salon.objects.filter(encargado=encargado).exists(): 
+        return JsonResponse({'status': 'error', 'message': 'No se puede eliminar encargado porque tiene salones asociados a él.'})
     encargado.es_encargado = False
     encargado.save()
     return JsonResponse({'status': 'success'})
+
+
+class EncargadoUpdateView(UpdateView):
+    model = Persona
+    form_class = EncargadoForm
+    success_url = reverse_lazy("listarEncargados")
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Modificar encargado'
+        return kwargs
+
+    
 
 class EncargadoListView(ListView):
     model = Persona
@@ -56,6 +79,12 @@ class SalonCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
+    
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Registrar Salon'
+        return kwargs
 
     def form_valid(self, form):
         salon = form.save(commit=False)  
@@ -86,11 +115,15 @@ def cambiar_estado_salon(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-#TODO: Ver que sucede al darle click y arreglar el problema
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
-    success_url = reverse_lazy("modificarSalon")
+    success_url = reverse_lazy("listarSalones")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Modificar Salon'
+        return kwargs
 
 def salon_eliminar(request, pk):
     a = Salon.objects.get(pk=pk)

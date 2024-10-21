@@ -105,10 +105,11 @@ class EncargadoForm(forms.ModelForm):
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML('<h2><center>Registrar encargado</center></h2>'),
+            HTML(f'<h2><center>{form_title or "Registrar Encargado"}</center></h2>'),
             HTML('<hr/>'),
             Fieldset(
                 "Datos del encargado",
@@ -264,11 +265,12 @@ class SalonForm(forms.ModelForm):
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             HTML(
-                '<h2><center>Registrar Salon</center></h2>'),
+                f'<h2><center>{form_title or "Registrar Salon"}</center></h2>'),
             HTML(
                 '<hr/>'),
             Fieldset(

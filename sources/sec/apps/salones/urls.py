@@ -9,7 +9,7 @@ urlpatterns = [
     # ----------------- Encargados -----------------
     path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
     path('listarEncargados/', EncargadoListView.as_view(), name='listarEncargados'),
-    path('modificarEncargado/<int:pk>', EncargadoCreateView.as_view(), name='modificarEncargado'),
+    path('modificarEncargado/<int:pk>', EncargadoUpdateView.as_view(), name='modificarEncargado'),
     path('eliminarEncargado/<int:pk>', eliminar_encargado, name='eliminarEncargado'),
 
 
