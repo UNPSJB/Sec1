@@ -13,9 +13,7 @@
                           <tr>
                             <th scope="col">seña</th>
                             <th scope="col">reserva</th>
-                            <th scope="col">inicio</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>  
+                            <th scope="col">inicio</th> 
                           </tr>
                       </thead>
                       <tbody>
@@ -25,7 +23,7 @@
                             <td>{{ alquiler.senia }}</td>
                             <td>{{ alquiler.reserva }}</td>
                             <td>{{ alquiler.inicio }}</td>
-                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>                                         
+                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn botones"> Ver </a></td>                                         
                           </tr>
                           {% endfor %}  
                       </tbody>

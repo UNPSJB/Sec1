@@ -8,8 +8,6 @@ $(document).ready(function() {
             info: "Mostrando  _END_ registros de un total de _TOTAL_ registros",
             zeroRecords: "No se encontraron resultados",
             infoEmpty: "Mostrando 0 a 0 de 0 registros",
-
-
         }
     });
   });

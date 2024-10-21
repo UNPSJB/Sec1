@@ -24,12 +24,6 @@
           </div>
           <div class = "input-group py-2">
             <label><b> Ubicacion en el mapa: </b></label>
-            <style>
-              #map {
-                  height: 300px; /* Altura del mapa */
-                  width: 100%;   /* Ancho del mapa */
-              }
-            </style>
           <div id="map" data-direccion="{{ salon.direccion|escapejs }}" data-nombre="{{ salon.nombre|escapejs }}" ></div>
           </div>
         </div>
@@ -65,11 +59,9 @@
           <div class="input-group py-2">
             <label><b> Disponible: </b></label> &nbsp;  
             <span data-salon-disponible="{{ salon.pk }}">{{salon.disponible|yesno:"Si,No"}}</span>
-
           </div>
         </div>
       </div> 
-      
       <!-- TODO: Modificar el JavaScript para que bloquee los botones de agregar y editar cuando el salon este deshabilitado-->
       <div class="listados-container">
         <!-- Listado de servicios-->
@@ -85,12 +77,10 @@
                   </div>
                 </div>
               </div>
-
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="serviciosNoDisponibles">
                 <label class="form-check-label" for="serviciosNoDisponibles" style="margin-left: 10px;">Mostrar todos los servicios</label>
               </div>
-
               <table  class="table table-striped table-responsive dataTable">
                   <thead>
                       <tr>
@@ -113,10 +103,10 @@
                             <td >
                               <div class="btn-group" role="group">
                                 {% if servicio.disponible %}
-                                    <button class="btn btn-success editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
+                                    <button class="btn botones editar-servicio  me-3" data-id="{{ servicio.id }}">Editar</button>
                                     <button class="btn btn-danger cambiar-estado" data-id="{{ servicio.id }}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>
                                 {% else %}
-                                    <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
+                                    <button class="btn botones cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
                                 {% endif %}
                             </div>
                             </td>
@@ -127,7 +117,6 @@
               </table>
             </div> 
         </div>
-
         <!-- Listado de alquileres-->
         <div class="container-listados my-3"> 
           <div class="table-responsive card shadow p-3"> 
@@ -137,7 +126,7 @@
                 </div>
                 <div class="col sm-12 col-md-8 col-lg-8 py-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
+                    <a href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn botones"> + </a>
                   </div>
                 </div>
               </div>
@@ -161,7 +150,7 @@
                             <td> {{alquiler.salon.nombre}}</td>
                             <td> {{alquiler.reserva}} </td>
                             <td> {{alquiler.inicio}} </td>
-                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                            <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn botones"> Ver </a></td>
                         </tr>
                         {% endfor %}
                       </div>
@@ -174,11 +163,7 @@
 
 {% endblock %}
 
-
-
-
 {% block modal %}
-
 <!-- TODO: Arreglar el modal del salon y hacer que al deshabilitarse, se oculten ambos listados -->
 <!-- Modal de eliminacion de salon -->
 <div class="modal fade" id="deshabilitarModalSalon" tabindex="-1" aria-labelledby="deshabilitarModalLabelSalon" aria-hidden="true">
@@ -198,8 +183,6 @@
       </div>
   </div>
 </div>
-
-
 <!-- Modal de eliminacion de servicio -->
 <div class="modal fade" id="deshabilitarModal" tabindex="-1" aria-labelledby="deshabilitarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -218,7 +201,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal de servicio-->
 <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -231,7 +213,6 @@
         <form id="formServicio" method="POST" action="{% url 'crearServicio' %}">
           {% csrf_token %}
           <input type="hidden" name="salon" value="{{ salon.pk }}">
-          
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -239,14 +220,12 @@
                 <input type="text" class="form-control" id="nombreServicio" name="nombre" placeholder="Ingrese nombre del servicio" required>
               </div>
             </div>
-
             <div class="col-md-4">
               <div class="form-group">
                 <label for="descripcionServicio">Descripción</label>
                 <textarea class="form-control" id="descripcionServicio" name="descripcion" placeholder="Ingrese descripción" rows="3" required></textarea>
               </div>
             </div>
-
             <div class="col-md-4">
               <div class="form-group">
                 <label for="precioServicio">Precio</label>
@@ -254,12 +233,10 @@
               </div>
             </div>
           </div>
-
           <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" id="obligatorioServicio" name="obligatorio">
             <label class="form-check-label" for="obligatorioServicio">Obligatorio</label>
           </div>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -271,297 +248,17 @@
 </div>
 {% endblock %}
 
-
-
 {% block extracss %}
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
 {% endblock %}
 
 {% block extrajs %}
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="{% static 'js/mapa.js' %}"></script>
   <script src="{% static 'js/dataTable.js' %}"></script>
-
-
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
-  <script src=https://cdn.datatables.net/2.1.8/js/dataTables.js></script>
-
-
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    let salonADeshabilitar = null;
-
-    const salonContainer = document.querySelector('[data-salon-disponible]');
-    if (salonContainer) {
-        const salonId = salonContainer.getAttribute('data-salon-disponible');
-        const disponible = salonContainer.textContent.trim() === "Si";
-        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
-        const nombre = botonesContainer.querySelector('.cambiar-estado-salon')?.getAttribute('data-nombre');
-        
-        actualizarInterfazSalon(salonId, nombre, disponible);
-    }
-
-    function actualizarInterfazSalon(salonId, nombre, disponible) {
-        // Actualizar el indicador de disponibilidad
-        const disponibleIndicador = document.querySelector(`[data-salon-disponible="${salonId}"]`);
-        if (disponibleIndicador) {
-            disponibleIndicador.textContent = disponible ? "Si" : "No";
-        }
-
-        // Actualizar los botones
-        const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
-        if (botonesContainer) {
-            if (disponible) {
-              const urlModificar = botonesContainer.getAttribute('data-url-modificar');
-                botonesContainer.innerHTML = `
-                    <a href="${urlModificar}" class="btn btn-success">Editar</a>
-                    <button class="btn btn-danger cambiar-estado-salon" 
-                            data-id="${salonId}" 
-                            data-nombre="${nombre}" 
-
-                            data-disponible="true" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#deshabilitarModalSalon">
-                        Deshabilitar
-                    </button>
-                `;
-                document.querySelector('.listados-container').style.display = 'block'; // Cambia el selector según tu estructura
-            } else {
-                botonesContainer.innerHTML = `
-                    <button class="btn btn-success cambiar-estado-salon" 
-                            data-id="${salonId}" 
-                            data-disponible="false">
-                        Habilitar
-                    </button>
-                `;
-                document.querySelector('.listados-container').style.display = 'none'; // Cambia el selector según tu estructura
-
-            }
-        }
-    }
-
-    function cambiarEstadoSalon(button) {
-        const salonId = button.getAttribute('data-id');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const cambiarEstadoUrl = "{% url 'cambiarEstadoSalon' %}";
-
-
-        fetch(cambiarEstadoUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken
-            },
-            body: `id=${salonId}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            actualizarInterfazSalon(data.salon_id, data.nombre, data.nuevo_estado);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Hubo un error al cambiar el estado del salón.');
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('cambiar-estado-salon')) {
-            const button = e.target;
-            const esDeshabilitacion = button.getAttribute('data-disponible') === 'true';
-
-            if (esDeshabilitacion) {
-                salonADeshabilitar = button;
-                const nombreSalon = button.getAttribute('data-nombre');
-                document.getElementById('salonNombre').textContent = nombreSalon;
-                return;
-            }
-
-            cambiarEstadoSalon(button);
-        }
-    });
-
-    // Manejador para el botón de confirmar deshabilitación
-    const confirmarBtn = document.getElementById('confirmarDeshabilitarSalon');
-    if (confirmarBtn) {
-        confirmarBtn.addEventListener('click', function() {
-            if (salonADeshabilitar) {
-                cambiarEstadoSalon(salonADeshabilitar);
-                const modal = bootstrap.Modal.getInstance(document.getElementById('deshabilitarModalSalon'));
-                if (modal) {
-                    modal.hide();
-                }
-                salonADeshabilitar = null;
-            }
-        });
-    }
-
-  });
-    
-  </script>
-
-  <script>
-    // Esperar a que el DataTable esté inicializado desde dataTable.js
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkbox = document.getElementById('serviciosNoDisponibles');
-        const tabla = document.querySelector('.dataTable');
-        let dataTableInstance;
-
-        // Función para obtener la instancia existente de DataTable
-        function obtenerDataTable() {
-            if ($.fn.DataTable.isDataTable(tabla)) {
-                dataTableInstance = $(tabla).DataTable();
-                return true;
-            }
-            return false;
-        }
-
-        // Función que intenta obtener DataTable cada 100ms
-        function esperarDataTable(callback, intentos = 0) {
-            if (obtenerDataTable()) {
-                callback();
-            } else if (intentos < 50) { // Máximo 5 segundos de espera
-                setTimeout(() => esperarDataTable(callback, intentos + 1), 100);
-            } else {
-                console.error('No se pudo obtener la instancia de DataTable');
-            }
-        }
-
-        function actualizarTabla(servicios) {
-            if (!dataTableInstance) {
-                console.error('DataTable no está inicializado');
-                return;
-            }
-
-            // Destruir los event listeners anteriores para evitar duplicados
-            $(tabla).find('.cambiar-estado, .editar-servicio').off();
-
-            // Limpiar la tabla
-            dataTableInstance.clear();
-            
-            // Preparar los datos para DataTable
-            const nuevosDatos = servicios.map(servicio => [
-                servicio.nombre,
-                servicio.descripcion,
-                servicio.precio,
-                servicio.obligatorio ? 'Si' : 'No',
-                servicio.disponible ? 'Si' : 'No',
-                `<div class="btn-group" role="group">
-                    ${servicio.disponible ? 
-                        `<button class="btn btn-success editar-servicio me-3" data-id="${servicio.id}">Editar</button>
-                        <button class="btn btn-danger cambiar-estado" data-id="${servicio.id}" data-disponible="true" data-bs-toggle="modal" data-bs-target="#deshabilitarModal">Deshabilitar</button>` :
-                        `<button class="btn btn-success cambiar-estado" data-id="${servicio.id}" data-disponible="false">Habilitar</button>`
-                    }
-                </div>`
-            ]);
-            
-            // Agregar los nuevos datos y redibujar
-            dataTableInstance.rows.add(nuevosDatos).draw();
-
-            // Actualizar los atributos de las filas
-            dataTableInstance.rows().every(function(rowIdx) {
-                const servicio = servicios[rowIdx];
-                const node = this.node();
-                node.id = `servicio-row-${servicio.id}`;
-                node.className = 'servicio-row';
-                node.setAttribute('data-disponible', servicio.disponible);
-            });
-        }
-        
-        function cargarServicios() {
-            const url = new URL(window.location.href);
-            url.searchParams.set('mostrar_todos', checkbox.checked);
-            
-            fetch(url.toString(), {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                actualizarTabla(data.servicios);
-            })
-            .catch(error => {
-                console.error('Error al cargar los servicios:', error);
-                alert('Error al cargar los servicios. Por favor, intente nuevamente.');
-            });
-        }
-
-        function cambiarEstadoServicio(button) {
-            const servicioId = button.data('id');
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            
-            $.ajax({
-              url: '{% url "cambiarEstadoServicio" %}',  // Ajusta esta URL según tu configuración
-                type: 'POST',
-                data: {
-                    'id': servicioId,
-                    'csrfmiddlewaretoken': csrfToken
-                },
-                success: function(response) {
-                    cargarServicios();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error en la solicitud AJAX:', error);
-                    alert('Hubo un error al cambiar el estado del servicio.');
-                }
-            });
-        }
-
-        // Inicializar todo después de que DataTable esté listo
-        esperarDataTable(() => {
-            // Establecer estado inicial del checkbox
-            checkbox.checked = false;
-            
-            // Configurar el event listener del checkbox
-            checkbox.addEventListener('change', cargarServicios);
-
-            // Configurar los event listeners para los botones usando delegación de eventos
-            $(document).on('click', '.cambiar-estado', function(e) {
-                const button = $(this);
-                const esDeshabilitacion = button.data('disponible') === true;
-                
-                if (esDeshabilitacion) {
-                    window.servicioADeshabilitar = button;
-                    const nombreServicio = button.closest('tr').find('td:first').text().trim();
-                    $('#servicioNombre').text(nombreServicio);
-                    return;
-                }
-                
-                cambiarEstadoServicio(button);
-            });
-
-            // Configurar el manejador para el botón de confirmar deshabilitación
-            $('#confirmarDeshabilitar').on('click', function() {
-                if (window.servicioADeshabilitar) {
-                    cambiarEstadoServicio(window.servicioADeshabilitar);
-                    $('#deshabilitarModal').modal('hide');
-                    window.servicioADeshabilitar = null;
-                }
-            });
-
-            // Cargar los datos iniciales
-            cargarServicios();
-        });
-    });
-</script>
-
-
-
-  
-
-  
+  <script src=https://cdn.datatables.net/2.1.8/js/dataTables.js></script>    
 {% endblock %}
 
 

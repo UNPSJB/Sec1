@@ -15,7 +15,6 @@
                             <th scope="col">Descripcion</th>
                             <th scope="col">Obligatorio</th>
                             <th scope="col">Salon al que pertenece</th>
-
                           </tr>
                       </thead>
                       <tbody>
@@ -32,7 +31,7 @@
                               {% endif %}
                             </td>
                             <td> {{ servicio.salon.nombre }} </td>
-                            <td><a href="#"class="btn btn-success">Editar</a></td>
+                            <td><a href="#" class="btn botones">Editar</a></td>
                             <td><a href="{% url 'eliminarServicio' servicio.pk %}"class="btn btn-danger">Eliminar</a></td>                                                         
                           </tr>
                           {% endfor %}  

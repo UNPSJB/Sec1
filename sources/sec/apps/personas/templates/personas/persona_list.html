@@ -9,7 +9,6 @@
     <th scope="col">Apellido</th>
     <th scope="col">Telefono</th>
     <th scope="col">Domicilio</th>
-    <th scope="col"> Acciones</th>
 </tr>
 {% endblock %}
 
@@ -22,7 +21,7 @@
     <td>{{ persona.telefono }}</td>
     <td>{{ persona.domicilio }}</td>
     <td>
-        <a href="{% url 'modificarEncargado' persona.pk %}"class="btn btn-success">Editar</a>
+        <a href="{% url 'modificarEncargado' persona.pk %}" class="btn botones">Editar</a>
         <button class="btn btn-danger eliminarEncargado" data-id="{{ persona.pk }}" data-nombre="{{ persona.nombre }}" data-bs-toggle="modal" data-bs-target="#eliminarEncargado">
          Eliminar
         </button>

@@ -7,8 +7,8 @@
     <div class="card shadow">
         <div class="card-body">
             <h2 class="card-title mb-4">DATOS PERSONALES</h2>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row mb-4">
+                <div class="col-md-4">
                     <div class="mb-3">
                         <strong>Nombre:</strong> {{afiliado.persona.nombre}}
                     </div>
@@ -18,20 +18,19 @@
                     <div class="mb-3">
                         <strong>DNI:</strong> {{afiliado.persona.dni}}
                     </div>
-                    <div class="mb-3">
-                        <strong>ID:</strong> {{afiliado.id}}
-                    </div>
-                    <div class="mb-3">
-                        <strong>Fecha Nacimiento:</strong> {{afiliado.persona.nacimiento}}
-                    </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="mb-3">
                         <strong>CUIL:</strong> {{afiliado.cuil}}
                     </div>
                     <div class="mb-3">
+                        <strong>Fecha Nacimiento:</strong> {{afiliado.persona.nacimiento}}
+                    </div>
+                    <div class="mb-3">
                         <strong>Nacionalidad:</strong> {{afiliado.persona.nacionalidad}}
                     </div>
+                </div>
+                <div class="col-md-4">
                     <div class="mb-3">
                         <strong>Estado Civil:</strong> {{afiliado.persona.get_estadoCivil_display}}
                     </div>
@@ -43,14 +42,22 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <form id="form-aceptar-{{ afiliado.id }}" method="POST" action="{% url 'aceptar_solicitud' afiliado.id %}" class="d-inline-block aceptarAfiliado">
+                        {% csrf_token %}
+                        <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ afiliado.id }}">Aceptar</button>
+                    </form>
+                    <button type="button" class="btn btn-danger rechazarAfiliado" data-bs-toggle="modal" data-bs-target="#rechazoModal-{{ afiliado.id }}">Rechazar</button>
+                </div>
+            </div>
+        </div> 
     </div>
-
     <div class="card shadow mt-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="card-title">Familiares</h3>
-                <button data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn btn-success">+</button>
+                <button data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn botones">+</button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -81,14 +88,6 @@
                 </table>
             </div>
         </div>
-    </div>
-
-    <div class="d-flex justify-content-end mt-4">
-        <form id="form-aceptar-{{ afiliado.id }}" method="POST" action="{% url 'aceptar_solicitud' afiliado.id %}" class="me-2">
-            {% csrf_token %}
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ afiliado.id }}">Aceptar</button>
-        </form>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rechazoModal-{{ afiliado.id }}">Rechazar</button>
     </div>
 </div>
 {% endblock %}

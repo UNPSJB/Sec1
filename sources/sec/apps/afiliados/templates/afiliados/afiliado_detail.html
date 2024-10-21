@@ -6,6 +6,9 @@
 <div class="py-4">
     <div class="container py-3" style="background-color: white ; border-radius: 6px;">
       <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/perfil.png' %}" class="img-thumbnail" alt="persona">
+        </div>
         <div class="col sm-12 col-md-4 col-lg-4 py-3">
           <label><h2><b>DATOS PERSONALES</b></h2></label>
           <div class="input-group py-2">
@@ -44,7 +47,7 @@
           {% if afiliado.estado == "Activo" %}
             <div class="col sm-12 col-md-12 col-lg-12">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <td><a href="{% url 'modificarAfiliado' object.pk %}"class="btn btn-success">Editar</a></td>
+                <td><a href="{% url 'modificarAfiliado' object.pk %}" class="btn botones">Editar</a></td>
                 <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal-{{ afiliado.id }}">Desafiliar</a></td>
               </div>
             </div>
@@ -59,7 +62,7 @@
               {% if afiliado.estado == "Activo" %}
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn btn-success"> + </a>
+                  <a data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn botones"> + </a>
                 </div>
               </div>
               {% endif %}
@@ -100,7 +103,7 @@
               </div>
               <div class="col sm-12 col-md-8 col-lg-8 py-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{% url 'crearAlumno' %}" class="btn btn-success"> + </a>
+                  <a href="{% url 'crearAlumno' %}" class="btn botones"> + </a>
                 </div>
               </div>
             </div>
@@ -129,7 +132,7 @@
                               <td> {{rol.alumno.curso.descuento}}% </td>
                               <td> ***Revisar*** </td>
                               <td> {{rol.alumno.curso.precio}}$ </td>
-                              <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn btn-success"> Ver </a></td>
+                              <td><a href="{% url 'detallarCurso' rol.alumno.curso.pk %}" class="btn botones"> Ver </a></td>
                             </tr>
                             {%endif%}
                           {%endfor%}
@@ -148,7 +151,7 @@
             </div>
             <div class="col sm-12 col-md-8 col-lg-8 py-3">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="{% url 'crearAlquiler' %}" class="btn btn-success"> + </a>
+                <a href="{% url 'crearAlquiler' %}" class="btn botones"> + </a>
               </div>
             </div>
           </div>
@@ -172,7 +175,7 @@
                           <td> {{alquiler.reserva}} </td>
                           <td> {{alquiler.inicio}} </td>
                           <td> <div> <input type="checkbox"> </div></td>
-                          <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a></td>
+                          <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn botones"> Ver </a></td>
                       </tr>
                       {% endfor %}
                     </div>
@@ -228,7 +231,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-success" form="quitarFamiliar-form">Aceptar</button>
+        <button type="submit" class="btn botones"form="quitarFamiliar-form">Aceptar</button>
     </div>
     </div>
   </div>
@@ -252,7 +255,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success" form="form-desafiliar-{{ afiliado.id }}">Aceptar</button>
+              <button type="submit" class="btn botones" form="form-desafiliar-{{ afiliado.id }}">Aceptar</button>
           </div>
       </div>
   </div>
