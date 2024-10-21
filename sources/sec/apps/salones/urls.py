@@ -47,7 +47,7 @@ urlpatterns = [
     # ----------------- Servicios -----------------
 
     path('crearServicio/', ServicioCreateView.as_view(), name='crearServicio'),
-    path('modificarServicio/<int:pk>', ServicioCreateView.as_view(), name='modificarServicio'),
+    path('modificarServicio/<int:pk>', views.modificarServicio, name='modificarServicio'),
     path('eliminarServicio/<int:pk>', ServicioDeleteView.as_view(), name='eliminarServicio'),
     #path('eliminarServicio/<int:pk>', servicio_eliminar, name='eliminarServicio'),
     path('detallarServicio/<int:pk>', ServicioDetailView.as_view(), name='detallarServicio'),
