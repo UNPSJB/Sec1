@@ -19,9 +19,8 @@ import re
 class EncargadoForm(forms.ModelForm):
     class Meta: 
         model = Persona
-        fields = ['dni', 'nombre', 'apellido', 'telefono', 'domicilio', 'nacimiento']
+        fields = [ 'nombre', 'apellido', 'telefono', 'domicilio', 'nacimiento']
         labels = {
-            'dni': 'DNI',
             'nombre': 'Nombre',
             'apellido': 'Apellido',
             'telefono': 'Teléfono',
@@ -57,12 +56,6 @@ class EncargadoForm(forms.ModelForm):
                 'oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"
             }),
         }
-
-    def clean_dni(self):
-        dni = self.cleaned_data['dni']
-        if not dni.isdigit() or len(dni) != 8:
-            raise forms.ValidationError("El DNI debe ser un número de 8 dígitos")
-        return dni
 
     def clean_telefono(self):
         telefono = self.cleaned_data['telefono']
@@ -105,15 +98,15 @@ class EncargadoForm(forms.ModelForm):
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML('<h2><center>Registrar encargado</center></h2>'),
+            HTML(f'<h2><center>{form_title or "Registrar Encargado"}</center></h2>'),
             HTML('<hr/>'),
             Fieldset(
                 "Datos del encargado",
                 Row(
-                    Column('dni', css_class='form-group col-md-4 mb-0'),
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('apellido', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
@@ -219,8 +212,9 @@ class SalonForm(forms.ModelForm):
 
         labels = {
             'monto': 'Monto (en pesos)',
-            'imagen2': 'Imagen 2',
-            'imagen3': 'Imagen 3',
+            'imagen1': 'Imagen principal', 
+            'imagen2': 'Imagen 2 (opcional)',
+            'imagen3': 'Imagen 3 (opcional)',
         }
 
         widgets = {
@@ -264,11 +258,12 @@ class SalonForm(forms.ModelForm):
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             HTML(
-                '<h2><center>Registrar Salon</center></h2>'),
+                f'<h2><center>{form_title or "Registrar Salon"}</center></h2>'),
             HTML(
                 '<hr/>'),
             Fieldset(

@@ -1,0 +1,95 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <form id="afiliado-form"method="post">
+            {% csrf_token %}
+            <input type="hidden" id="hidden-action" name="action" value="search">
+            <h2><center>Registrar Encargado</center></h2>
+            <hr/>
+              <legend>Datos Personales</legend>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                  <div id="div_{{persona_form.dni.id_for_label}}" class="mb-3">
+                    <label for="{{ persona_form.dni.id_for_label }}" class="form-label">{{ persona_form.dni.label|safe }}</label>
+                    {{ persona_form.dni }}
+                  </div>
+                </div>
+              </div>
+              <div id="form-container"></div>
+            <input
+            type="submit"
+            name="submit"
+            value="Siguiente"
+            class="btn btn-primary button white"
+            id="submit-id-submit"
+          />
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel"> Encargado ya existe</h5>
+            </div>
+            <div class="modal-body" id="id_modal_body">
+                Contenido del modal aquí.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cerrar-modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function() {
+        $('#afiliado-form').on('submit', function(e) {
+            var actionValue = $(this).find('input[name="action"]').val();
+            if (actionValue === 'search') {
+                e.preventDefault(); // Prevenir el envío normal del formulario
+                
+                $.ajax({
+                    url: "{% url 'buscarPersonaParaEncargado' %}", // Cambia esto por tu URL para verificar el DNI
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.es_encargado) {
+                            $('#id_modal_body').html(`El dni ${response.dni} es encargado`);
+                            $('#miModal').modal('show'); // Muestra el modal
+                        }else{
+                            $('#submit-id-submit').val('Guardar'); // Cambia el texto del boton
+                            $('#hidden-action').remove();
+                            $('#form-container').html(response); // Renderiza la respuesta en el contenedor
+                            $('#id_dni').prop('disabled', true); // Deshabilita el dni
+                        }
+                    },
+                    error: function() {
+                        alert("Error al verificar el DNI.");
+                    }
+                });
+            }
+        });
+        // Manejar el clic en el botón de cancelar del modal
+        $('#btn-cerrar, #btn-cerrar-modal').on('click', function() {
+            $('#miModal').modal('hide'); // Cierra el modal
+            //window.history.back(); // Regresa a la página anterior
+        });
+    });
+</script> 
+
+{% endblock %}
+    
