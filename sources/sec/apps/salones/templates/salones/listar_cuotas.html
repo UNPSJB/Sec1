@@ -10,7 +10,8 @@
                 <th scope="col">Número de Cuota</th>
                 <th scope="col">Monto</th>
                 <th scope="col">Fecha de Pago</th>
-                <th scope="col">Estado</th>
+                <th scope="col">Vencimiento</th>
+                <th scope="col">Accion</th>
             </tr>
         </thead>
         <tbody>
@@ -19,15 +20,27 @@
                 <td>{{ cuota.numero }}</td>
                 <td>{{ cuota.monto }}</td>
                 <td>{{ cuota.pago }}</td>
+                <td>{{ cuota.alquiler.inicio }}</td>
                 <td style="padding: 0; ">
                     {% if not cuota.pago %}
-                    <!-- Botón para pagar -->
-                    <form method="post" action="{% url 'registrar_pago' pago_id=cuota.id %}" style="padding: 0; margin: 0; height: 40px; width: 20px">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary btn-sm" style="height: 30px; width: 80px; margin-top:10px;  margin-left: -12px;">Pagar</button>
-                    </form>
+                        {% if cuota.puede_pagar %}
+                            <button type="button" class="btn btn-primary btn-sm pagar-cuota-btn" data-cuota-id="{{ cuota.id }}" data-cuota-numero="{{ cuota.numero }}" data-cuota-monto="{{ cuota.monto }}">
+                                Pagar
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-secondary btn-sm" style="height: 30px; width: 80px; margin-top:10px; margin-left: -12px;" disabled>Pagar</button>
+                        {% endif %}
                     {% else %}
-                    <span class="text-success">Pagada</span>
+                        <!-- Botón para mostrar el modal del comprobante -->
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#comprobanteModal" 
+                                data-cuota-numero="{{ cuota.numero }}" 
+                                data-cuota-monto="{{ cuota.monto }}" 
+                                data-cuota-pago="{{ cuota.pago }}"
+                                data-cuota-alquiler-id="{{ cuota.alquiler.id }}"
+                                data-cuota-alquiler-afiliado="{{ cuota.alquiler.afiliado }}">
+                                
+                            Ver Comprobante
+                        </button>
                     {% endif %}
                 </td>
             </tr>
@@ -38,5 +51,127 @@
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'detallarAlquiler' pk=alquiler_id %}" class="btn btn-primary">Regresar</a>
 </div>
+
+<!-- Modal General de Confirmación -->
+<div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarPagoModalLabel">Confirmar Pago de Cuota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí actualizaremos dinámicamente la información de la cuota -->
+                ¿Está seguro que desea pagar la cuota número <span id="modal-cuota-numero"></span> por un monto de <span id="modal-cuota-monto"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- Aquí el action del formulario será actualizado dinámicamente -->
+                <form method="post" id="modal-form" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Pagar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.getElementById('confirmarPagoModal');
+        var modalNumeroCuota = document.getElementById('modal-cuota-numero');
+        var modalMontoCuota = document.getElementById('modal-cuota-monto');
+        var modalForm = document.getElementById('modal-form');
+
+        // Agregamos un evento click a todos los botones de pagar cuota
+        var pagarCuotaBtns = document.querySelectorAll('.pagar-cuota-btn');
+        pagarCuotaBtns.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var cuotaId = button.getAttribute('data-cuota-id');
+                var cuotaNumero = button.getAttribute('data-cuota-numero');
+                var cuotaMonto = button.getAttribute('data-cuota-monto');
+                
+                // Actualizamos el contenido del modal
+                modalNumeroCuota.textContent = cuotaNumero;
+                modalMontoCuota.textContent = cuotaMonto;
+
+                
+                // Actualizamos la acción del formulario con la URL correcta para pagar la cuota
+                modalForm.action = "{% url 'registrar_pago' 0 %}".replace('0', cuotaId);
+                //modalForm.action = `/ruta/para/pagar/cuota/${cuotaId}/`;  // Ajusta la URL según tu configuración
+
+                // Mostramos el modal
+                var bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+            });
+        });
+    });
+</script>
+<!-- Modal del Comprobante de Pago -->
+<div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="comprobanteModalContent">
+          <h5>Detalle</h5>
+          <p><strong>Número de Cuota:</strong> <span id="comprobante-cuota-numero"></span></p>
+          <p><strong>Monto:</strong> $<span id="comprobante-cuota-monto"></span></p>
+          <p><strong>Fecha de Pago:</strong> <span id="comprobante-cuota-pago"></span></p>
+          <p><strong>Numero alquiler:</strong> <span id="comprobante-cuota-alquiler-id"></span></p>
+          <p><strong>Afiliado:</strong> <span id="comprobante-cuota-alquiler-afiliado"></span></p>
+        </div>
+        <div class="modal-footer">
+            <button id="downloadComprobante" class="btn btn-success">Descargar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var comprobanteModal = document.getElementById('comprobanteModal');
+        var cuotaNumeroSpan = document.getElementById('comprobante-cuota-numero');
+        var cuotaMontoSpan = document.getElementById('comprobante-cuota-monto');
+        var cuotaPagoSpan = document.getElementById('comprobante-cuota-pago');
+        var cuotaAlquilerIdSpan = document.getElementById('comprobante-cuota-alquiler-id');  // Cambiado el nombre
+        var cuotaAlquilerAfiliadoSpan = document.getElementById('comprobante-cuota-alquiler-afiliado');
+        var downloadButton = document.getElementById('downloadComprobante');
+        var comprobanteContent = document.getElementById('comprobanteModalContent');
+
+        // Cuando se muestra el modal
+        comprobanteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;  // El botón que activó el modal
+            var cuotaNumero = button.getAttribute('data-cuota-numero');
+            var cuotaMonto = button.getAttribute('data-cuota-monto');
+            var cuotaPago = button.getAttribute('data-cuota-pago');
+            var cuotaAlquilerId = button.getAttribute('data-cuota-alquiler-id');  // Evitar duplicación
+            var cuotaAlquilerAfiliado = button.getAttribute('data-cuota-alquiler-afiliado');
+
+            // Actualizar el contenido del modal
+            cuotaNumeroSpan.textContent = cuotaNumero;
+            cuotaMontoSpan.textContent = cuotaMonto;
+            cuotaPagoSpan.textContent = cuotaPago;
+            cuotaAlquilerIdSpan.textContent = cuotaAlquilerId;  // Actualiza correctamente
+            cuotaAlquilerAfiliadoSpan.textContent = cuotaAlquilerAfiliado;
+        });
+
+        // Evento para descargar el comprobante en PDF
+        downloadButton.addEventListener('click', function () {
+            html2pdf()
+                .from(comprobanteContent)  // Selecciona el contenido del modal
+                .set({
+                    margin: 1,
+                    filename: `Comprobante_Cuota_${cuotaNumeroSpan.textContent}.pdf`,  // Nombre del archivo PDF
+                    html2canvas: { scale: 2 },
+                    jsPDF: { orientation: 'portrait' }
+                })
+                .save();  // Guarda el archivo PDF
+        });
+    });
+</script>
 {% endblock %}

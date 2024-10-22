@@ -27,7 +27,15 @@
                 <b>Monto:</b> ${{ alquiler.monto }}
               </li>
               <li class="list-group-item">
-                <b>Estado:</b> {{ alquiler.estado_pago }}
+                <b>Estado:</b>{% if object.estado_alquiler == "Concluido" %}
+                                  <span class="text-success">Concluido</span>
+                              {% elif object.estado_alquiler == "Pagado" %}
+                                  <span class="text-success">Pagado</span>
+                                  {% elif object.estado_alquiler == "Pendiente" %}
+                                  <span class="text-warning">Pendiente</span>
+                              {% else %}
+                                  <span class="text-warning">Cancelado</span>
+                              {% endif %}
               </li>
             </ul>
           </div>
@@ -49,22 +57,55 @@
         </div>
       </div>
       <div class="gap-2 d-md-flex justify-content-md-end" style="height: 40px;">
-        <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn btn-primary">Ver Cuotas</a>
-        <button type="button" class="btn btn-primary" style="height: 40px; width: 80px; margin-top: -0px;"
-          data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
+        {% if alquiler.pago_senia %}
+          {% if alquiler.tiene_cuotas %}
+            <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn btn-primary">Pagar</a>
+          {% else %}
+            <button type="button" class="btn btn-primary" style="height: 40px; width: 80px; margin-top: -0px;"
+            data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
+          {% endif %}
+        {% else %}
+          <!-- Mostrar un botón deshabilitado si no se ha pagado la seña -->
+          <button type="button" class="btn btn-secondary" style="height: 40px; width: 80px; margin-top: -0px;"disabled>Pagar</button>
+        {% endif %}
         <a href="#" class="btn btn-success">Editar</a>
         <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary">
-        En Espera
+          En Espera
         </a>
         <a href="{% url 'eliminarAlquiler' alquiler.pk %}" class="btn btn-danger">Eliminar</a>
       </div>
 
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
-      ComprobanteSeña
-    </button>
+    {% if alquiler.pago_senia %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
+          Comprobante Seña
+      </button>
+    {% else %}
+      <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
+    {% endif %}
 </div>
 </form>
+</div>
+
+<div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmarPagoModalLabel">Confirmar Pago de Seña</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              ¿Está seguro que desea pagar la seña?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <form action="{% url 'pagar_senia' alquiler.pk %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Pagar Seña</button>
+              </form>
+          </div>
+      </div>
+  </div>
 </div>
 
 <!-- Modal -->
@@ -72,16 +113,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="comprobanteModalLabel">Comprobante</h5>
+        <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de seña</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="comprobanteContent">
         <div class="card-body">
-          <h4 class="card-title">Detalle</h4>
           <p><strong>Afiliado:</strong> {{ alquiler.afiliado }}</p>
           <p><strong>Salón:</strong> {{ alquiler.salon.nombre }}</p>
           <p><strong>Fecha de Inicio:</strong> {{ alquiler.inicio }}</p>
           <p><strong>Seña:</strong> {{ alquiler.senia }}</p>
+          <p><strong>Fecha de Pago de seña:</strong> {{ alquiler.pago_senia }}</p>
           <p><strong>Monto Total:</strong> {{ alquiler.monto }}</p>
           <p><strong>Fecha de Reserva:</strong> {{ alquiler.reserva }}</p>
         </div>
@@ -112,6 +153,7 @@
     });
   });
 </script>
+
 
 <!-- Modal para seleccionar la cantidad de cuotas -->
 <div class="modal fade" id="crearCuotasModal" tabindex="-1" role="dialog" aria-labelledby="crearCuotasModalLabel"
