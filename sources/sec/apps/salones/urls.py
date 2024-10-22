@@ -7,7 +7,9 @@ from django.contrib import admin
 urlpatterns = [
 
     # ----------------- Encargados -----------------
-    path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
+    path('crearEncargado/', crear_persona_y_encargado, name='crearEncargado'),
+    path('buscarPersonaEncargado/',buscar_persona_para_encargado,name='buscarPersonaParaEncargado'),
+
     path('listarEncargados/', EncargadoListView.as_view(), name='listarEncargados'),
     path('modificarEncargado/<int:pk>', EncargadoUpdateView.as_view(), name='modificarEncargado'),
     path('eliminarEncargado/<int:pk>', eliminar_encargado, name='eliminarEncargado'),

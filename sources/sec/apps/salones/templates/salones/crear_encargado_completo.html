@@ -1,0 +1,56 @@
+<input type="hidden" name="action" id="hidden-action" value="{{ action }}">
+<input type="hidden" name="dni" required="" id="id_dni" value="{{dni}}">
+      <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.nombre.id_for_label}}" class="mb-3">
+            <label for="{{ persona_form.nombre.id_for_label }}" class="form-label">{{ persona_form.nombre.label|safe }}</label>
+            {{ persona_form.nombre }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.apellido.id_for_label}}" class="mb-3">
+            <label for="{{ persona_form.apellido.id_for_label }}" class="form-label">{{ persona_form.apellido.label|safe }}</label>
+            {{ persona_form.apellido }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            <div id="div_{{persona_form.nacimiento.id_for_label}}" class="mb-3">
+                <label for="{{ persona_form.nacimiento.id_for_label }}" class="form-label">{{ persona_form.nacimiento.label|safe }}</label>
+                {{ persona_form.nacimiento }}
+            </div>
+        </div>
+      </div>
+      <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.nacionalidad.id_for_label}}" class="mb-3">
+              <label for="{{ persona_form.nacionalidad.id_for_label }}" class="form-label">{{ persona_form.nacionalidad.label|safe }}</label>
+              {{ persona_form.nacionalidad }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.estadoCivil.id_for_label}}" class="mb-3">
+              <label for="{{ persona_form.estadoCivil.id_for_label }}" class="form-label">{{ persona_form.estadoCivil.label|safe }}</label>
+              {{ persona_form.estadoCivil }}
+          </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            <div id="div_{{persona_form.domicilio.id_for_label}}" class="mb-3">
+                <label for="{{ persona_form.domicilio.id_for_label }}" class="form-label">{{ persona_form.domicilio.label|safe }}</label>
+                {{ persona_form.domicilio }}
+              </div>
+        </div>
+      </div>
+      <div class="row form-row">
+        <div class="form-group col-md-4 mb-0">
+            <div id="div_{{persona_form.telefono.id_for_label}}" class="mb-3">
+                <label for="{{ persona_form.telefono.id_for_label }}" class="form-label">{{ persona_form.telefono.label|safe }}</label>
+                {{ persona_form.telefono }}
+              </div>
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          <div id="div_{{persona_form.email.id_for_label}}" class="mb-3">
+              <label for="{{ persona_form.email.id_for_label }}" class="form-label">{{ persona_form.email.label|safe }}</label>
+              {{ persona_form.email }}
+          </div>
+        </div>
+      </div>

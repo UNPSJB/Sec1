@@ -25,6 +25,7 @@ class EncargadoCreateView(CreateView):
     model = Persona
     form_class = EncargadoForm
     success_url = reverse_lazy('listarEncargados')  
+    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -36,8 +37,80 @@ class EncargadoCreateView(CreateView):
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
-    
 
+
+def buscar_persona_para_encargado(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')    
+        # Primero, verificar si se envió el formulario de DNI
+        if action == 'search':
+            dni = request.POST.get('dni')
+            try:
+                # Intenta obtener la persona por el DNI
+                persona = Persona.objects.get(dni=dni)
+                persona_form = PersonaForm(instance=persona)
+                new_action = 'update'
+                 # Verifica el estado de es_encargado
+                if persona.es_encargado:
+                    return JsonResponse({
+                        'es_encargado': True,
+                        'dni': dni,
+                    })
+
+            except Persona.DoesNotExist:
+                # Si no existe, crea un nuevo formulario vacío
+                persona_form = PersonaForm()
+                new_action = 'create'
+            # Renderiza el formulario completo con los datos de la persona
+            return render(request, 'salones/crear_encargado_completo.html', {
+                'persona_form': persona_form,
+                'encargado_form': EncargadoForm(),
+                'dni': dni,  # Manten el DNI para uso posterior
+                'action': new_action
+            })
+
+
+def crear_persona_y_encargado(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        # Manejo del formulario completo para guardar
+        if action == 'update':
+            dni = request.POST.get('dni')
+            old_persona = Persona.objects.get(dni=dni)
+            persona_form = PersonaForm(request.POST, instance=old_persona)
+        else:
+            persona_form = PersonaForm(request.POST)
+
+
+        if persona_form.is_valid():
+            persona = persona_form.save()
+
+    
+            if persona.es_encargado:
+                    messages.error(request, "La persona ya es encargado")
+                    return render(request, 'salones/crear_persona_y_encargado.html', {
+                        'persona_form': persona_form,
+                    })
+
+            persona.es_encargado = True
+            persona.save()
+            messages.success(request, "Encargado cargado exitosamente.")
+            return redirect(reverse('listarEncargados'))
+        else:
+            # Manejar errores de validación
+            for field in persona_form:
+                for error in field.errors:
+                    messages.error(request, f"Error en el campo '{field.label}': {error}")
+            return render(request, 'salones/crear_persona_y_encargado.html', {
+                'persona_form': persona_form,
+            })
+
+    # Si es un GET inicial, mostrar solo el formulario de DNI
+    persona_form = PersonaForm()
+    return render(request, 'salones/crear_persona_y_encargado.html', {
+        'persona_form': persona_form,
+    })
+    
 
 
 def eliminar_encargado(request, pk):

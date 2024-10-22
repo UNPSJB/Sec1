@@ -610,22 +610,18 @@
 
                 // Actualizar los botones del salón
                 const botonesContainer = document.querySelector(`[data-salon-botones="${salonId}"]`);
+                const urlModificar = botonesContainer.getAttribute('data-url-modificar');
+
                 if (botonesContainer) {
                     if (disponible) {
                         botonesContainer.innerHTML = `
-                            <data-id="${servicio.id}"
-                                    data-nombre="${servicio.nombre.replace(/"/g, '&quot;')}"
-                                    data-descripcion="${servicio.descripcion.replace(/"/g, '&quot;')}"
-                                    data-precio="${servicio.precio}"
-                                    data-obligatorio="${servicio.obligatorio}"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editarServicioModal" class="btn btn-success">Editar</a>
+                            <a href="${urlModificar}" class="btn btn-success">Editar</a>
                             <button class="btn btn-danger cambiar-estado-salon" 
-                                    data-id="${salonId}" 
-                                    data-nombre="${nombre}" 
-                                    data-disponible="true" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#deshabilitarModalSalon">
+                                data-id="${salonId}" 
+                                data-nombre="${nombre}" 
+                                data-disponible="true" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deshabilitarModalSalon">
                                 Deshabilitar
                             </button>
                         `;
@@ -750,6 +746,13 @@
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 const cambiarEstadoUrl = "{% url 'cambiarEstadoSalon' %}";
 
+
+                console.log('Cambiando estado del salón:', {
+                    salonId,
+                    button: button,
+                    disponible: button.getAttribute('data-disponible')
+                });
+
                 fetch(cambiarEstadoUrl, {
                     method: 'POST',
                     headers: {
@@ -768,7 +771,7 @@
                     cargarServicios();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error detallado:', error);
                     alert('Hubo un error al cambiar el estado del salón.');
                 });
             }
