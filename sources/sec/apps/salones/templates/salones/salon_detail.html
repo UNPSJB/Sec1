@@ -47,12 +47,6 @@
             </div>
             <div class="input-group py-2">
                 <label><b> Ubicacion en el mapa: </b></label>
-                <style>
-                    #map {
-                        height: 300px; /* Altura del mapa */
-                        width: 100%;   /* Ancho del mapa */
-                    }
-                </style>
                 <div id="map" data-direccion="{{ salon.direccion|escapejs }}" data-nombre="{{ salon.nombre|escapejs }}"></div>
             </div>
         </div>
@@ -60,7 +54,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end" data-salon-botones="{{ salon.pk }}" data-url-modificar="{% url 'modificarSalon' salon.pk %}">
                     {% if salon.disponible %}
-                        <a href="{% url 'modificarSalon' salon.pk %}" class="btn btn-success">Editar</a>
+                        <a href="{% url 'modificarSalon' salon.pk %}" class="btn botones">Editar</a>
                         <button class="btn btn-danger cambiar-estado-salon" 
                                 data-id="{{ salon.pk }}" 
                                 data-nombre="{{ salon.nombre }}" 
@@ -70,7 +64,7 @@
                             Deshabilitar
                         </button>
                     {% else %}
-                        <button class="btn btn-success cambiar-estado-salon" 
+                        <button class="btn botones cambiar-estado-salon" 
                                 data-id="{{ salon.pk }}" 
                                 data-nombre="{{ salon.nombre }}" 
                                 data-disponible="false">
@@ -102,7 +96,7 @@
                 </div>
                 <div class="col sm-12 col-md-8 col-lg-8 py-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn btn-success"> + </button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#crearServicioModal" class="btn botones"> + </button>
                     </div>
                 </div>
               </div>
@@ -132,7 +126,7 @@
                             <td >
                               <div class="btn-group" role="group">
                                 {% if servicio.disponible and salon.disponible %}
-                                    <button class="btn btn-success editar-servicio me-3" 
+                                    <button class="btn botones editar-servicio me-3" 
                                         data-id="{{ servicio.id }}" 
                                         data-nombre="{{ servicio.nombre }}"
                                         data-descripcion="{{ servicio.descripcion }}"
@@ -141,7 +135,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editarServicioModal">Editar</button>
                                 {% elif salon.disponible %}
-                                    <button class="btn btn-success cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
+                                    <button class="btn botones cambiar-estado" data-id="{{ servicio.id }}" data-disponible="false">Habilitar</button>
                                 {% endif %}
                               </div>
                             </td>
@@ -161,7 +155,7 @@
                 </div>
                 <div class="col sm-12 col-md-8 col-lg-8 py-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a id="btnCrearAlquiler" href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn btn-success"> + </a>
+                        <a id="btnCrearAlquiler" href="{% url 'crearAlquilerSalon' salon.pk %}" class="btn botones"> + </a>
                   </div>
                 </div>
               </div>
@@ -186,9 +180,8 @@
                             <td> {{alquiler.reserva}} </td>
                             <td> {{alquiler.inicio}} </td>
                             <td>
-                                    <a  href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn btn-success"> Ver </a>
+                                    <a  href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn botones"> Ver </a>
                             </td>
-
                         </tr>
                         {% endfor %}
                       </div>
@@ -244,7 +237,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="crearServicioLabel">Registrar Servicio</h1>
+        <h2 class="modal-title fs-5" id="crearServicioLabel">Registrar Servicio</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -276,12 +269,12 @@
             <input type="checkbox" class="form-check-input" id="obligatorioServicio" name="obligatorio">
             <label class="form-check-label" for="obligatorioServicio">Obligatorio</label>
           </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-      </div>
-      </form>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn botones">Guardar</button>
+            </div>
+        </form>
     </div>
   </div>
 </div>
@@ -336,7 +329,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" id="guardarServicio" class="btn btn-primary">Guardar</button>
+          <button type="submit" id="guardarServicio" class="btn botones">Guardar</button>
         </div>
         </form>
       </div>
@@ -596,7 +589,7 @@
                 if (botonesContainer) {
                     if (disponible) {
                         botonesContainer.innerHTML = `
-                            <a href="${urlModificar}" class="btn btn-success">Editar</a>
+                            <a href="${urlModificar}" class="btn botones">Editar</a>
                             <button class="btn btn-danger cambiar-estado-salon" 
                                 data-id="${salonId}" 
                                 data-nombre="${nombre}" 
@@ -608,7 +601,7 @@
                         `;
                     } else {
                         botonesContainer.innerHTML = `
-                            <button class="btn btn-success cambiar-estado-salon" 
+                            <button class="btn botones cambiar-estado-salon" 
                                     data-id="${salonId}" 
                                     data-disponible="false">
                                 Habilitar
@@ -641,7 +634,7 @@
                     `<div class="btn-group" role="group">
                         ${salonActualDisponible ? 
                             (servicio.disponible ? 
-                                `<button class="btn btn-success editar-servicio me-3" 
+                                `<button class="btn botones editar-servicio me-3" 
                                     data-id="${servicio.id}"
                                     data-nombre="${servicio.nombre.replace(/"/g, '&quot;')}"
                                     data-descripcion="${servicio.descripcion.replace(/"/g, '&quot;')}"
@@ -654,7 +647,7 @@
                                     data-disponible="true" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#deshabilitarModal">Deshabilitar</button>` :
-                                `<button class="btn btn-success cambiar-estado" 
+                                `<button class="btn botones cambiar-estado" 
                                     data-id="${servicio.id}" 
                                     data-disponible="false">Habilitar</button>`
                             ) : ''
@@ -830,22 +823,12 @@
                     actualizarVisibilidadBotones(disponible);
                 }
 
-
-                
-
-
                 // Cargar los datos iniciales
                 cargarServicios();
             });
         });
-
-    
 </script>
 
-
-  
-
-  
 {% endblock %}
 
 

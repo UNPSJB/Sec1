@@ -71,8 +71,22 @@ textarea {
     color: #fff;
 }
 
+.card-header{
+    background-color: #064080;
+    color: #fff
+}
+
+.aAlquileres{
+    text-decoration: none;
+}
+
 #mapa {
     width: 100%;
+}
+
+#map {
+    height: 300px; /* Altura del mapa */
+    width: 100%;   /* Ancho del mapa */
 }
 
 /* Estilos formularios */
@@ -239,4 +253,10 @@ textarea {
     background-color: #f1f1f1;
     color: #aaa;
     cursor: not-allowed;
+  }
+
+  .form-check-input.small-checkbox {
+      width: 0.8em;
+      height: 0.8em;
+      margin-top: 0.25em;
   }

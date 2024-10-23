@@ -7,47 +7,56 @@
 {% endblock %}
 {% block container %}
 
-<h2 class="text-center">Registrar alquiler</h2>
-
 <form method="POST" action="">
     {% csrf_token %}
-    <fieldset>
-        <legend>Datos alquiler</legend>
-        <div class="mb-4">
-            <h6>Nombre del salon: {{ form.initial.salon }}</h6>
-            <h6>Senia requerida (10% del monto del salon): {{ form.initial.senia }}</h6>
-        </div>
-        <div class="container-fluid row">
-            <div class="col-3">
-                <label for="id_dni">DNI</label>
-                {{ form.dni }}
-            </div>
-
-            <div class="col-3">
-                <label for="id_afiliado">Afiliado</label>
-                <input type="text" id="id_afiliado_nombre" class="form-control" readonly>
-                <input type="hidden" id="id_afiliado" name="afiliado_id">
-            </div>
-
-            <input type="hidden" id="id_inicio" name="inicio">
-            <input type="hidden" id="id_salon" value="{{ form.initial.salon.id }}">
-            <div id="calendar-container" style="width: 50%; height: 600px;  margin: auto; margin-top: -140px;">
-                <div id="calendar"></div>
-            </div>
-            <label>Servicios:</label>
-                {% for servicio in servicios %}
-                    <div>
-                        <input type="checkbox" name="servicios" value="{{ servicio.id }}" 
-                         {% if servicio.obligatorio %} checked disabled {% endif %}>
-                        <label>{{ servicio.nombre }} ({{ servicio.precio }} $)</label>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <fieldset>
+                    <h2>Datos Alquiler</h2>
+                    <div class="mb-4">
+                        <h6><b>Nombre del salon: </b>{{ form.initial.salon }}</h6>
+                        <h6><b>Seña requerida (10% del monto del salon): </b>{{ form.initial.senia }}</h6>
                     </div>
-                {% endfor %}
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="id_dni">DNI</label>
+                            {{ form.dni }}
+                        </div>
+                        
+                        <div class="col-6">
+                            <label for="id_afiliado">Afiliado</label>
+                            <input type="text" id="id_afiliado_nombre" class="form-control" readonly>
+                            <input type="hidden" id="id_afiliado" name="afiliado_id">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Servicios:</label>
+                        {% for servicio in servicios %}
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input small-checkbox me-2" type="checkbox" name="servicios" value="{{ servicio.id }}" 
+                                    {% if servicio.obligatorio %} checked disabled {% endif %}>
+                                <label class="form-check-label">{{ servicio.nombre }} ({{ servicio.precio }} $)</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <input type="hidden" id="id_inicio" name="inicio">
+                <input type="hidden" id="id_salon" value="{{ form.initial.salon.id }}">
+                <div id="calendar-container" class="h-100">
+                    <div id="calendar"></div>
+                </div>
+            </div>
         </div>
-    </fieldset>
-    <button type="submit" class="btn btn-success">Guardar</button>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button type="submit" class="btn botones">Guardar</button>
+            </div>
+        </div>
+    </div>
 </form>
-
-
 
 {% endblock %}
 

@@ -6,11 +6,11 @@
 <div class="container">
   <form action="#">
     <div class="form first">
-      <header class="text-center"> Datos Alquiler </header>
+      <h2> Datos Alquiler </h2>
       <div class="row justify-content-center">
         <div class="col-sm-12 col-md-6 col-lg-5 py-3">
           <div class="card" style="width: 100%;">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header">
               Detalles del Alquiler
             </div>
             <ul class="list-group list-group-flush">
@@ -32,9 +32,9 @@
                               {% elif object.estado_alquiler == "Pagado" %}
                                   <span class="text-success">Pagado</span>
                                   {% elif object.estado_alquiler == "Pendiente" %}
-                                  <span class="text-warning">Pendiente</span>
+                                  <span>Pendiente</span>
                               {% else %}
-                                  <span class="text-warning">Cancelado</span>
+                                  <span class="text-danger">Cancelado</span>
                               {% endif %}
               </li>
             </ul>
@@ -42,15 +42,15 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-5 py-3">
           <div class="card" style="width: 100%;">
-            <div class="card-header bg-success text-white">
+            <div class="card-header">
               Información del Afiliado y Salón
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
-                <b>Afiliado:</b> <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{ alquiler.afiliado }}</a>
+                <b>Afiliado:</b> <a class="aAlquileres" href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{ alquiler.afiliado }}</a>
               </li>
               <li class="list-group-item">
-                <b>Salón:</b> <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{ alquiler.salon }}</a>
+                <b>Salón:</b> <a class="aAlquileres" href="{% url 'detallarSalon' alquiler.salon.pk %}">{{ alquiler.salon }}</a>
               </li>
             </ul>
           </div>
@@ -59,16 +59,15 @@
       <div class="gap-2 d-md-flex justify-content-md-end" style="height: 40px;">
         {% if alquiler.pago_senia %}
           {% if alquiler.tiene_cuotas %}
-            <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn btn-primary">Pagar</a>
+            <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn botones">Pagar</a>
           {% else %}
-            <button type="button" class="btn btn-primary" style="height: 40px; width: 80px; margin-top: -0px;"
-            data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
+            <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
           {% endif %}
         {% else %}
           <!-- Mostrar un botón deshabilitado si no se ha pagado la seña -->
-          <button type="button" class="btn btn-secondary" style="height: 40px; width: 80px; margin-top: -0px;"disabled>Pagar</button>
+          <button type="button" class="btn botones"disabled>Pagar</button>
         {% endif %}
-        <a href="#" class="btn btn-success">Editar</a>
+        <a href="#" class="btn botones">Editar</a>
         <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary">
           En Espera
         </a>
@@ -77,11 +76,11 @@
 
     </div>
     {% if alquiler.pago_senia %}
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
+      <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
           Comprobante Seña
       </button>
     {% else %}
-      <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
+      <a href="javascript:void(0);" class="btn botones" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
     {% endif %}
 </div>
 </form>
@@ -101,7 +100,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <form action="{% url 'pagar_senia' alquiler.pk %}" method="post" style="display: inline;">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-primary">Pagar Seña</button>
+                  <button type="submit" class="btn botones">Pagar Seña</button>
               </form>
           </div>
       </div>
@@ -113,7 +112,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de seña</h5>
+        <h2 class="modal-title" id="comprobanteModalLabel">Comprobante de seña</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="comprobanteContent">
@@ -129,8 +128,8 @@
       </div>
       <input type="hidden" id="id_alquiler" value="{{ alquiler.pk }}">
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="downloadButton">Descargar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn botones" id="downloadButton">Descargar</button>
       </div>
     </div>
   </div>
@@ -178,8 +177,8 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="confirmarCrearCuotas">Confirmar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn botones" id="confirmarCrearCuotas">Confirmar</button>
       </div>
     </div>
   </div>

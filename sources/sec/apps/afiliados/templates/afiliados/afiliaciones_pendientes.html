@@ -1,28 +1,35 @@
 {% extends 'list.html' %}
+{% load static %}
 {% block ttitle %}Listado de Afiliaciones Pendientes{% endblock %}
-{% block head %}
-  <!-- Include DataTables CSS -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-{% endblock %}
+
 {% block thead %}
 <thead>
   <tr>
-    <th scope="col">numero</th>
     <th scope="col">nombre</th>
     <th scope="col">apellido</th>
+    <th scope="col">dni</th>
     <th scope="col">cuil</th>
+    <th scope="col">nacimiento</th>
+    <th scope="col">nacionalidad</th>
+    <th scope="col">estadoCivil</th>
+    <th scope="col">domicilio</th>
     <th scope="col">telefono</th>
+    <th scope="col">accion</th>
   </tr>
 </thead>
 {% endblock %}
 {% block tbody %}
-<tbody class="dataTable"> <!-- Aquí se aplica la clase dataTable -->
+<tbody>
   {% for afiliado in object_list %}
   <tr class="bg-transition">
-    <td>{{ afiliado.id }}</td>
     <td>{{ afiliado.persona.nombre }}</td>
     <td>{{ afiliado.persona.apellido }}</td>
+    <td>{{ afiliado.persona.dni }}</td>
     <td>{{ afiliado.cuil }}</td>
+    <td>{{ afiliado.persona.nacimiento }}</td>
+    <td>{{ afiliado.persona.nacionalidad }}</td>
+    <td>{{ afiliado.persona.estadoCivil }}</td>
+    <td>{{ afiliado.persona.domicilio }}</td>
     <td>{{ afiliado.persona.telefono }}</td>
     <td>
       <a href="{% url 'detallarSolicitud' afiliado.pk %}" class="btn botones">
@@ -33,9 +40,5 @@
   {% endfor %}
 </tbody>
 {% endblock %}
-{% block scripts %}
-  <!-- Include jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Include DataTables JS -->
-  <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-{% endblock %}
+
+
