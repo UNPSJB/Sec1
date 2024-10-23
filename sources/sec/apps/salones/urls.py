@@ -7,7 +7,9 @@ from django.contrib import admin
 urlpatterns = [
 
     # ----------------- Encargados -----------------
-    path('crearEncargado/', EncargadoCreateView.as_view(), name='crearEncargado'),
+    path('crearEncargado/', crear_persona_y_encargado, name='crearEncargado'),
+    path('buscarPersonaEncargado/',buscar_persona_para_encargado,name='buscarPersonaParaEncargado'),
+
     path('listarEncargados/', EncargadoListView.as_view(), name='listarEncargados'),
     path('modificarEncargado/<int:pk>', EncargadoUpdateView.as_view(), name='modificarEncargado'),
     path('eliminarEncargado/<int:pk>', eliminar_encargado, name='eliminarEncargado'),
@@ -32,13 +34,12 @@ urlpatterns = [
     path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquilerSalon'),
     path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
     path('eliminarAlquiler/<int:pk>', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
-    #path('eliminarAlquiler/<int:pk>', alquiler_eliminar, name='eliminarAlquiler'),
     path('detallarAlquiler/<int:pk>', AlquilerDetailView.as_view(), name='detallarAlquiler'),
     path('listarAlquileres/', AlquilerListView.as_view(), name='listarAlquileres'),
-    path('comprobante_senia/<int:pk>/', comprobante_senia, name='comprobante_senia'),
     path('registrar_pago/<int:pago_id>', registrar_pago, name='registrar_pago'),
-    #path('alquiler/<int:alquiler_id>/pago_cuotas/', pago_cuotas, name='pago_cuotas'),
     path('crear_cuotas/<int:alquiler_id>/', crear_cuotas, name='crear_cuotas'),
+    path('pagar_senia/<int:alquiler_id>/', pagar_senia, name='pagar_senia'),
+    path('reemplazar_alquiler/<int:alquiler_id>/', reemplazar_alquiler, name='reemplazar_alquiler'),
     path('salon/<int:salon_pk>/lista_espera/<str:inicio>/', ListaEsperaView.as_view(), name='lista_espera'),
     path('alquiler/<int:alquiler_id>/cuotas/', PagoAlquilerListView.as_view(), name='listar_cuotas'),
     path('buscar_afiliado/', buscar_afiliado, name='buscar_afiliado'),

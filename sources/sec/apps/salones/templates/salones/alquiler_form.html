@@ -34,6 +34,14 @@
             <div id="calendar-container" style="width: 50%; height: 600px;  margin: auto; margin-top: -140px;">
                 <div id="calendar"></div>
             </div>
+            <label>Servicios:</label>
+                {% for servicio in servicios %}
+                    <div>
+                        <input type="checkbox" name="servicios" value="{{ servicio.id }}" 
+                         {% if servicio.obligatorio %} checked disabled {% endif %}>
+                        <label>{{ servicio.nombre }} ({{ servicio.precio }} $)</label>
+                    </div>
+                {% endfor %}
         </div>
     </fieldset>
     <button type="submit" class="btn btn-success">Guardar</button>
@@ -97,12 +105,15 @@
                 fetch('/salones/obtener_dias_ocupados/'+ salonId +'/')
                 .then(response => response.json())
                 .then(data => {
-                    const eventos = data.map(fecha => ({
+                    const eventos = data.ocupados.map(item => ({
                         title: 'Ocupado',
-                        start: fecha,
+                        start: item.fecha,
                         allDay: true,
                         backgroundColor: 'purple',
-                        borderColor: 'purple' 
+                        borderColor: 'purple',
+                        extendedProps: {
+                            alquileresEnEspera: item.alquileres_en_espera // Agregar los alquileres en espera como una propiedad extendida
+                        } 
 
                     }));
                     console.log("Eventos para FullCalendar:", eventos);
@@ -116,7 +127,16 @@
             eventContent: function(arg) {
                 var eventText = document.createElement('div');
                 eventText.innerHTML = arg.event.title;
+
+                // Crear un elemento para mostrar la cantidad de alquileres en espera
+                var esperaText = document.createElement('div');
+                esperaText.innerHTML = `Espera: ${arg.event.extendedProps.alquileresEnEspera}`;
+                esperaText.style.fontSize = '12px';
+                esperaText.style.color = 'white'; // Cambiar el color del texto según
+                
+                eventText.appendChild(esperaText);
                 eventText.style.fontSize = '12px';
+
                 return { domNodes: [eventText] };
             },
             dateClick: function(info) {

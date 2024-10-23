@@ -25,6 +25,7 @@ class EncargadoCreateView(CreateView):
     model = Persona
     form_class = EncargadoForm
     success_url = reverse_lazy('listarEncargados')  
+    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -36,8 +37,80 @@ class EncargadoCreateView(CreateView):
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
-    
 
+
+def buscar_persona_para_encargado(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')    
+        # Primero, verificar si se envió el formulario de DNI
+        if action == 'search':
+            dni = request.POST.get('dni')
+            try:
+                # Intenta obtener la persona por el DNI
+                persona = Persona.objects.get(dni=dni)
+                persona_form = PersonaForm(instance=persona)
+                new_action = 'update'
+                 # Verifica el estado de es_encargado
+                if persona.es_encargado:
+                    return JsonResponse({
+                        'es_encargado': True,
+                        'dni': dni,
+                    })
+
+            except Persona.DoesNotExist:
+                # Si no existe, crea un nuevo formulario vacío
+                persona_form = PersonaForm()
+                new_action = 'create'
+            # Renderiza el formulario completo con los datos de la persona
+            return render(request, 'salones/crear_encargado_completo.html', {
+                'persona_form': persona_form,
+                'encargado_form': EncargadoForm(),
+                'dni': dni,  # Manten el DNI para uso posterior
+                'action': new_action
+            })
+
+
+def crear_persona_y_encargado(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        # Manejo del formulario completo para guardar
+        if action == 'update':
+            dni = request.POST.get('dni')
+            old_persona = Persona.objects.get(dni=dni)
+            persona_form = PersonaForm(request.POST, instance=old_persona)
+        else:
+            persona_form = PersonaForm(request.POST)
+
+
+        if persona_form.is_valid():
+            persona = persona_form.save()
+
+    
+            if persona.es_encargado:
+                    messages.error(request, "La persona ya es encargado")
+                    return render(request, 'salones/crear_persona_y_encargado.html', {
+                        'persona_form': persona_form,
+                    })
+
+            persona.es_encargado = True
+            persona.save()
+            messages.success(request, "Encargado cargado exitosamente.")
+            return redirect(reverse('listarEncargados'))
+        else:
+            # Manejar errores de validación
+            for field in persona_form:
+                for error in field.errors:
+                    messages.error(request, f"Error en el campo '{field.label}': {error}")
+            return render(request, 'salones/crear_persona_y_encargado.html', {
+                'persona_form': persona_form,
+            })
+
+    # Si es un GET inicial, mostrar solo el formulario de DNI
+    persona_form = PersonaForm()
+    return render(request, 'salones/crear_persona_y_encargado.html', {
+        'persona_form': persona_form,
+    })
+    
 
 
 def eliminar_encargado(request, pk):
@@ -148,6 +221,10 @@ class SalonDetailView(DetailView):
             context['servicios'] = self.object.servicio_set.filter(disponible=True)
         else:
             context['servicios'] = self.object.servicio_set.all()
+
+        # Filtrar los alquileres activos y no cancelados
+        context['alquileres'] = self.object.alquiler_set.filter(activo=True, cancelado=False)
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -177,7 +254,7 @@ class SalonListView(ListView):
 
 
 # ---------------------------- Alquiler View ------------------------------------ #
-# TODO: Mejorar el calendario para incluir la cola de espera
+
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
@@ -193,6 +270,13 @@ class AlquilerCreateView(CreateView):
         initial['reserva'] = timezone.now().date()
         return initial
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        salon_pk = self.kwargs.get('salon_pk')
+        salon = get_object_or_404(Salon, pk=salon_pk)
+        context['servicios'] = salon.servicio_set.filter(disponible=True)  # Obtener servicios disponibles
+        return context
+    
     def form_valid(self, form):
         salon_pk = self.kwargs.get('salon_pk')
         salon = get_object_or_404(Salon, pk=salon_pk)
@@ -207,13 +291,22 @@ class AlquilerCreateView(CreateView):
 
         alquiler.salon = salon
         alquiler.monto = salon.monto
-        alquiler.senia = (salon.monto * 10) / 100 #ver si le cobro seña a los que estan el lista de espera
+        alquiler.senia = (salon.monto * 10) / 100
         alquiler.reserva = timezone.now().date()
 
         afiliado_id = self.request.POST.get('afiliado_id')
         if afiliado_id:
             afiliado = get_object_or_404(Afiliado, id=afiliado_id)
             alquiler.afiliado = afiliado
+
+        servicios_obligatorios = salon.servicio_set.filter(obligatorio=True)
+        for servicio in servicios_obligatorios:
+            alquiler.monto += servicio.precio
+
+        servicios_seleccionados = self.request.POST.getlist('servicios')
+        for servicio_id in servicios_seleccionados:
+            servicio = get_object_or_404(Servicio, id=servicio_id)
+            alquiler.monto += servicio.precio
 
         if alquiler_existente:
             alquiler.activo = False
@@ -227,7 +320,7 @@ class AlquilerCreateView(CreateView):
             return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('comprobante_senia', kwargs={'pk': self.object.pk})
+        return reverse_lazy('detallarAlquiler', kwargs={'pk': self.object.pk})
 
     def redirect_to_waitlist(self, salon_pk, inicio):
     
@@ -239,21 +332,41 @@ class AlquilerCreateView(CreateView):
     def form_invalid(self, form):
         return super().form_invalid(form)
 
-def obtener_dias_ocupados(request, salon_pk):
-    alquileres = Alquiler.objects.filter(salon_id=salon_pk).values('inicio')
+""" def obtener_dias_ocupados(request, salon_pk):
+    alquileres = Alquiler.objects.filter(salon_id=salon_pk,cancelado=False).values('inicio')
     fechas_ocupadas = [alquiler['inicio'].strftime('%Y-%m-%d') for alquiler in alquileres]
 
     return JsonResponse(fechas_ocupadas, safe=False)
-    
-    
-def comprobante_senia(request, pk):
-    alquiler = get_object_or_404(Alquiler, pk=pk)
-    
-    context = {
-        'alquiler': alquiler,
-    }
+ """
+from django.http import JsonResponse
+from .models import Alquiler
 
-    return render(request, 'salones/comprobante_senia.html', context)
+def obtener_dias_ocupados(request, salon_pk):
+    # Obtener los alquileres activos
+    alquileres_activos = Alquiler.objects.filter(salon_id=salon_pk, cancelado=False, activo=True)
+    fechas_ocupadas = [alquiler.inicio.strftime('%Y-%m-%d') for alquiler in alquileres_activos]
+
+    # Obtener la cantidad de alquileres en espera
+    alquileres_en_espera = Alquiler.objects.filter(salon_id=salon_pk, cancelado=False, activo=False)
+    alquileres_en_espera_por_fecha = {}
+
+    for alquiler in alquileres_en_espera:
+        fecha = alquiler.inicio.strftime('%Y-%m-%d')
+        if fecha in alquileres_en_espera_por_fecha:
+            alquileres_en_espera_por_fecha[fecha] += 1
+        else:
+            alquileres_en_espera_por_fecha[fecha] = 1
+
+    # Construir la respuesta
+    ocupados = []
+    for fecha in fechas_ocupadas:
+        cantidad_espera = alquileres_en_espera_por_fecha.get(fecha, 0)
+        ocupados.append({
+            'fecha': fecha,
+            'alquileres_en_espera': cantidad_espera
+        })
+
+    return JsonResponse({'ocupados': ocupados}, safe=False)
 
 def buscar_afiliado(request):
     dni = request.GET.get('dni')
@@ -299,8 +412,11 @@ class AlquilerListView(ListView):
     model = Alquiler
     paginate_by = 100 
 
+    def get_queryset(self):
+        # Filtramos solo los alquileres activos y que no estén cancelados
+        return Alquiler.objects.filter(activo=True, cancelado=False).order_by('inicio')
+
 # ---------------------------- Servicio View ------------------------------------ #
-# TODO: Hacer bajas logicas
 class ServicioCreateView(CreateView):
 
     model = Servicio
@@ -408,13 +524,18 @@ def crear_cuotas(request, alquiler_id):
 
     return redirect('detallarAlquiler', pk=alquiler_id)
 
-#Se paga una cuota
 def registrar_pago(request, pago_id):
     pago = get_object_or_404(PagoAlquiler, id=pago_id)
-    pago.pago = datetime.now()
-    pago.save()
-    messages.success(request, f'Pago de la cuota N°{pago.numero} ha sido realizado exitosamente.')
+
+    if pago.puede_pagar():
+        pago.pago = datetime.now()
+        pago.save()
+        messages.success(request, f'Pago de la cuota N°{pago.numero} ha sido realizado exitosamente.')
+    else:
+        messages.error(request, f'No se puede pagar la cuota N°{pago.numero} hasta que la cuota anterior esté pagada.')
+
     return redirect('detallarAlquiler', pk=pago.alquiler.id)
+
 
 class PagoAlquilerListView(ListView):
     model = PagoAlquiler
@@ -424,7 +545,13 @@ class PagoAlquilerListView(ListView):
         alquiler_id = self.kwargs['alquiler_id']
         cuotas = PagoAlquiler.objects.filter(alquiler_id=alquiler_id)
         return cuotas
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        alquiler_id = self.kwargs['alquiler_id']
+        context['alquiler_id'] = self.kwargs['alquiler_id']
+        return context
+    
 class ListaEsperaView(ListView):
     model = Alquiler
     template_name = 'salones/lista_espera.html'
@@ -436,15 +563,58 @@ class ListaEsperaView(ListView):
         lista_espera = Alquiler.objects.filter(
             salon_id=salon_pk,
             inicio=inicio,
-            activo=False
+            activo=False,
+            cancelado=False
         )
         return lista_espera
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        salon_pk = self.kwargs.get('salon_pk')
+        inicio = self.kwargs.get('inicio')
+
+        context['alquiler_actual'] = Alquiler.objects.filter(
+            salon_id=salon_pk,
+            inicio=inicio,
+            activo=True
+        ).first()
+        
+        return context
+
+def pagar_senia(request, alquiler_id):
+    alquiler = get_object_or_404(Alquiler, id=alquiler_id)
+    alquiler.pago_senia = timezone.now().date()
+    alquiler.save()
+    messages.success(request, 'La seña se ha pagado correctamente.')
+
+    return redirect('detallarAlquiler', pk=alquiler.id)
+
+def reemplazar_alquiler(request, alquiler_id):
+    
+    alquiler_espera = get_object_or_404(Alquiler, id=alquiler_id)
+    
+    alquiler_actual_id = request.POST.get('alquiler_actual_id')
+    alquiler_actual = get_object_or_404(Alquiler, id=alquiler_actual_id)
+    
+    alquiler_actual.activo = False
+    alquiler_actual.cancelado = True
+    alquiler_actual.save()
+
+    alquiler_espera.activo = True
+    alquiler_espera.save()
+
+    messages.success(request, 'El alquiler fue reemplazado correctamente.')
+    
+    return redirect('detallarAlquiler', pk=alquiler_espera.id)
 
 def cancelar_alquiler(alquiler_id):
     alquiler = get_object_or_404(Alquiler, pk=alquiler_id)
     alquiler.activo = False
+    alquiler.cancelado = True
     alquiler.save()
 
-# TODO: Arreglar la creacion de cuotas, intentar poner un if empty llamar a crear cuotas
+# TODO: Hacer bajas logicas y ver que les dejo modificar
 
-# TODO: Implementar cola de espera, cambiar al afiliado actual y elegir uno en espera
+
+

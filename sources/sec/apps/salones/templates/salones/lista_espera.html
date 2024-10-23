@@ -16,6 +16,15 @@
             <tr class="bg-transition">
                 <td>{{ alquiler.afiliado }}</td>
                 <td>{{ alquiler.reserva }}</td>
+                <td>
+                    <form action="{% url 'reemplazar_alquiler' alquiler.id %}" method="post">
+                        {% csrf_token %}
+                        {% if alquiler_actual %}
+                        <input type="hidden" name="alquiler_actual_id" value="{{ alquiler_actual.id }}">
+                        <button type="submit" class="btn btn-danger" style="height: 40px; width: 80px; margin-top: -0px;">Reemplazar</button>
+                        {% endif %}
+                    </form>
+                </td>
             </tr>
             {% empty %}
             <tr>
@@ -24,6 +33,6 @@
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'detallarAlquiler' pk=alquiler_actual.id %}" class="btn btn-primary">Regresar</a>
 </div>
-<a href="{% url 'listarAlquileres' %}" class="btn btn-primary">Regresar</a>
 {% endblock %}
