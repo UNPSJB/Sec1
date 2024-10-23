@@ -14,7 +14,6 @@ from django.http import JsonResponse
 from django_select2.forms import ModelSelect2Widget
 from datetime import datetime
 
-#TODO: Ver como hacer los editar para salones, encargados y servicios
 
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
@@ -27,23 +26,45 @@ class EncargadoCreateView(CreateView):
     form_class = EncargadoForm
     success_url = reverse_lazy('listarEncargados')  
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Registrar encargado'
+        return kwargs
+
     def form_valid(self, form):
         encargado = form.save(commit=False)
         encargado.es_encargado = True  
         encargado.save()  
         return super().form_valid(form)
+    
+
 
 
 def eliminar_encargado(request, pk):
     encargado = get_object_or_404(Persona, pk=pk)
+    if Salon.objects.filter(encargado=encargado).exists(): 
+        return JsonResponse({'status': 'error', 'message': 'No se puede eliminar encargado porque tiene salones asociados a él.'})
     encargado.es_encargado = False
     encargado.save()
     return JsonResponse({'status': 'success'})
 
+
+class EncargadoUpdateView(UpdateView):
+    model = Persona
+    form_class = EncargadoForm
+    success_url = reverse_lazy("listarEncargados")
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Modificar encargado'
+        return kwargs
+
+    
+
 class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
-    template_name = '../salones/templates/salones/encargado_list.html'
 
     def get_queryset(self):
         return Persona.objects.filter(es_encargado=1).order_by('dni')
@@ -57,6 +78,12 @@ class SalonCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
+    
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Registrar Salon'
+        return kwargs
 
     def form_valid(self, form):
         salon = form.save(commit=False)  
@@ -87,11 +114,15 @@ def cambiar_estado_salon(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-#TODO: Ver que sucede al darle click y arreglar el problema
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
-    success_url = reverse_lazy("modificarSalon")
+    success_url = reverse_lazy("listarSalones")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_title'] = 'Modificar Salon'
+        return kwargs
 
 def salon_eliminar(request, pk):
     a = Salon.objects.get(pk=pk)
@@ -276,6 +307,8 @@ class ServicioCreateView(CreateView):
     form_class = ServicioForm
     success_url = reverse_lazy('listarServicios')
 
+
+
     def form_valid(self, form):
         salon_id = self.request.POST.get('salon')  
         salon = get_object_or_404(Salon, pk=salon_id)  
@@ -290,15 +323,43 @@ class ServicioCreateView(CreateView):
     def get_success_url(self):
         return reverse('detallarSalon', kwargs={'pk': self.object.salon.pk})
 
-class ServicioUpdateView(UpdateView):
-    model = Servicio
-    form_class = ServicioForm
-    success_url = reverse_lazy("listarServicios")
+
+
+def modificarServicio(request, pk):
+    servicio = get_object_or_404(Servicio, id=pk)  # Obtén el servicio, o devuelve 404 si no existe
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        obligatorio = request.POST.get('obligatorio') == 'on'
+
+        # Procesa la lógica de actualización aquí
+        # Si hay un error en los campos, puedes devolver un error
+        #if not nombre or not descripcion or not precio:
+        #   return HttpResponseBadRequest("Campos vacíos")  # Manejo simple para campos vacíos
+
+        # Suponiendo que tienes un modelo Servicio
+        servicio = Servicio.objects.get(id=pk)
+
+        servicio.nombre = nombre
+        servicio.descripcion = descripcion
+        servicio.precio = precio
+        servicio.obligatorio = obligatorio
+        servicio.save()
+        messages.success(request, 'El servicio ha sido modificado con éxito.')
+
+        return redirect('detallarSalon', pk=servicio.salon.id)  # Asegúrate de que servicio.salon devuelve el ID correcto
+
+    return redirect('detallarSalon', pk=servicio.salon.id)  # Redirige si no es un POST
+
+
 
 def servicio_eliminar(request, pk):
     a = Servicio.objects.get(pk=pk)
     a.delete()
     return redirect('listarServicios') 
+
+
 
 
 def cambiar_estado(request):
