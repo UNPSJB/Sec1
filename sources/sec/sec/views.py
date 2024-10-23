@@ -25,7 +25,7 @@ def contacto(request):
 
 
 def home(request):
-    return render(request,"home.html")
+    return redirect("login")
 
 # def listadoCursos(request):
 #     return render(request,"listadoCursos.html")

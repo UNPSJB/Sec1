@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 
 # ---------------------------- Afiliado de prueba View ------------------------------------ #
+
 def buscar_persona_para_afiliado(request):
     if request.method == 'POST':
         action = request.POST.get('action')    
