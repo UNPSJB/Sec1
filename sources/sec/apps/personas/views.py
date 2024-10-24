@@ -6,6 +6,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from sec.decorators import staff_required
+from django.utils.decorators import method_decorator
 
 # ---------------------------- Persona View ------------------------------------ #
 
@@ -15,6 +17,12 @@ class PersonaCreateView(CreateView):
     form_class = PersonaForm
     # template_name = 'afiliados/afiliado_form.html' # template del form
     success_url = reverse_lazy('listarPersonas')
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 
     def post(self, *args, **kwargs):
@@ -36,6 +44,10 @@ class PersonaUpdateView(UpdateView):
     form_class = PersonaForm
     success_url = reverse_lazy("listarPersonas")
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
     
     def form_valid(self, form):
         #messages.add_message(self.request, messages.SUCCESS, 'Persona modificada con éxito')
@@ -45,6 +57,7 @@ class PersonaUpdateView(UpdateView):
         #messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
 
+@staff_required
 def persona_eliminar(request, pk):
     a = Persona.objects.get(pk=pk)
     a.delete()
@@ -57,6 +70,15 @@ def persona_eliminar(request, pk):
 class PersonaDetailView(DetailView):
     model = Persona
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
 class PersonaListView(ListView):
     model = Persona
     paginate_by = 100 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)

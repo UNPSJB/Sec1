@@ -12,9 +12,7 @@
                       <thead>
                           <tr>
                             <th scope="col">numero</th>
-                            <th scope="col">capacidad</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>  
+                            <th scope="col">capacidad</th> 
                           </tr>
                       </thead>
                       <tbody>
@@ -23,7 +21,7 @@
                           <tr class="bg-transition">
                             <td>{{ aula.numero }}</td>
                             <td>{{ aula.capacidad }}</td>
-                            <td><a href="#"class="btn btn-success">Editar</a></td>
+                            <td><a href="#"class="btn botones">Editar</a></td>
                             <td><a href="{% url 'eliminarAula' aula.pk %}"class="btn btn-danger">Eliminar</a></td>             
                                                                        
                           </tr>

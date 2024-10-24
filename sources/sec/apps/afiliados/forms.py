@@ -69,7 +69,7 @@ class PersonaFamiliarForm(forms.ModelForm):
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
             "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
             "nacimiento": forms.TextInput(attrs={'type': 'date'}),
-            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            'nacionalidad': forms.Select(attrs={'class': 'form-select'}),
         }
         labels = {
             'nacimiento': 'Fecha de nacimiento',

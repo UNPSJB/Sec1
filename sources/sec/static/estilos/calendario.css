@@ -1,0 +1,13 @@
+
+.fc-button {
+    padding: 5px 10px !important;  /* Ajusta el tamaño del padding */
+    font-size: 12px !important;     /* Cambia el tamaño de la fuente */
+    height: 30px !important;         /* Cambia la altura */
+    width: "auto" !important;  
+  }
+
+  .fc-button-group {
+    padding: 5px 10px !important;  /* Ajusta el tamaño del padding */
+    font-size: 12px !important;     /* Cambia el tamaño de la fuente */
+    height: 30px !important;         /* Cambia la altura */
+  }

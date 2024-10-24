@@ -14,12 +14,13 @@ from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 from datetime import date
 from django.utils import timezone
 
+import re
+
 class EncargadoForm(forms.ModelForm):
     class Meta: 
         model = Persona
-        fields = ['dni', 'nombre', 'apellido', 'telefono', 'domicilio', 'nacimiento']
+        fields = [ 'nombre', 'apellido', 'telefono','email', 'domicilio', 'nacionalidad', 'estadoCivil', 'nacimiento']
         labels = {
-            'dni': 'DNI',
             'nombre': 'Nombre',
             'apellido': 'Apellido',
             'telefono': 'Teléfono',
@@ -32,13 +33,29 @@ class EncargadoForm(forms.ModelForm):
 
         widgets = {
             'nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'nombre': forms.TextInput(attrs={
+                'pattern': '[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*',
+                'onkeypress': 'return /[a-zA-ZñÑáéíóúÁÉÍÓÚ ]/.test(event.key)',
+                'oninput': 'this.value = this.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+            }),
+            'apellido': forms.TextInput(attrs={
+                'pattern': '[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*',
+                'onkeypress': 'return /[a-zA-ZñÑáéíóúÁÉÍÓÚ ]/.test(event.key)',
+                'oninput': 'this.value = this.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+            }),
+            'dni': forms.TextInput(attrs={
+                'pattern': '[0-9]{8}',
+                'maxlength': '8',
+                'onkeypress': 'return /[0-9]/.test(event.key)',
+            }),
+            'domicilio': forms.TextInput(attrs={
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+            }),
+            "telefono": forms.TextInput(attrs={
+                'oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"
+            }),
         }
-
-    def clean_dni(self):
-        dni = self.cleaned_data['dni']
-        if not dni.isdigit() or len(dni) != 8:
-            raise forms.ValidationError("El DNI debe ser un número de 8 dígitos")
-        return dni
 
     def clean_telefono(self):
         telefono = self.cleaned_data['telefono']
@@ -55,31 +72,52 @@ class EncargadoForm(forms.ModelForm):
             raise forms.ValidationError("Debes ser mayor de 18 años para registrarte.")
         
         return nacimiento
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        if not re.match("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$", nombre):
+            raise forms.ValidationError("Nombre incorrecto.")
+        return nombre.capitalize()
 
+    def clean_apellido(self):
+        apellido = self.cleaned_data['apellido']
+        if not re.match("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$", apellido):
+            raise forms.ValidationError("Apellido incorrecto.")
+        return apellido.capitalize()
 
+    def clean_domicilio(self):
+        domicilio = self.cleaned_data['domicilio']
+        if not re.match("^[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]+$", domicilio):
+            raise forms.ValidationError("El domicilio no debe contener símbolos.")
+        if not re.search(r'\d+$', domicilio):
+            raise forms.ValidationError("El domicilio debe contener un número al final.")
+        return domicilio
 
     def is_valid(self) -> bool:
         valid = super().is_valid()
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML('<h2><center>Registrar encargado</center></h2>'),
+            HTML(f'<h2><center>{form_title or "Registrar Encargado"}</center></h2>'),
             HTML('<hr/>'),
             Fieldset(
                 "Datos del encargado",
                 Row(
-                    Column('dni', css_class='form-group col-md-4 mb-0'),
-                    Column('nombre', css_class='form-group col-md-4 mb-0'),
-                    Column('apellido', css_class='form-group col-md-4 mb-0'),
+                    Column('nombre', css_class='form-group col-md-6 mb-3'),
+                    Column('apellido', css_class='form-group col-md-6 mb-3'),
+                    Column('telefono', css_class='form-group col-md-6 mb-3'),
+                    Column('email', css_class='form-group col-md-6 mb-3'),
                     css_class='form-row'
                 ),
                 Row(
-                    Column('telefono', css_class='form-group col-md-5 mb-0'),
-                    Column('domicilio', css_class='form-group col-md-5 mb-0'),
-                    Column('nacimiento', css_class='form-group col-md-5 mb-0'),
+                    Column('domicilio', css_class='form-group col-md-6 mb-3'),
+                    Column('nacionalidad', css_class='form-group col-md-6 mb-3'),
+                    Column('estadoCivil', css_class='form-group col-md-6 mb-3'),
+                    Column('nacimiento', css_class='form-group col-md-6 mb-3'),
                     css_class='form-row'
                 )
             ),
@@ -90,12 +128,14 @@ class ServicioForm(forms.ModelForm):
 
     class Meta:
         model = Servicio
-        fields = "__all__"
+        fields = ['nombre', 'descripcion', 'precio', 'obligatorio']
         exclude = ['salon']
 
         widgets = {
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
             "descripcion": forms.TextInput(attrs={'placeholder': 'Ingrese descripción'}),
+            "precio": forms.TextInput(attrs={'placeholder': 'Ingrese precio'}),
+
         }
 
     def is_valid(self) -> bool:
@@ -115,6 +155,8 @@ class ServicioForm(forms.ModelForm):
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
                     Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                    Column('precio', css_class='form-group col-md-4 mb-0'),
+
                     Column('obligatorio', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
@@ -124,26 +166,22 @@ class ServicioForm(forms.ModelForm):
 
 
 class AlquilerForm(forms.ModelForm):
+    """ afiliado = forms.ModelChoiceField(queryset= Afiliado.objects.filter(desde__isnull = True),
+                                      widget=forms.Select(attrs={'class': 'select2'})) """
+   
+    dni = forms.CharField(max_length=8, label='DNI', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el DNI'}))
+    afiliado_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Alquiler
-        fields = ['afiliado', 'inicio', 'senia']
+        fields = ['inicio']
 
         widgets = {
-            "reserva": forms.TextInput(attrs={'type': 'date'}),
-            "inicio": forms.TextInput(attrs={'type': 'date'}),
-            "senia": forms.TextInput(attrs={'placeholder': 'Ingrese monto de la seña'}),
+            "inicio": forms.TextInput(attrs={'type': 'date'})
         }
         labels = {
-            'senia': 'Seña',
-            'reserva': 'Fecha de reserva',
             'inicio': 'Fecha de inicio'
         }
-
-    def clean_senia(self):
-        senia = self.cleaned_data['senia']
-        if senia < 0 or senia > 99999999.99:
-            raise forms.ValidationError("La senia no es valida")
-        return senia
 
     def clean_inicio(self):
         inicio = self.cleaned_data.get('inicio')
@@ -154,42 +192,6 @@ class AlquilerForm(forms.ModelForm):
         if reserva is None:
             return inicio
         return inicio
-    
-    def save(self, commit=False):
-        print('llego aca')
-        #afiliadoForm = AfiliadoForm(data=self.cleaned_data)
-        #afiliado = afiliadoForm.save(commit=False)
-        #salonForm = SalonForm(data=self.cleaned_data)
-        #salon = salonForm.save(commit=False)
-        alquilerForm = AlquilerForm(data=self.cleaned_data)
-        alquiler = alquilerForm.save(commit=False)
-        alquiler.agregarAlquiler(self.cleaned_data['salon'], alquiler.senia, alquiler.reserva, alquiler.inicio, self.cleaned_data['afiliado']) #.agregarAlquiler(salon, alquiler.senia, alquiler.reserva, alquiler.inicio, afiliado)
-        return alquiler
-
-    def __init__(self, instance=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Alquiler</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                   "Datos del alquiler",
-            Row(
-                Column('afiliado', css_class='form-group col-md-4 mb-0'),
-                Column('salon', css_class='form-group col-md-4 mb-0'),
-                Column('senia', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('reserva', css_class='form-group col-md-4 mb-0'),
-                Column('inicio', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            HTML('<hr/>'),
-            Submit('submit', 'Guardar', css_class='button white'),)
 
 class PagoAlquilerForm(forms.ModelForm):
     
@@ -200,20 +202,64 @@ class PagoAlquilerForm(forms.ModelForm):
 
 class SalonForm(forms.ModelForm):
 
-    servicios = forms.ModelMultipleChoiceField(
-        queryset=Servicio.objects.filter(obligatorio=False),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label='Servicios'
+    encargado = forms.ModelChoiceField(
+        queryset=Persona.objects.filter(es_encargado=True),  
+        required=True, 
+        label='Encargado'
     )
     
     class Meta:
         model = Salon
-        fields = "__all__"
+        fields = ['nombre', 'direccion', 'capacidad', 'monto', 'encargado', 'imagen', 'imagen2', 'imagen3', 'descripcion']
         exclude = ['afiliado']
 
         labels = {
-            'monto': 'Monto',
+            'monto': 'Monto (en pesos)',
+            'imagen1': 'Imagen principal', 
+            'imagen2': 'Imagen 2 (opcional)',
+            'imagen3': 'Imagen 3 (opcional)',
+        }
+
+        widgets = {
+            'capacidad': forms.NumberInput(attrs={
+                'min': 0,
+                'max': 999,
+                'maxlength': 3,
+                'oninput': '''
+                    if (this.value.length > 3) {
+                        this.value = this.value.slice(0, 3);  // Corta el valor a 3 dígitos
+                    }
+                    this.value = this.value.replace(/[^0-9]/g, "");  // Permite solo números
+            ''',
+                'placeholder': 'Ingrese capacidad'  
+            }),
+            'monto': forms.NumberInput(attrs={
+                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");',
+                'placeholder': 'Ingrese monto'  
+            }),
+            'nombre': forms.TextInput(attrs={
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+                'placeholder': 'Ingrese nombre del salón' 
+            }),
+            'direccion': forms.TextInput(attrs={
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+                'placeholder': 'Ingrese dirección'  # Placeholder agregado
+            }),
+            'descripcion': forms.Textarea(attrs={
+                'oninput': 'this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);',
+                'placeholder': 'Ingrese descripción'  # Placeholder agregado
+            }),
+            'imagen': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen principal'  # Placeholder agregado
+            }),
+            'imagen2': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen 2 (opcional)'  # Placeholder agregado
+            }),
+            'imagen3': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen 3 (opcional)'  # Placeholder agregado
+            }),
         }
 
     def clean_capacidad(self):
@@ -233,15 +279,15 @@ class SalonForm(forms.ModelForm):
         return valid
 
     def __init__(self, *args, **kwargs):
+        form_title = kwargs.pop('form_title', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             HTML(
-                '<h2><center>Registrar Salon</center></h2>'),
+                f'<h2><center>{form_title or "Registrar Salon"}</center></h2>'),
             HTML(
                 '<hr/>'),
             Fieldset(
-                "Datos del salon",
                     "Datos del salon",
                 Row(
                     Column('nombre', css_class='form-group col-md-4 mb-0'),
@@ -253,11 +299,12 @@ class SalonForm(forms.ModelForm):
                     Column('monto', css_class='form-group col-md-4 mb-0'),
                     Column('encargado', css_class='form-group col-md-4 mb-0'),
                     Column('imagen',css_class = 'form-group col-md-4 mb-0'),
-                    Column('servicios', css_class='form-group col-md-10 mb-0'),  
+                    Column('imagen2',css_class = 'form-group col-md-4 mb-0'),
+                    Column('imagen3',css_class = 'form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
                 Row(
-                    Column('descripcion', css_class = 'form-group col-md-10 mb-0'),
+                    Column('descripcion', css_class = 'form-group col-md-11 mb-0'),
                     css_class='form-row'
 
 

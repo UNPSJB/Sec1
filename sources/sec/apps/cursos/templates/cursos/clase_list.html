@@ -13,8 +13,7 @@
                           <tr>
                             <th scope="col">Dia</th>
                             <th scope="col">Comienza</th>
-                            <th scope="col">Termina</th>
-                            <th scope="col"></th>  
+                            <th scope="col">Termina</th> 
                           </tr>
                       </thead>
                       <tbody>
@@ -24,7 +23,7 @@
                             <td>{{ clase.get_dia_display }}</td>                            
                             <td>{{ clase.inicio }}</td>
                             <td>{{ clase.fin }}</td>
-                            <td><a href="#"class="btn btn-primary">Editar</a></td>
+                            <td><a href="#"class="btn botones">Editar</a></td>
                             <td><a href="{% url 'eliminarClase' clase.pk %}"class="btn btn-primary">Eliminar</a></td>             
                                                                        
                           </tr>
