@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML
 from django import forms
 
+
 class PersonaForm(ModelForm):
     class Meta:
         model = Persona
@@ -14,7 +15,7 @@ class PersonaForm(ModelForm):
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
             "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
             "nacimiento": forms.TextInput(attrs={'type': 'date'}),
-            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            'nacionalidad': forms.Select(attrs={'class': 'form-select'}),
             "estadoCivil": forms.Select(attrs={'class': 'form-select'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
             "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono','oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"}),
@@ -40,7 +41,7 @@ class ModificarPersonaForm(ModelForm):
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),
             "apellido": forms.TextInput(attrs={'placeholder': 'Ingrese apellidos', 'oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');" "this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');"}),
             "nacimiento": forms.TextInput(attrs={'type': 'date'}),
-            "nacionalidad": forms.TextInput(attrs={'placeholder': 'Ingrese nacionalidad'}),
+            'nacionalidad': forms.Select(attrs={'class': 'form-select'}),
             "estadoCivil": forms.Select(attrs={'class': 'form-select'}),
             "domicilio": forms.TextInput(attrs={'placeholder': 'Ingrese domicilio'}),
             "telefono": forms.TextInput(attrs={'placeholder': 'Ingrese teléfono','oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"}),

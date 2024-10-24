@@ -19,7 +19,7 @@ import re
 class EncargadoForm(forms.ModelForm):
     class Meta: 
         model = Persona
-        fields = [ 'nombre', 'apellido', 'telefono', 'domicilio', 'nacimiento']
+        fields = [ 'nombre', 'apellido', 'telefono','email', 'domicilio', 'nacionalidad', 'estadoCivil', 'nacimiento']
         labels = {
             'nombre': 'Nombre',
             'apellido': 'Apellido',
@@ -49,8 +49,8 @@ class EncargadoForm(forms.ModelForm):
                 'onkeypress': 'return /[0-9]/.test(event.key)',
             }),
             'domicilio': forms.TextInput(attrs={
-            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
-            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
             }),
             "telefono": forms.TextInput(attrs={
                 'oninput': "this.value = this.value.replace(/[^0-9+]/g, '');"
@@ -107,14 +107,17 @@ class EncargadoForm(forms.ModelForm):
             Fieldset(
                 "Datos del encargado",
                 Row(
-                    Column('nombre', css_class='form-group col-md-4 mb-0'),
-                    Column('apellido', css_class='form-group col-md-4 mb-0'),
+                    Column('nombre', css_class='form-group col-md-6 mb-3'),
+                    Column('apellido', css_class='form-group col-md-6 mb-3'),
+                    Column('telefono', css_class='form-group col-md-6 mb-3'),
+                    Column('email', css_class='form-group col-md-6 mb-3'),
                     css_class='form-row'
                 ),
                 Row(
-                    Column('telefono', css_class='form-group col-md-5 mb-0'),
-                    Column('domicilio', css_class='form-group col-md-5 mb-0'),
-                    Column('nacimiento', css_class='form-group col-md-5 mb-0'),
+                    Column('domicilio', css_class='form-group col-md-6 mb-3'),
+                    Column('nacionalidad', css_class='form-group col-md-6 mb-3'),
+                    Column('estadoCivil', css_class='form-group col-md-6 mb-3'),
+                    Column('nacimiento', css_class='form-group col-md-6 mb-3'),
                     css_class='form-row'
                 )
             ),
@@ -131,7 +134,7 @@ class ServicioForm(forms.ModelForm):
         widgets = {
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombre del servicio'}),
             "descripcion": forms.TextInput(attrs={'placeholder': 'Ingrese descripción'}),
-             "precio": forms.TextInput(attrs={'placeholder': 'Ingrese precio'}),
+            "precio": forms.TextInput(attrs={'placeholder': 'Ingrese precio'}),
 
         }
 
@@ -220,24 +223,42 @@ class SalonForm(forms.ModelForm):
         widgets = {
             'capacidad': forms.NumberInput(attrs={
                 'min': 0,
-                'max': 9999,
-                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");'
+                'max': 999,
+                'maxlength': 3,
+                'oninput': '''
+                    if (this.value.length > 3) {
+                        this.value = this.value.slice(0, 3);  // Corta el valor a 3 dígitos
+                    }
+                    this.value = this.value.replace(/[^0-9]/g, "");  // Permite solo números
+            ''',
+                'placeholder': 'Ingrese capacidad'  
             }),
             'monto': forms.NumberInput(attrs={
-                'min': 0,
-                'max': 999999999,
-                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");'
+                'oninput': 'this.value = this.value.replace(/[^0-9]/g, "");',
+                'placeholder': 'Ingrese monto'  
             }),
             'nombre': forms.TextInput(attrs={
-            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*',
-            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+                'placeholder': 'Ingrese nombre del salón' 
             }),
             'direccion': forms.TextInput(attrs={
-            'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
-            'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");'
+                'pattern': '[a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]*\\d+$',
+                'oninput': 'this.value = this.value.replace(/[^a-zA-Z0-9 ñÑáéíóúÁÉÍÓÚ]/g, "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");',
+                'placeholder': 'Ingrese dirección'  # Placeholder agregado
             }),
-            'descripcion': forms.TextInput(attrs={
-            'oninput': 'this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);'
+            'descripcion': forms.Textarea(attrs={
+                'oninput': 'this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);',
+                'placeholder': 'Ingrese descripción'  # Placeholder agregado
+            }),
+            'imagen': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen principal'  # Placeholder agregado
+            }),
+            'imagen2': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen 2 (opcional)'  # Placeholder agregado
+            }),
+            'imagen3': forms.ClearableFileInput(attrs={
+                'placeholder': 'Seleccionar imagen 3 (opcional)'  # Placeholder agregado
             }),
         }
 

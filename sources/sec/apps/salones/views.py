@@ -13,8 +13,11 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.http import JsonResponse
 from django_select2.forms import ModelSelect2Widget
 from datetime import datetime
+from sec.decorators import staff_required
+from django.utils.decorators import method_decorator
 
 
+@staff_required
 def listadoSalones(request):
     return render(request, 'listadoSalones.html', {})
 
@@ -25,6 +28,11 @@ class EncargadoCreateView(CreateView):
     model = Persona
     form_class = EncargadoForm
     success_url = reverse_lazy('listarEncargados')  
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
     
 
     def get_form_kwargs(self):
@@ -38,7 +46,7 @@ class EncargadoCreateView(CreateView):
         encargado.save()  
         return super().form_valid(form)
 
-
+@staff_required
 def buscar_persona_para_encargado(request):
     if request.method == 'POST':
         action = request.POST.get('action')    
@@ -70,6 +78,7 @@ def buscar_persona_para_encargado(request):
             })
 
 
+@staff_required
 def crear_persona_y_encargado(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -112,7 +121,7 @@ def crear_persona_y_encargado(request):
     })
     
 
-
+@staff_required
 def eliminar_encargado(request, pk):
     encargado = get_object_or_404(Persona, pk=pk)
     if Salon.objects.filter(encargado=encargado).exists(): 
@@ -128,6 +137,11 @@ class EncargadoUpdateView(UpdateView):
     success_url = reverse_lazy("listarEncargados")
 
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['form_title'] = 'Modificar encargado'
@@ -139,6 +153,11 @@ class EncargadoListView(ListView):
     model = Persona
     paginate_by = 100 
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def get_queryset(self):
         return Persona.objects.filter(es_encargado=1).order_by('dni')
 
@@ -148,6 +167,12 @@ class SalonCreateView(CreateView):
 
     model = Salon
     form_class = SalonForm
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
     def get_success_url(self):
         return reverse_lazy('detallarSalon', kwargs={'pk': self.object.pk})
@@ -166,23 +191,24 @@ class SalonCreateView(CreateView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
-    
+
+@staff_required
 def cambiar_estado_salon(request):
     if request.method == 'POST':
         salon_id = request.POST.get('id')
 
         # Buscar el salón por ID
         salon = Salon.objects.get(id=salon_id)
-        
-        # Cambiar el estado de disponibilidad
+
         salon.disponible = not salon.disponible
         salon.save()
 
         # Retornar el nuevo estado y el ID del salón en la respuesta
         return JsonResponse({
+            'status': 'success',
             'nuevo_estado': salon.disponible,
             'salon_id': salon.id,
-            'nombre': salon.nombre, 
+            'nombre': salon.nombre,
         })
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
@@ -192,11 +218,19 @@ class SalonUpdateView(UpdateView):
     form_class = SalonForm
     success_url = reverse_lazy("listarSalones")
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['form_title'] = 'Modificar Salon'
         return kwargs
 
+
+@staff_required
 def salon_eliminar(request, pk):
     a = Salon.objects.get(pk=pk)
     a.delete()
@@ -207,11 +241,21 @@ class SalonDeleteView(DeleteView):
     success_url = reverse_lazy('listarSalones')
 
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 
 class SalonDetailView(DetailView):
     model = Salon
     context_object_name = 'salon'
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -253,12 +297,24 @@ class SalonListView(ListView):
     context_object_name = 'salones'
 
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+
 # ---------------------------- Alquiler View ------------------------------------ #
 
 class AlquilerCreateView(CreateView):
 
     model = Alquiler
     form_class = AlquilerForm
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
     def get_initial(self):
         initial = super().get_initial()
@@ -341,6 +397,7 @@ class AlquilerCreateView(CreateView):
 from django.http import JsonResponse
 from .models import Alquiler
 
+@staff_required
 def obtener_dias_ocupados(request, salon_pk):
     # Obtener los alquileres activos
     alquileres_activos = Alquiler.objects.filter(salon_id=salon_pk, cancelado=False, activo=True)
@@ -368,6 +425,7 @@ def obtener_dias_ocupados(request, salon_pk):
 
     return JsonResponse({'ocupados': ocupados}, safe=False)
 
+@staff_required
 def buscar_afiliado(request):
     dni = request.GET.get('dni')
     try:
@@ -396,6 +454,11 @@ class AlquilerUpdateView(UpdateView):
     form_class = AlquilerForm
     success_url = reverse_lazy("listarAlquileres")
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+@staff_required
 def alquiler_eliminar(request, pk):
     a = Alquiler.objects.get(pk=pk)
     a.delete()
@@ -405,12 +468,28 @@ class AlquilerDeleteView(DeleteView):
     model = Alquiler
     success_url = reverse_lazy('listarAlquileres')
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
 class AlquilerDetailView(DetailView):
     model = Alquiler
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AlquilerListView(ListView):
     model = Alquiler
     paginate_by = 100 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
     def get_queryset(self):
         # Filtramos solo los alquileres activos y que no estén cancelados
@@ -422,6 +501,11 @@ class ServicioCreateView(CreateView):
     model = Servicio
     form_class = ServicioForm
     success_url = reverse_lazy('listarServicios')
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 
@@ -440,7 +524,7 @@ class ServicioCreateView(CreateView):
         return reverse('detallarSalon', kwargs={'pk': self.object.salon.pk})
 
 
-
+@staff_required
 def modificarServicio(request, pk):
     servicio = get_object_or_404(Servicio, id=pk)  # Obtén el servicio, o devuelve 404 si no existe
     if request.method == 'POST':
@@ -469,7 +553,7 @@ def modificarServicio(request, pk):
     return redirect('detallarSalon', pk=servicio.salon.id)  # Redirige si no es un POST
 
 
-
+@staff_required
 def servicio_eliminar(request, pk):
     a = Servicio.objects.get(pk=pk)
     a.delete()
@@ -477,6 +561,7 @@ def servicio_eliminar(request, pk):
 
 
 
+@staff_required
 
 def cambiar_estado(request):
     if request.method == 'POST':
@@ -499,13 +584,30 @@ class ServicioDeleteView(DeleteView):
     model = Servicio
     success_url = reverse_lazy('listarServicios')
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
 class ServicioDetailView(DetailView):
     model = Servicio
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class ServicioListView(ListView):
     model = Servicio
     paginate_by = 100 
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+@staff_required
 def crear_cuotas(request, alquiler_id):
     alquiler = get_object_or_404(Alquiler, id=alquiler_id)
     cuotas = int(request.POST.get('cuotas'))
@@ -524,6 +626,7 @@ def crear_cuotas(request, alquiler_id):
 
     return redirect('detallarAlquiler', pk=alquiler_id)
 
+@staff_required
 def registrar_pago(request, pago_id):
     pago = get_object_or_404(PagoAlquiler, id=pago_id)
 
@@ -540,6 +643,12 @@ def registrar_pago(request, pago_id):
 class PagoAlquilerListView(ListView):
     model = PagoAlquiler
     template_name = 'salones/listar_cuotas.html'
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     
     def get_queryset(self):
         alquiler_id = self.kwargs['alquiler_id']
@@ -555,6 +664,12 @@ class PagoAlquilerListView(ListView):
 class ListaEsperaView(ListView):
     model = Alquiler
     template_name = 'salones/lista_espera.html'
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
     def get_queryset(self):
         salon_pk = self.kwargs.get('salon_pk')
@@ -582,6 +697,7 @@ class ListaEsperaView(ListView):
         
         return context
 
+@staff_required
 def pagar_senia(request, alquiler_id):
     alquiler = get_object_or_404(Alquiler, id=alquiler_id)
     alquiler.pago_senia = timezone.now().date()
@@ -590,6 +706,7 @@ def pagar_senia(request, alquiler_id):
 
     return redirect('detallarAlquiler', pk=alquiler.id)
 
+@staff_required
 def reemplazar_alquiler(request, alquiler_id):
     
     alquiler_espera = get_object_or_404(Alquiler, id=alquiler_id)
@@ -608,6 +725,7 @@ def reemplazar_alquiler(request, alquiler_id):
     
     return redirect('detallarAlquiler', pk=alquiler_espera.id)
 
+@staff_required
 def cancelar_alquiler(alquiler_id):
     alquiler = get_object_or_404(Alquiler, pk=alquiler_id)
     alquiler.activo = False
