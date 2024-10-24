@@ -4,52 +4,233 @@ from django import forms
 from apps.personas.models import Persona
 from apps.personas.forms import PersonaForm, ModificarPersonaForm
 from django.forms import ValidationError, ModelForm, Textarea
-from .models import Especialidad, Aula, Profesor, Curso, Dictado, Clase, Alumno, PagoDictado, Titularidad, Liquidacion, AsistenciaProfesor 
+from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Div, HTML, Row, Column
 import ipdb
 from datetime import date
 
-class EspecialidadForm(forms.ModelForm):
+
+#--------------------------------ACTIVIDAD---------------------------------------------
+class ActividadForm(forms.ModelForm):
     class Meta:
-        model = Especialidad
-        fields = "__all__"
+        model = Actividad
+        fields = ['nombre', 'descripcion', 'descuento', 'categoria', 'tipoAbono', 'cupoReferencia', 'precioReferencia', 'remuneracionProfesor', 'diasTolerancia']
+        widgets = {
+            "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese Nombre de la activiad'}),
+            "descripcion": forms.Textarea(attrs={'placeholder': 'Descripcion'}),
+            "descuento": forms.TextInput(attrs={'placeholder': 'Descuento para afiliados','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "categoria": forms.Select(attrs={'class': 'form-select'}),
+            "tipoAbono": forms.Select(attrs={'class': 'form-select'}),
+            "cupoReferencia": forms.TextInput(attrs={'placeholder': 'Ingrese un Cupo de referencia','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "precioReferencia": forms.TextInput(attrs={'placeholder': 'Ingrese un Precio de referencia','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "remuneracionProfesor": forms.TextInput(attrs={'placeholder': 'Ingrese Remuneracion del Profesor','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "diasTolerancia": forms.TextInput(attrs={'placeholder': 'Ingrese los dias de tolerancia','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+        }
 
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre']
-        nombre = nombre.lower()
-        if Especialidad.objects.filter(nombre__iexact=nombre).exists():
-            raise forms.ValidationError("Ya existe una especialidad con este nombre.")
-        return nombre
+        labels = {
+            'formaPago': 'Forma de pago',
+            'especialidad': 'Especialidad',
+            'cupoReferencia': 'Cupo de Referencia',
+            'tipoAbono': 'Tipo de Abono',
+            'precioReferencia': 'Precio de Referencia',
+            'remuneracionProfesor': 'Remuneracion del Profesor',
+            'diasTolerancia': 'Dias de Tolerancia'
+        }
+    """ 
+    def clean_desde(self):
+        fecha_desde = self.cleaned_data['desde']               
+        if fecha_desde < date.today():
+            raise forms.ValidationError("La fecha de inicio del curso no puede ser anterior a hoy")
+        return fecha_desde
 
+    def clean_hasta(self):
+        fecha_hasta = self.cleaned_data['hasta']               
+        if fecha_hasta < date.today():
+            raise forms.ValidationError("La fecha de finalizacion del curso no puede ser anterior a hoy") 
+        return fecha_hasta"""
 
-    def clean(self):
-        pass
+    def clean_cupo(self):
+        cupo = self.cleaned_data['cupoReferencia']
+        if cupo < 5:
+            raise forms.ValidationError("El cupo es insufuciente")
+        if cupo > 999:
+            raise forms.ValidationError("El cupo es demasiado grande")
+        return cupo
 
-    def is_valid(self) -> bool:
-        valid = super().is_valid()
-        return valid
+    def clean_descuento(self):
+        descuento = int(self.cleaned_data['descuento'])
+        if descuento > 100:
+            raise forms.ValidationError("El descuento es invalido")
+        return descuento
 
+    def clean_precio(self):
+        precio = self.cleaned_data['precioReferencia']
+        if precio > 999999:
+            raise forms.ValidationError("El precio es invalido, el precio maximo es 999999")
+        return precio
 
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Especialidad</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                "Datos de Especialidad",
-            Row(
-                Column('area', css_class='form-group col-md-4 mb-0'),
-                Column('nombre', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
+        if instance:
+            self.helper.layout = Layout( 
+                HTML(
+                        '<h2><center>Editar Actividad</center></h2>'),
+                HTML(
+                        '<hr/>'),
+                Fieldset(
+                    "Datos de la Actividad",
+                Row(
+                    Column('nombre', css_class='form-group col-md-4 mb-0'),
+                    Column('categoria', css_class='form-group col-md-4 mb-0'),
+                    Column('tipoAbono', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('cupoReferencia', css_class='form-group col-md-4 mb-0'),
+                    Column('precioReferencia', css_class='form-group col-md-4 mb-0'),
+                    Column('remuneracionProfesor', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('descuento', css_class='form-group col-md-4 mb-0'),
+                    Column('diasTolerancia', css_class='form-group col-md-4 mb-0'),
+                    Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                ),
+                Submit('submit', 'Guardar', css_class='button white'),)
+        else:
+            self.helper.layout = Layout( 
+                HTML(
+                        '<h2><center>Registrar Actividad</center></h2>'),
+                HTML(
+                        '<hr/>'),
+                Fieldset(
+                    "Datos de la Actividad",
+                Row(
+                    Column('nombre', css_class='form-group col-md-4 mb-0'),
+                    Column('categoria', css_class='form-group col-md-4 mb-0'),
+                    Column('tipoAbono', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('cupoReferencia', css_class='form-group col-md-4 mb-0'),
+                    Column('precioReferencia', css_class='form-group col-md-4 mb-0'),
+                    Column('remuneracionProfesor', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('descuento', css_class='form-group col-md-4 mb-0'),
+                    Column('diasTolerancia', css_class='form-group col-md-4 mb-0'),
+                    Column('descripcion', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                ),
+                Submit('submit', 'Guardar', css_class='button white'),)
 
-            Submit('submit', 'Guardar', css_class='button white'),)
 
+#--------------------------------DICTADO---------------------------------------------
+class DictadoForm(forms.ModelForm):
+    dias = forms.MultipleChoiceField(
+        choices=DIA,
+        widget=forms.CheckboxSelectMultiple,
+        label= 'Dias de Dictado'
+    )
+    class Meta:
+        model = Dictado
+        fields = ['aula','profesor','costo','cupo','inicio','fin','duracionClase','horaInicioClase','actividad']
+        widgets = {
+                "aula": forms.Select(attrs={'class': 'form-select'}),
+                "profesor": forms.Select(attrs={'class': 'form-select'}),
+                "costo": forms.NumberInput(attrs={'placeholder': 'Ingrese costo del curso'}),
+                "cupo": forms.TextInput(attrs={'placeholder': 'Ingrese cupo del curso'}),
+                "inicio": forms.TextInput(attrs={'type': 'date'}),
+                "fin": forms.TextInput(attrs={'type': 'date'}),
+                "duracioClase": forms.TextInput(),
+                "horaInicioClase": forms.TextInput(attrs={'type': 'time'}),
+                "actividad": forms.HiddenInput(),
+        }
+
+        labels = {
+                'inicio': 'Fecha de inicio',
+                'fin': 'Fecha de finalizacion',
+                'duracionClase': 'Duracion de la clase',
+                'horaInicioClase': 'Hora de Inicio'
+        }
+
+    def save(self, commit=True):
+        dictado = super().save(commit=False)
+        # Guarda los nombres de los días como una cadena separada por comas
+        dias_nombres = [dict(DIA)[int(dia)] for dia in self.cleaned_data['dias']]  # Obtiene los nombres
+        dictado.dias = ','.join(dias_nombres)  # Guarda como cadena
+        if commit:
+            dictado.save()
+        dictado.generar_clases()
+        dictado.generar_sueldo_profesor()
+        return dictado
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.attrs = {'id': 'dictado-form'}
+        if instance:
+            self.helper.layout = Layout( 
+                HTML(
+                        '<h2><center>Editar Dictado</center></h2>'),
+                HTML(
+                        '<hr/>'),
+                Fieldset(
+                    "Datos del Dictado",
+                Row(
+                    Column('aula', css_class='form-group col-md-4 mb-0'),
+                    Column('profesor', css_class='form-group col-md-4 mb-0'),
+                    Column('cupo', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('costo', css_class='form-group col-md-4 mb-0'),
+                    Column('inicio', css_class='form-group col-md-4 mb-0'),
+                    Column('fin', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                ),
+                Submit('submit', 'Guardar', css_class='button white'),)
+        else:
+            self.helper.layout = Layout( 
+                HTML(
+                        '<h2><center>Registrar Dictado</center></h2>'),
+                HTML(
+                        '<hr/>'),
+                Fieldset(
+                    "Datos del Dictado",
+                Row(
+                    Column('aula', css_class='form-group col-md-4 mb-0'),
+                    Column('profesor', css_class='form-group col-md-4 mb-0'),
+                    Column('cupo', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('costo', css_class='form-group col-md-4 mb-0'),
+                    Column('inicio', css_class='form-group col-md-4 mb-0'),
+                    Column('fin', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row(
+                    Column('duracionClase', css_class='form-group col-md-4 mb-0'),
+                    Column('horaInicioClase', css_class='form-group col-md-4 mb-0'),
+                    Column('dias', css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
+                Row('actividad'),
+                ),
+                Submit('submit', 'Guardar', css_class='button white'),)
+
+
+#--------------------------------AULA---------------------------------------------
 class AulaForm(forms.ModelForm):
     class Meta:
         model = Aula
@@ -60,27 +241,21 @@ class AulaForm(forms.ModelForm):
             'capacidad': 'Capacidad',
         }
     def clean_numero(self):
-        numero = self.cleaned_data['numero']
+        numero = int(self.cleaned_data['numero'])
         if Aula.objects.filter(numero=numero).exists():
             raise forms.ValidationError("Ya existe un aula con este numero.")
         return numero
     
     def clean_capacidad(self):
-        capacidad = self.cleaned_data['capacidad']
+        capacidad = int(self.cleaned_data['capacidad'])
         if capacidad <= 0 or capacidad > 999:
             raise forms.ValidationError("La capacidad no es valida")
         return capacidad
 
-    def clean(self):
-        pass
-
-    def is_valid(self) -> bool:
-        valid = super().is_valid()
-        return valid
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.attrs = {'id': 'aula-form'}
         self.helper.layout = Layout( 
             HTML(
                     '<h2><center>Registrar Aula</center></h2>'),
@@ -89,22 +264,53 @@ class AulaForm(forms.ModelForm):
             Fieldset(
                 "Datos de Aula",
             Row(
-                Column('numero', css_class='form-group col-md-4 mb-0'),
-                Column('capacidad', css_class='form-group col-md-4 mb-0'),
+                Column('numero', css_class='form-group col-md-6 mb-0'),
+                Column('capacidad', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             ),
 
             Submit('submit', 'Guardar', css_class='button white'),)
 
+
+#--------------------------------PROFESOR---------------------------------------------
 class ProfesorForm(forms.ModelForm):
     class Meta:
         model = Profesor
-        fields = "__all__"
-        exclude = ['tipo','persona']
-        labels = {
-            'aniosExperiencia': 'Años de experiencia',     
+        fields = ["cbu", "experiencia"]
+        widgets = {
+            "cbu": forms.TextInput(attrs={'placeholder': 'Ingrese cbu','oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
+            "experiencia": forms.TextInput(attrs={'placeholder': 'Ingrese experiencia del profesor'}),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = self.fields[field].widget.attrs.get('class', '') + ' form-control'
+            if self.fields[field].required:
+                self.fields[field].label = f'{self.fields[field].label}<span class="asteriskField">*</span>'
+
+
+#--------------------------------INSCRIPCION---------------------------------------------
+class InscripcionDictadoForm(forms.ModelForm):
+    class Meta:
+        model = Inscripcion
+        fields = ["alumno", "dictado"]
+        widgets = {
+            "alumno": forms.HiddenInput(),
+            "dictado": forms.HiddenInput(),
+        }
+
+class InscripcionClaseForm(forms.ModelForm):
+    class Meta:
+        model = Inscripcion
+        fields = ["alumno", "clase"]
+        widgets = {
+            "alumno": forms.HiddenInput(),
+            "clase": forms.HiddenInput(),
+        }
+
+
+
 
 class CrearProfesorForm(forms.Form):
 
@@ -228,126 +434,27 @@ class ModificarProfesorForm(forms.Form):
                 css_class='form-row'
             ),
             Row(
-                Column('especializacion', css_class='form-group col-md-4 mb-0'),
-                Column('aniosExperiencia', css_class='form-group col-md-4 mb-0'),
+                Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
+                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
+                Column('domicilio', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('telefono', css_class='form-group col-md-4 mb-0'),
+                Column('email', css_class='form-group col-md-4 mb-0'),
                 Column('cbu', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('experiencia', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
         Submit('submit', 'Guardar', css_class='button white'),)
 
-class CursoForm(forms.ModelForm):
-    class Meta:
-        model = Curso
-        fields = "__all__"
 
-        widgets = {
-            "desde": forms.TextInput(attrs={'type': 'date'}),
-            "hasta": forms.TextInput(attrs={'type': 'date'}),
-        }
 
-        labels = {
-            'desde': 'Fecha desde',
-            'hasta': 'Fecha hasta',
-            'formaPago': 'Forma de pago',
-            'especialidad': 'Especialidad',
-            'cupo': 'Cupo minimo',
-            'tipoModulo': 'Tipo de modulo',
-        }
 
-    def clean_desde(self):
-        fecha_desde = self.cleaned_data['desde']               
-        if fecha_desde < date.today():
-            raise forms.ValidationError("La fecha de inicio del curso no puede ser anterior a hoy")
-        return fecha_desde
-
-    def clean_hasta(self):
-        fecha_hasta = self.cleaned_data['hasta']               
-        if fecha_hasta < date.today():
-            raise forms.ValidationError("La fecha de finalizacion del curso no puede ser anterior a hoy")
-        return fecha_hasta
-
-    def clean_cupo(self):
-        cupo = self.cleaned_data['cupo']
-        if cupo < 20:
-            raise forms.ValidationError("El cupo es insufuciente")
-        if cupo > 999:
-            raise forms.ValidationError("El cupo es demasiado grande")
-        return cupo
-
-    def clean_descuento(self):
-        descuento = self.cleaned_data['descuento']
-        if descuento > 100:
-            raise forms.ValidationError("El descuento es invalido")
-        return descuento
-
-    def clean_precio(self):
-        precio = self.cleaned_data['precio']
-        if precio > 999999:
-            raise forms.ValidationError("El precio es invalido, el precio maximo es 999999")
-        return precio
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Curso</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                   "Datos Curso",
-            Row(
-                Column('especialidad', css_class='form-group col-md-4 mb-0'),
-                Column('nombre', css_class='form-group col-md-4 mb-0'),
-                Column('desde', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('hasta', css_class='form-group col-md-4 mb-0'),
-                Column('cupo', css_class='form-group col-md-4 mb-0'),
-                Column('modulos', css_class='form-group col-md-4 mb-0'),
-                Column('tipoModulo', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('formaPago', css_class='form-group col-md-4 mb-0'),
-                Column('descuento', css_class='form-group col-md-4 mb-0'),
-                Column('precio', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
-
-class TitularidadForm(forms.ModelForm):
-    class Meta:
-        model = Titularidad
-        fields = "__all__"
-        exclude=['dictado', 'hasta']
-        widgets = {
-                "desde": forms.TextInput(attrs={'type': 'date'}),
-                #"hasta": forms.TextInput(attrs={'type': 'date'}),
-        }
-
-        labels = {
-                'desde': 'Fecha Desde',
-                #'hasta': 'Fecha Hasta',
-        }
-
-class DictadoForm(forms.ModelForm):
-    class Meta:
-        model = Dictado
-        fields = "__all__"
-        exclude = ['profesores', 'curso', 'costo'] # excluimos el campo ManyToMany
-        widgets = {
-                "inicio": forms.TextInput(attrs={'type': 'date'}),
-                "fin": forms.TextInput(attrs={'type': 'date'}),
-        }
-
-        labels = {
-                'inicio': 'Fecha inicio',
-                'fin': 'Fecha fin',
-        }
 
 class CrearDictadoForm(forms.Form):
 
@@ -391,91 +498,9 @@ class CrearDictadoForm(forms.Form):
             Submit('submit', 'Guardar', css_class='button white'),)
 
 
-class ClaseForm(forms.ModelForm):
-    class Meta:
-        model = Clase
-        fields = "__all__"
-        exclude = ['dictado']
-        widgets = {
-                'inicio' : forms.TimeInput(format='%H:%M',attrs={'type': 'time'}),
-                'fin' : forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
-        }
 
-        labels = {
-                'inicio': 'Fecha inicio',
-                'fin': 'Fecha fin',
-        }
-    def save(self, commit=False):
-        clase = super().save(commit)
-        clase.dictado = self.initial["dictado"]
-        clase.save()
-        return clase
 
-    def __init__(self, initial=None, *args, **kwargs):
-        super().__init__(initial=initial, *args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Clase</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                   "Datos Clase",
-            Row(
-                Column('dia', css_class='form-group col-md-4 mb-0'),
-                Column('inicio', css_class='form-group col-md-4 mb-0'),
-                Column('fin', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('dictado', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
 
-class PagoDictadoForm(forms.ModelForm):
-    class Meta:
-        model = PagoDictado
-        fields = "__all__"
-        exclude = ['dictado']
-        widgets = {
-                "pago": forms.TextInput(attrs={'type': 'date'}),
-        }
-
-        labels = {
-                'pago': 'Fecha pago',
-                'tipoPago': 'Forma de pago',
-        }
-
-    def save(self, commit=False):
-        pago_dictado = super().save(commit)
-        pago_dictado.dictado = self.initial["dictado"]
-        pago_dictado.save()
-        return pago_dictado
-
-    def __init__(self, initial=None, *args, **kwargs):
-        super().__init__(initial=initial, *args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout( 
-            HTML(
-                    '<h2><center>Registrar Pago de Dictado</center></h2>'),
-            HTML(
-                    '<hr/>'),
-            Fieldset(
-                   "Datos Pago de Dictado",
-            Row(
-                Column('alumno', css_class='form-group col-md-4 mb-0'),
-                Column('pago', css_class='form-group col-md-4 mb-0'),
-                Column('monto', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('tipoPago', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            ),
-            Submit('submit', 'Guardar', css_class='button white'),)
 
 class LiquidacionForm(forms.ModelForm):
     class Meta:
@@ -499,7 +524,7 @@ class EditarAlumnoForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['persona','tipo', 'dictado', 'curso']
         
-class CrearAlumnoForm(forms.Form):
+""" class CrearAlumnoForm(forms.Form):
     curso = forms.ModelChoiceField(queryset= Curso.objects.all())
     
     def clean_dni(self):
@@ -569,7 +594,7 @@ class CrearAlumnoForm(forms.Form):
             ),
             HTML('<hr/>'),   
 
-            Submit('submit', 'Guardar', css_class='button white'),)
+            Submit('submit', 'Guardar', css_class='button white'),) """
 
 class ModificarAlumnoForm(forms.Form):
     def is_valid(self) -> bool:
@@ -600,13 +625,19 @@ class ModificarAlumnoForm(forms.Form):
             Row(
                 Column('nombre', css_class='form-group col-md-4 mb-0'),
                 Column('apellido', css_class='form-group col-md-4 mb-0'),
+                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('nacionalidad', css_class='form-group col-md-4 mb-0'),
+                Column('estadoCivil', css_class='form-group col-md-4 mb-0'),
                 Column('domicilio', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-
+                
                 Column('telefono', css_class='form-group col-md-4 mb-0'),
-                Column('nacimiento', css_class='form-group col-md-4 mb-0'),
+                Column('email', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             ),
@@ -618,16 +649,9 @@ class ModificarAlumnoForm(forms.Form):
 ModificarAlumnoForm.base_fields.update(EditarAlumnoForm.base_fields)
 ModificarAlumnoForm.base_fields.update(ModificarPersonaForm.base_fields)        
 
-CrearDictadoForm.base_fields.update(DictadoForm.base_fields)
-CrearDictadoForm.base_fields.update(TitularidadForm.base_fields)
-
-
 CrearProfesorForm.base_fields.update(PersonaForm.base_fields)
 CrearProfesorForm.base_fields.update(ProfesorForm.base_fields)
 
 ModificarProfesorForm.base_fields.update(ModificarPersonaForm.base_fields)
 ModificarProfesorForm.base_fields.update(ProfesorForm.base_fields) 
-
-CrearAlumnoForm.base_fields.update(AlumnoForm.base_fields)
-CrearAlumnoForm.base_fields.update(PersonaForm.base_fields)
 

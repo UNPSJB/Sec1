@@ -7,29 +7,27 @@
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xl-12 col-xl-12">  
     <div class="container-listados my-3"> 
               <div class="table-responsive card shadow p-3"> 
-                <h3>Listado de Cursos</h3>
+                <h3>Listado de Actividades</h3>
                   <table class="table table-striped table-responsive">
                       <thead>
                           <tr>
                             <th scope="col">nombre</th>
                             <th scope="col">fecha desde</th>
-                            <th scope="col">fecha hasta</th>
-                            <th scope="col">cupo</th> 
-                            <th scope="col">precio</th> 
-                            <th scope="col">especialidad</th>   
+                            <th scope="col">categoria</th> 
+                            <th scope="col">tipo de abono</th> 
+                            <th scope="col">descuento</th> 
                           </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          {% for curso in object_list %}
+                          {% for actividad in object_list %}
                           <tr class="bg-transition">
-                            <td>{{ curso.nombre }}</td>
-                            <td>{{ curso.desde }}</td>
-                            <td>{{ curso.hasta }}</td>
-                            <td>{{ curso.cupo }}</td>
-                            <td>{{ curso.precio }}</td>
-                            <td>{{ curso.especialidad }}</td>
-                            <td><a href="{% url 'detallarCurso' curso.pk %}" class="btn btn-success"> Ver </a></td>             
+                            <td>{{ actividad.nombre }}</td>
+                            <td>{{ actividad.desde }}</td>
+                            <td>{{ actividad.get_categoria_display }}</td>
+                            <td>{{ actividad.get_tipoAbono_display }}</td>
+                            <td>{{ actividad.descuento }}%</td>
+                            <td><a href="{% url 'detallarActividad' actividad.pk %}" class="btn btn-success"> Ver </a></td>             
                                                                        
                           </tr>
                           {% endfor %}  

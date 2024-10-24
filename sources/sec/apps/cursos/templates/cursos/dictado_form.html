@@ -1,12 +1,26 @@
-{% extends 'main.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-
-{% block container %}
 
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         {% crispy form form.helper %}
     </div>
 </div>
-{% endblock %}
+ 
+<script>
+
+$('#dictado-form').on('submit', function(e) {
+    e.preventDefault(); // Prevenir el envío normal del formulario
+    $.ajax({
+        url: "{% url 'crearDictado' %}", // Cambia esto por tu URL para verificar el DNI
+        type: "POST",
+        data: $(this).serialize(),
+        success: function(response) {
+            location.reload();  // Recarga la página actual
+        },
+        error: function() {
+            alert("Error al crear Dictado");
+        }
+    });
+  });
+</script>

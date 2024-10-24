@@ -1,0 +1,94 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <form id="profesor-form"method="post">
+            {% csrf_token %}
+            <input type="hidden" id="hidden-action" name="action" value="search">
+            <h2><center>Registrar Profesor</center></h2>
+            <hr/>
+              <legend>Datos Personales</legend>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_id_dni" class="mb-3">
+                        <label for="id_dni" class="form-label">Dni<span class="asteriskField">*</span></label>
+                        <input type="text" name="dni" pattern="(\d{7}|\d{8})" placeholder="########" title="Debe ser un Dni Valido" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="8" class=" form-control" required="" id="id_dni">
+                      </div>
+                </div>
+              </div>
+              <div id="form-container"></div>
+            <input
+            type="submit"
+            name="submit"
+            value="Siguiente"
+            class="btn btn-primary button white"
+            id="submit-id-submit"
+          />
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Afiliacion activa</h5>
+            </div>
+            <div class="modal-body" id="id_modal_body">
+                Contenido del modal aquí.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cerrar-modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn-aceptar">Ver detalle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %} 
+<script>
+$(document).ready(function() {
+    $('#profesor-form').on('submit', function(e) {
+        var actionValue = $(this).find('input[name="action"]').val();
+        if (actionValue === 'search') {
+            e.preventDefault(); // Prevenir el envío normal del formulario
+            
+            $.ajax({
+                url: "{% url 'buscarPersonaParaProfesor' %}", // Cambia esto por tu URL para verificar el DNI
+                type: "POST",
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.profesor_activo) {
+                        $('#id_modal_body').html(`Ya se encuentra activo un profesor con DNI: ${response.dni}`);
+                        $('#miModal').modal('show'); // Muestra el modal
+                        // Manejar el clic en el botón "Aceptar"
+                        $('#btn-aceptar').off('click').on('click', function() {
+                            $('#miModal').modal('hide');
+                            // Redirige a la URL deseada usando el pk
+                            window.location.href = `/profesores/detallarProfesor/${response.profesor_activo}`;
+                        });
+                    }else{
+                        $('#submit-id-submit').val('Guardar'); // Cambia el texto del boton
+                        $('#hidden-action').remove();
+                        $('#form-container').html(response); // Renderiza la respuesta en el contenedor
+                        $('#id_dni').prop('disabled', true); // Deshabilita el dni
+                    }
+                },
+                error: function() {
+                    alert("Error al verificar el DNI.");
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

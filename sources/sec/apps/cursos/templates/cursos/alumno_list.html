@@ -14,7 +14,7 @@
                                 <th> DNI </th>
                                 <th> Nombre </th>
                                 <th> Apellido </th>
-                                <th> Cursos </th>
+                                <th> Es Afiliado </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,7 +25,11 @@
                                         <td>{{ alumno.persona.dni }}</td>
                                         <td>{{ alumno.persona.nombre }}</td>
                                         <td>{{ alumno.persona.apellido }}</td>
-                                        <td>{{ alumno.curso.nombre }}</td>
+                                        <td> {% if alumno.persona.es_afiliado %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %} </td>
                                         <td><a href="{% url 'detallarAlumno' alumno.pk %}" class="btn btn-success"> Ver </a></td>  
                                     </tr>
                                     {% endfor %}             

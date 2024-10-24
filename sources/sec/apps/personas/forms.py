@@ -7,8 +7,7 @@ from django import forms
 class PersonaForm(ModelForm):
     class Meta:
         model = Persona
-        fields = '__all__'
-        exclude=['persona', 'tipo']
+        fields = ['dni','nombre','apellido','nacimiento','nacionalidad','estadoCivil','domicilio','telefono','email']
         widgets = {
             "dni": forms.TextInput(attrs={'pattern': '(\d{7}|\d{8})', 'placeholder': '########', 'title': 'Debe ser un Dni Valido', 'oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}),
             "nombre": forms.TextInput(attrs={'placeholder': 'Ingrese nombres','oninput': "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');""this.value = this.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');" }),

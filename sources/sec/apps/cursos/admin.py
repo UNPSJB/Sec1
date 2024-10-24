@@ -1,10 +1,8 @@
 from django.contrib import admin
 from .models import (
-    Profesor, 
-    Especialidad, 
+    Profesor,
     Alumno, 
-    Curso, 
-    Titularidad, 
+    Actividad, 
     Dictado
 )
 
@@ -12,7 +10,5 @@ from .models import (
 
 admin.site.register(Profesor)
 admin.site.register(Alumno)
-admin.site.register(Curso)
-admin.site.register(Especialidad)
-admin.site.register(Titularidad)
+admin.site.register(Actividad)
 admin.site.register(Dictado)

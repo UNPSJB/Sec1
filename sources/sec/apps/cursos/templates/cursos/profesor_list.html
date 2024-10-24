@@ -11,28 +11,23 @@
                   <table class="table table-striped table-responsive">
                       <thead>
                           <tr>
+                            <th scope="col">Dni</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Apellido</th>
-                            <th scope="col">Dni</th>
-                            <th scope="col">Especializacion</th>
                             <th scope="col">Telefono</th>
-                            <th scope="col">Domicilio</th>
-                            <th scope="col">Antiguedad</th>
-                            <th scope="col">Cbu</th>   
+                            <th scope="col">Domicilio</th>  
+                            <th></th>
                           </tr>
                       </thead>
                       <tbody>
                         <tr>
                           {% for profesor in object_list %}
                           <tr class="bg-transition">
+                            <td>{{ profesor.persona.dni }}</td>
                             <td>{{ profesor.persona.nombre }}</td>
                             <td>{{ profesor.persona.apellido }}</td>
-                            <td>{{ profesor.persona.dni }}</td>
-                            <td>{{ profesor.especializacion }}</td>
-                            <td>{{ profesor.telefono }}</td>
-                            <td>{{ profesor.domicilio }}</td>
-                            <td>{{ profesor.aniosExperiencia }}</td>
-                            <td>{{ profesor.cbu }}</td>             
+                            <td>{{ profesor.persona.telefono }}</td>
+                            <td>{{ profesor.persona.domicilio }}</td>           
                             <td><a href="{% url 'detallarProfesor' profesor.pk %}" class="btn btn-success"> Ver </a></td>                                        
                           </tr>
                           {% endfor %}  

@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block container %}
-<div class="py-4" style="background-color: #0f66c3">
+<div class="py-4">
     <div class="container py-3" style="background-color: white">
       <div class="row">
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
@@ -21,7 +21,7 @@
             <label><b> DNI: </b></label> &nbsp; {{profesor.persona.dni}}
           </div>
           <div class="input-group py-2">
-            <label><b> Domicilio: </b></label> &nbsp; {{profesor.domicilio}}
+            <label><b> Domicilio: </b></label> &nbsp; {{profesor.persona.domicilio}}
           </div>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4 py-3">
@@ -32,16 +32,13 @@
             </div>
           </div>
           <div class="input-group py-2">
-            <label><b> Telefono: </b></label> &nbsp; {{profesor.telefono}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Especializacion: </b></label> &nbsp; {{profesor.especializacion}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Años Experiencia: </b></label> &nbsp; {{profesor.aniosExperiencia}}
+            <label><b> Telefono: </b></label> &nbsp; {{profesor.persona.telefono}}
           </div>
           <div class="input-group py-2">
             <label><b> CBU: </b></label> &nbsp; {{profesor.cbu}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Experiencia: </b></label> &nbsp; {{profesor.experiencia}}
           </div>
         </div>
       </div>
@@ -52,34 +49,27 @@
               <div class="col sm-12 col-md-4 col-lg-4 py-3">
                 <h3> Cursos vigentes </h3>
               </div>
-              <div class="col sm-12 col-md-8 col-lg-8 py-3">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="#" class="btn btn-success"> + </a>
-                </div>
-              </div>
             </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                      <th> Nombre </th>
+                      <th> Actividad </th>
                       <th> Fecha Desde </th>
                       <th> Fecha Hasta </th>
-                      <th> Descuento </th>
-                      <th> Profesor </th>
-                      <th> Precio </th>
+                      <th> Remuneracion </th>
                       <th> Acciones </th>
                     </tr>
                 </thead>
                 <tbody>
                     <div>
                         <tr>
-                          <td> Desarrollo de software</td>
-                          <td> 01/08/21 </td>
-                          <td> 21/11/12 </td>
-                          <td> 15% </td>
-                          <td> Diego </td>
-                          <td> 15000$ </td>
-                          <td><a href="{% url 'verCurso' %}" class="btn btn-success"> Ver </a></td>
+                          {% for dictado in profesor.actividadesVigentes %}
+                          <td> {{dictado.actividad}}</td>
+                          <td> {{dictado.fin}}</td>
+                          <td> {{dictado.inicio}}</td>
+                          <td> ${{dictado.actividad.remuneracionProfesor}} </td>
+                          <td><a href="{% url 'detallarActividad' dictado.actividad.pk %}" class="btn btn-success"> Ver </a></td>
+                          {% endfor %}  
                         </tr>
                     </div>
                 </tbody>
