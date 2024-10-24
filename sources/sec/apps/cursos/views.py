@@ -12,12 +12,19 @@ from django.template import RequestContext
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from datetime import datetime
+from sec.decorators import staff_required
+from django.utils.decorators import method_decorator
 
 #--------------------------------ACTIVIDAD---------------------------------------------
 class ActividadCreateView(CreateView):
     model = Actividad
     form_class = ActividadForm
     template_name = 'actividades/actividad_form.html'
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('detallarActividad', kwargs={'pk': self.object.pk})
@@ -26,6 +33,11 @@ class ActividadUpdateView(UpdateView):
     model = Actividad
     form_class = ActividadForm
     template_name = 'actividades/actividad_form.html'
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('detallarActividad', kwargs={'pk': self.object.pk})
@@ -33,13 +45,24 @@ class ActividadUpdateView(UpdateView):
 class ActividadDetailView(DetailView):
     model = Actividad
     template_name = 'actividades/actividad_detail.html'
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class ActividadListView(ListView):
     model = Actividad
     template_name = 'actividades/actividad_list.html'
     paginate_by = 100 
     ordering = 'id'
+    
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+@staff_required
 def baja_actividad(request):
     if request.method == 'POST':
         actividad_id = request.POST.get('actividad_id')
@@ -54,6 +77,11 @@ class DictadoCreateView(CreateView):
     model = Dictado
     form_class = DictadoForm
     success_url = reverse_lazy('listarDictados')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
     """ 
     def get_initial(self):
         curso = get_object_or_404(Curso, pk=self.kwargs.get('pk', 0))
@@ -75,6 +103,11 @@ class DictadoUpdateView(UpdateView):
     model = Dictado
     form_class = DictadoForm
     success_url = reverse_lazy("listarDictados")
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 """
     def form_valid(self, form):
         #messages.add_message(self.request, messages.SUCCESS, 'Dictado modificado con éxito')
@@ -88,13 +121,28 @@ class DictadoUpdateView(UpdateView):
 class DictadoDeleteView(DeleteView):
     model = Dictado
     success_url = reverse_lazy('listarDictados')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class DictadoDetailView(DetailView):
     model = Dictado
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class DictadoListView(ListView):
     model = Dictado
     paginate_by = 100 
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
  
 
 #--------------------------------AULA---------------------------------------------
@@ -103,6 +151,11 @@ class AulaCreateView(CreateView):
     model = Aula
     form_class = AulaForm
     #success_url = reverse_lazy('listarAulas')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         # Guarda el objeto
@@ -127,17 +180,33 @@ class AulaUpdateView(UpdateView):
     form_class = AulaForm
     template_name = 'cursos/aula_update.html'
     success_url = reverse_lazy("listarAulas")
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AulaDeleteView(DeleteView):
     model = Aula
     success_url = reverse_lazy('listarAulas')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AulaListView(ListView):
     model = Aula
     paginate_by = 100 
     ordering = 'id'
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 #--------------------------------PROFESOR---------------------------------------------
+@staff_required
 def buscar_persona_para_profesor(request):
     if request.method == 'POST':
         action = request.POST.get('action')    
@@ -168,6 +237,7 @@ def buscar_persona_para_profesor(request):
                 'action': new_action
             })
 
+@staff_required
 def crear_profesor(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -213,6 +283,7 @@ def crear_profesor(request):
 
 
 #--------------------------------INSCRIPCIONES---------------------------------------------
+@staff_required
 def buscar_alumno(request):
     if request.method == 'POST':
         dni = request.POST.get('dni')
@@ -244,6 +315,7 @@ def buscar_alumno(request):
             'html': html,
         })
 
+@staff_required
 def inscripcion_a_dictado(request, dictado_id):
     # Si es un GET inicial, mostrar solo el formulario de DNI
     dictado = Dictado.objects.get(id=dictado_id)
@@ -252,6 +324,7 @@ def inscripcion_a_dictado(request, dictado_id):
         'action': 'inscripcion'
     })
 
+@staff_required
 def crear_inscripcion_a_dictado(request):
     if request.method == 'POST':
         inscripcion_form = InscripcionDictadoForm(request.POST)
@@ -307,13 +380,16 @@ def crear_inscripcion_a_dictado(request):
                     'html': html,
                 })
 
+@staff_required
 def inscripcion_a_clase(request, clase_id):
+
     # Si es un GET inicial, mostrar solo el formulario de DNI
     clase = Clase.objects.get(id=clase_id)
     return render(request, 'inscripciones/inscripcionClase.html', {
         'clase': clase,
     })
 
+@staff_required
 def crear_inscripcion_a_clase(request):
     if request.method == 'POST':
         inscripcion_form = InscripcionClaseForm(request.POST)
@@ -359,7 +435,7 @@ def crear_inscripcion_a_clase(request):
                     'html': html,
                 })
 
-
+@staff_required
 def inscripcion_a_cola_espera(request, dictado_id):
     # Si es un GET inicial, mostrar solo el formulario de DNI
     dictado = Dictado.objects.get(id=dictado_id)
@@ -368,6 +444,7 @@ def inscripcion_a_cola_espera(request, dictado_id):
         'action': 'espera'
     })
 
+@staff_required
 def crear_inscripcion_a_cola_espera(request):
     if request.method == 'POST':
         inscripcion_form = InscripcionDictadoForm(request.POST)
@@ -384,7 +461,13 @@ def crear_inscripcion_a_cola_espera(request):
 class InscripcionDetailView(DetailView):
     model = Inscripcion
     template_name = 'inscripciones/inscripcion_detail.html'
+    
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+@staff_required
 def desinscribir(request):
     if request.method == 'POST':
         inscripcion_id = request.POST.get('inscripcion_id')
@@ -393,6 +476,7 @@ def desinscribir(request):
         messages.success(request, f"Se ha desinscripto a {inscripcion.alumno}.")
         return redirect(reverse('detallarActividad', args=[inscripcion.dictado.actividad.id]))
 
+@staff_required
 def inscripcion_desde_espera(request):
     if request.method == 'POST':
         inscripcion_id = request.POST.get('inscripcion_id')
@@ -416,6 +500,7 @@ def inscripcion_desde_espera(request):
                             })
 
 #--------------------------------ALUMNO-----------------------------------------------
+@staff_required
 def crear_alumno(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -450,17 +535,37 @@ def crear_alumno(request):
 class AlumnoListView(ListView):
     model = Alumno
     paginate_by = 100 
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AlumnoDetailView(DetailView):
     model = Alumno
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AlumnoDeleteView(DeleteView):
     model = Alumno
     success_url = reverse_lazy('listarAlumnos')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class AlumnoUpdateView(UpdateView):
     model = Alumno
     form_class = ModificarAlumnoForm
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('detallarAlumno', kwargs={'pk': self.object.pk})
@@ -485,6 +590,12 @@ class PagoListView(ListView):
     """ def get_queryset(self):
         # Filtra los pagos de este mes que están pendientes
         return Pago.objects.filter(pago__isnull=True).order_by('id') """
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
     def get_queryset(self):
         # Obtener el mes y el año actuales
         now = datetime.now()
@@ -499,6 +610,7 @@ class PagoListView(ListView):
             Q(fecha__year=current_year)
         ).order_by('id')
 
+@staff_required
 def pagar(request):
     if request.method == 'POST':
         pago_id = request.POST.get('pago_id')
@@ -512,6 +624,11 @@ class ProfesorCreateView(CreateView):
 
     model = Profesor
     form_class = CrearProfesorForm
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
@@ -526,6 +643,12 @@ class ProfesorCreateView(CreateView):
 class ProfesorUpdateView(UpdateView):
     model = Profesor
     form_class = ModificarProfesorForm
+
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('detallarProfesor', kwargs={'pk': self.object.pk})
@@ -542,6 +665,7 @@ class ProfesorUpdateView(UpdateView):
     def form_invalid(self, form):
         return super().form_invalid(form)
 
+@staff_required
 def profesor_eliminar(request, pk):
     a = Profesor.objects.get(pk=pk)
     a.delete()
@@ -550,9 +674,19 @@ def profesor_eliminar(request, pk):
 class ProfesorDeleteView(DeleteView):
     model = Profesor
     success_url = reverse_lazy('listarProfesores')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class ProfesorDetailView(DetailView):
     model = Profesor
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class ProfesorListView(ListView):
     model = Profesor
@@ -560,9 +694,13 @@ class ProfesorListView(ListView):
 
 
 
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 
+@staff_required
 def marcar_asistencia(request):
     if request.method == 'POST':
         clase_id = request.POST.get('clase_id')
@@ -580,6 +718,12 @@ class LiquidacionListView(ListView):
     """ def get_queryset(self):
         # Filtra los pagos de este mes que están pendientes
         return Pago.objects.filter(pago__isnull=True).order_by('id') """
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
     def get_queryset(self):
         # Obtener el mes y el año actuales
         now = datetime.now()
@@ -594,7 +738,7 @@ class LiquidacionListView(ListView):
             Q(liquidacion__year=current_year)
         ).order_by('id')
 
-
+@staff_required
 def pagar_profesor(request):
     if request.method == 'POST':
         liquidacion_id = request.POST.get('liquidacion_id')
@@ -612,11 +756,26 @@ def pagar_profesor(request):
 class ClaseDeleteView(DeleteView):
     model = Clase
     success_url = reverse_lazy('listarClases')
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class ClaseDetailView(DetailView):
     model = Clase
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class ClaseListView(ListView):
     model = Clase
     paginate_by = 100 
+    
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
