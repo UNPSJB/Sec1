@@ -3,30 +3,47 @@
     <input type="hidden" id="hidden-action" name="action" value="search">
               <h2><center>Inscripcion a {{clase.dictado.actividad.nombre}}</center></h2>
               <hr/>
-  <div class="row">
-  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-      <div class="input-group py-2">
-        <label><b> DNI: </b></label> &nbsp; {{alumno.persona.dni}}
+              <!-- Fila principal para las dos tarjetas -->
+    <div class="row justify-content-center">
+      
+      <!-- Tarjeta Datos del Alumno -->
+      <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+        <div class="card" style="width: 100%;">
+          <div class="card-header">
+            Detalles del Alumno
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <b>DNI:</b> {{ alumno.persona.dni }}
+            </li>
+            <li class="list-group-item">
+              <b>Nombre:</b> {{ alumno.persona.nombre }}
+            </li>
+            <li class="list-group-item">
+              <b>Apellido:</b> {{ alumno.persona.apellido }}
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="input-group py-2">
-        <label><b> Nombre: &nbsp;</b>{{alumno.persona.nombre}}</label>
+
+      <!-- Tarjeta Detalles de la Actividad y Pago -->
+      <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+        <div class="card" style="width: 100%;">
+          <div class="card-header">
+            Información de la Actividad
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <b>Actividad:</b> {{ clase.dictado.actividad.nombre }}
+            </li>
+            <li class="list-group-item">
+              <b>Pago:</b> ${{ pago }}
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="input-group py-2">
-        <label><b> Apellido: </b></label> &nbsp; {{alumno.persona.apellido}}
-      </div>
-  </div>
-  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-    <div class="input-group py-2">
-      <label><b> Actividad: </b></label> &nbsp; {{clase.dictado.actividad.nombre}}
+
     </div>
-    <div class="input-group py-2">
-      <label><b> Pago: &nbsp;</b>${{pago}}</label>
-    </div>
-    <div class="input-group py-2">
-      <label><b> Nose: </b></label> &nbsp;
-    </div>
-  </div>
-  </div>
       {{ form.clase }}
       {{ form.alumno }}
       <input

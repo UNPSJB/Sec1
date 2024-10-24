@@ -169,7 +169,7 @@ class AlquilerForm(forms.ModelForm):
     """ afiliado = forms.ModelChoiceField(queryset= Afiliado.objects.filter(desde__isnull = True),
                                       widget=forms.Select(attrs={'class': 'select2'})) """
    
-    dni = forms.CharField(max_length=8, label='DNI', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el DNI'}))
+    dni = forms.CharField(max_length=8, label='DNI', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el DNI', 'oninput': "this.value = this.value.replace(/[^0-9]/g, '');"}))
     afiliado_id = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
