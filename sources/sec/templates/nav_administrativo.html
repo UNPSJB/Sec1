@@ -123,16 +123,17 @@
   </a>
   <ul class="dropdown-menu">
     <li>
-      <a class="dropdown-item" href="{% url 'crearSalon' %}"
-        ><i class="fa-solid fa-plus"></i> Agregar salón</a>
+      <a class="dropdown-item" href="{% url 'crearEncargado' %}">
+        <i class="fa-solid fa-plus"></i> Agregar encargado</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'crearServicio' %}"
-        ><i class="fa-solid fa-plus"></i> Agregar servicio</a
-      >
+      <a class="dropdown-item" href="{% url 'crearSalon' %}"
+        ><i class="fa-solid fa-plus"></i> Agregar salón</a>
     </li>
+   
     <li class="dropdown-divider"></li>
+
     <li>
       <a class="dropdown-item" href="{% url 'listarSalones' %}"
         ><i class="fa-solid fa-list"></i> Listado de salones</a
@@ -140,8 +141,8 @@
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'listarServicios' %}"
-        ><i class="fa-solid fa-list"></i> Listado de Servicios</a
+      <a class="dropdown-item" href="{% url 'listarEncargados' %}"
+        ><i class="fa-solid fa-list"></i> Listado de encargados</a
       >
     </li>
   </ul>
@@ -157,12 +158,6 @@
     Gestión Alquileres
   </a>
   <ul class="dropdown-menu">
-    <li>
-      <a class="dropdown-item" href="{% url 'crearAlquiler' %}"
-        ><i class="fa-solid fa-calendar-plus"></i> Agregar alquiler</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarAlquileres' %}"
         ><i class="fa-solid fa-list"></i> Listado de alquileres</a>

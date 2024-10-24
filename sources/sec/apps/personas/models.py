@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.core.exceptions import ValidationError
-
+from .nacionalidades import NACIONALIDADES_CHOICES
 class PersonaRolManager(models.Manager):
     def __init__(self, tipo):
         super().__init__()
@@ -31,7 +31,7 @@ class Persona(models.Model):
     nombre = models.CharField(max_length= 30)
     apellido = models.CharField(max_length= 30)
     nacimiento = models.DateField()
-    nacionalidad = models.CharField(max_length=50) #Hacer choices
+    nacionalidad = models.CharField(max_length=2, choices=NACIONALIDADES_CHOICES)
     ESTADO_CIVIL = [(0, "Casado/a"),(1, "Viudo/a"),(2, "Soltero/a"),(3, "Divorciado/a")] #Esto habria que hacerlo en otro lado
     estadoCivil = models.PositiveSmallIntegerField(choices=ESTADO_CIVIL,null=True)
     domicilio = models.CharField(max_length=50, null=True)

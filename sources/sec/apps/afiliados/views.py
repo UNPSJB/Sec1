@@ -10,8 +10,12 @@ from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
+from sec.decorators import staff_required
+from django.utils.decorators import method_decorator
 
 # ---------------------------- Afiliado de prueba View ------------------------------------ #
+
+@staff_required
 def buscar_persona_para_afiliado(request):
     if request.method == 'POST':
         action = request.POST.get('action')    
@@ -43,7 +47,7 @@ def buscar_persona_para_afiliado(request):
                 'action': new_action
             })
 
-
+@staff_required
 def crear_persona_y_afiliado(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -97,13 +101,16 @@ def crear_persona_y_afiliado(request):
         'afiliado_form': afiliado_form
     })
 
+@staff_required
 def aceptar_solicitud(request, afiliado_id):
     if request.method == 'POST':
         afiliado = Afiliado.objects.get(id=afiliado_id)
         afiliado.darAlta()
         messages.success(request, f"Se acepto la solicitud de {afiliado}.")
         return redirect(reverse('afiliacionesPendientes'))
+    
 
+@staff_required
 def desafiliar(request):
     if request.method == 'POST':
         afiliado_id = request.POST.get('afiliado_id')
@@ -113,6 +120,7 @@ def desafiliar(request):
         messages.success(request, f"Se ha desafiliado a {afiliado}.")
         return redirect(reverse('listarAfiliados'))
 
+@staff_required
 def quitarFamiliar(request):
     if request.method == 'POST':
         familiar_id = request.POST.get('familiar_id')
@@ -121,6 +129,7 @@ def quitarFamiliar(request):
         messages.success(request, f"Se ha quitado a {familiar}.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('crearAfiliado')))
 
+@staff_required
 def rechazar_solicitud(request):
     if request.method == 'POST':
         afiliado_id = request.POST.get('afiliado_id')
@@ -130,6 +139,7 @@ def rechazar_solicitud(request):
         messages.success(request, f"Se ha rechazado la solicitud de {afiliado}.")
         return redirect(reverse('afiliacionesPendientes'))
 
+@staff_required
 def buscar_comercio(request):
     if request.method == 'GET':
         comercio_cuit = request.GET.get('cuit')
@@ -155,6 +165,7 @@ def buscar_comercio(request):
                 'id': comercio_id
         })
 
+@staff_required
 def crear_comercio(request):
     if request.method == 'POST':
         action = request.POST.get('action-comercio')
@@ -176,6 +187,7 @@ def crear_comercio(request):
             print('no se que mierda pasa')
     return JsonResponse({'error': 'Formulario no válido'}, status=400)
 
+@staff_required
 def buscar_persona_para_familiar(request):
     if request.method == 'GET':
         # Primero, verificar si se envió el formulario de DNI
@@ -207,6 +219,7 @@ def buscar_persona_para_familiar(request):
             'action': new_action
         })
 
+@staff_required
 def crear_familiar(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -250,6 +263,13 @@ class AfiliadoUpdateView(UpdateView):
     form_class = ModificarAfiliadoForm
     #success_url = reverse_lazy("detallarAfiliado")
 
+    
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+
     def get_success_url(self):
         return reverse_lazy('detallarAfiliado', kwargs={'pk': self.object.pk})
 
@@ -270,19 +290,46 @@ class AfiliadoUpdateView(UpdateView):
 class AfiliadoDetailView(DetailView):
     model = Afiliado
 
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
 class AfiliadoListView(ListView):
     model = Afiliado
     paginate_by = 100
     ordering = 'id'
 
+    
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+
 class AfiliacionesPendientes(ListView):
     model = Afiliado
     paginate_by = 100
     template_name = 'afiliados/afiliaciones_pendientes.html'
+
+    
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
     def get_queryset(self):
         # Filtra los afiliados que están pendientes
         return Afiliado.objects.filter(alta__isnull=True,hasta__isnull=True).order_by('id')
-
+    
+    
 class AfiliacionPendienteDetailView(DetailView):
     model = Afiliado
     template_name = 'afiliados/afiliacion_pendiente_detail.html'
+
+
+    @method_decorator(staff_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+

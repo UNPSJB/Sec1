@@ -4,38 +4,432 @@
 
 {% block container %}
 <div>
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xl-12">  
-    <div class="container-listados my-3"> 
-              <div class="table-responsive card shadow p-3"> 
-                <h3>Listado de Salones</h3>
-                  <table class="table table-striped table-responsive">
-                      <thead>
-                          <tr>
-                            <th scope="col">nombre</th>
-                            <th scope="col">direccion</th>
-                            <th scope="col">capacidad</th>
-                            <th scope="col">monto</th>
-                            <th scope="col">encargado</th>  
-                          </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {% for salon in object_list %}
-                          <tr class="bg-transition">
-                            <td>{{ salon.nombre }}</td>
-                            <td>{{ salon.direccion }}</td>
-                            <td>{{ salon.capacidad }}</td>
-                            <td>{{ salon.monto }}</td>
-                            <td>{{ salon.encargado }}</td>
-                            <td><a href="{% url 'detallarSalon' salon.pk %}" class="btn btn-success"> Ver </a></td>             
-                            <td><a href="{% url 'eliminarSalon' salon.pk %}" class="btn btn-danger"> Eliminar </a></td>                                           
-                          </tr>
-                          {% endfor %}  
-                      </tbody>
-                  </table>
-                </div> 
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12 bg-white p-4 shadow rounded">
+        <!-- Título del listado -->
+        <h2 class="mb-4 text-center">Listado de Salones</h2>
+        <div class="search-box">
+          <div class="row align-items-center">
+              <div class="col-md-6">
+                  <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+              </div>
+              <div class="col-md-6 d-flex justify-content-end">
+                  <select class="form-select cards-per-page" id="cardsPerPage">
+                      <option value="5">5 por página</option>
+                      <option value="10">10 por página</option>
+                      <option value="20">20 por página</option>
+                  </select>
+              </div>
+          </div>
+          <div class="row filters-row">
+            <div class="col-md-8">
+                <span class="sort-label">Ordenar por:</span>
+                <!-- Dropdown Nombre -->
+                <div class="dropdown sort-dropdown d-inline-block">
+                    <button class="dropdown-toggle" type="button" id="dropdownNombre" data-bs-toggle="dropdown" aria-expanded="false">
+                        Nombre 
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownNombre">
+                        <li><a class="dropdown-item" href="#" data-sort="nombre" data-direction="asc">
+                            <i class="fas fa-sort-alpha-down"></i> Ascendente
+                        </a></li>
+                        <li><a class="dropdown-item" href="#" data-sort="nombre" data-direction="desc">
+                            <i class="fas fa-sort-alpha-up"></i> Descendente
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <!-- Dropdown Descripción -->
+                <div class="dropdown sort-dropdown d-inline-block">
+                    <button class="dropdown-toggle" type="button" id="dropdownDescripcion" data-bs-toggle="dropdown" aria-expanded="false">
+                        Descripción 
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownDescripcion">
+                        <li><a class="dropdown-item" href="#" data-sort="descripcion" data-direction="asc">
+                            <i class="fas fa-sort-alpha-down"></i> Ascendente
+                        </a></li>
+                        <li><a class="dropdown-item" href="#" data-sort="descripcion" data-direction="desc">
+                            <i class="fas fa-sort-alpha-up"></i> Descendente
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!-- Dropdown Disponibilidad -->
+                <div class="dropdown sort-dropdown d-inline-block">
+                    <button class="dropdown-toggle" type="button" id="dropdownDisponible" data-bs-toggle="dropdown" aria-expanded="false">
+                        Disponibilidad
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownDisponible">
+                        <li><a class="dropdown-item" href="#" data-sort="disponible" data-direction="asc">
+                            <i class="fas fa-check"></i> Disponibles primero</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#" data-sort="disponible" data-direction="desc">
+                            <i class="fas fa-times"></i> No disponibles primero</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <select class="form-select" id="filterDisponible">
+                    <option value="todos">Todos los salones</option>
+                    <option value="disponible">Solo habilitados</option>
+                    <option value="no-disponible">Solo deshabilitados</option>
+                </select>
+            </div>
+          </div>
+      </div>
+
+    <div id="cardsContainer">
+        {% for salon in salones %}
+        <div class="row card-item" 
+             data-nombre="{{ salon.nombre|lower }}" 
+             data-descripcion="{{ salon.descripcion|lower }}"
+             data-disponible="{{ salon.disponible|yesno:'1,0' }}">
+            <div class="container d-flex justify-content-center">
+                <div class="col-8 mb-4">
+                    <div class="card h-100">
+                        <div class="disponible-badge">
+                            {% if salon.disponible %}
+                            <span class="badge bg-success">Habilitado</span>
+                            {% else %}
+                            <span class="badge bg-danger">Deshabilitado</span>
+                            {% endif %}
+                        </div>
+                        <div class="row g-0" style="height: 100%;">
+                            <div class="col-md-5" style="overflow: hidden;">
+                                {% if salon.imagen %}
+                                <img src="{{ salon.imagen.url }}" alt="{{ salon.nombre }}" 
+                                     style="width: 100%; height: 100%; object-fit: cover;"/>
+                                {% else %}
+                                <span>No disponible</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-7 d-flex align-items-start flex-column">
+                                <div class="card-body d-flex flex-column" style="height: 100%;">
+                                    <h5 class="card-title">{{ salon.nombre }}</h5>
+                                    <p class="card-text" style="flex-grow: 1;">{{ salon.descripcion }}</p>
+                                    <div class="mt-auto d-flex flex-column flex-md-row justify-content-between">
+                                        <a href="{% url 'detallarSalon' salon.pk %}" 
+                                        class="btn botones">Ver más</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+    </nav>
 </div>
 {% endblock %}
+
+
+{% block extracss %}
+<style>
+   .search-box {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .pagination {
+            margin: 20px 0;
+        }
+        .cards-per-page {
+            margin-left: 20px;
+        }
+        .disponible-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+        .filters-row {
+            margin-top: 15px;
+        }
+        .sort-dropdown {
+            margin-right: 10px;
+        }
+        .sort-dropdown .dropdown-toggle {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            color: #212529;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .sort-dropdown .dropdown-toggle:hover {
+            background-color: #f8f9fa;
+            border-color: #c1c9d0;
+        }
+        .sort-dropdown .dropdown-toggle::after {
+            margin-left: 8px;
+        }
+        .sort-dropdown .dropdown-menu {
+            min-width: 200px;
+            padding: 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sort-dropdown .dropdown-item {
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .sort-dropdown .dropdown-item i {
+            margin-right: 8px;
+            width: 16px;
+        }
+        .sort-dropdown .dropdown-item.active {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+        .sort-dropdown .dropdown-divider {
+            margin: 4px 0;
+        }
+        .sort-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .filtered-out {
+            display: none;
+          }
+</style>
+{% endblock %}
+
+
+{% block extrajs %}
+  <script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const cardsContainer = document.getElementById('cardsContainer');
+    const searchInput = document.getElementById('searchInput');
+    const cardsPerPageSelect = document.getElementById('cardsPerPage');
+    const filterDisponible = document.getElementById('filterDisponible');
+    const paginationContainer = document.getElementById('pagination');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+    let currentSort = 'nombre';
+    let currentSortDirection = 'asc';
+    let currentPage = 1;
+    let cardsPerPage = parseInt(cardsPerPageSelect?.value || '5');
+
+    // Función para actualizar el estado visual de los dropdowns
+    function updateDropdownStates() {
+        dropdownItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.sort === currentSort && item.dataset.direction === currentSortDirection) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    // Función segura para obtener valores de comparación
+    function getSafeCompareValue(value) {
+        return value === null || value === undefined ? '' : value.toString().toLowerCase();
+    }
+
+    // Función para filtrar tarjetas
+    function filterCards() {
+        const searchTerm = searchInput?.value?.toLowerCase() || '';
+        const disponibleFilter = filterDisponible?.value || 'todos';
+        const cards = document.querySelectorAll('.card-item');
+        
+        let visibleCount = 0;
+        cards.forEach(card => {
+            const nombre = getSafeCompareValue(card.dataset.nombre);
+            const descripcion = getSafeCompareValue(card.dataset.descripcion);
+            const disponible = card.dataset.disponible === '1';
+            
+            const matchesSearch = nombre.includes(searchTerm) || descripcion.includes(searchTerm);
+            
+            let matchesDisponible = true;
+            if (disponibleFilter === 'disponible') {
+                matchesDisponible = disponible;
+            } else if (disponibleFilter === 'no-disponible') {
+                matchesDisponible = !disponible;
+            }
+            
+            if (matchesSearch && matchesDisponible) {
+                card.classList.remove('filtered-out');
+                visibleCount++;
+            } else {
+                card.classList.add('filtered-out');
+            }
+        });
+        
+        currentPage = 1; // Reiniciar la paginación a la primera página al filtrar
+        updatePagination();
+    }
+
+    // Función para ordenar tarjetas
+    function sortCards(property, direction) {
+        if (!cardsContainer) return; 
+        
+        const cards = Array.from(document.querySelectorAll('.card-item'));
+        if (!cards.length) return; 
+        
+        currentSort = property;
+        currentSortDirection = direction;
+
+        cards.sort((a, b) => {
+            let valueA = getSafeCompareValue(a.dataset[property]);
+            let valueB = getSafeCompareValue(b.dataset[property]);
+            
+            if (property === 'disponible') {
+                valueA = parseInt(valueA) || 0;
+                valueB = parseInt(valueB) || 0;
+                return direction === 'asc' ? valueB - valueA : valueA - valueB;
+            }
+
+            try {
+                return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+            } catch (e) {
+                return direction === 'asc' ? (valueA > valueB ? 1 : -1) : (valueB > valueA ? 1 : -1);
+            }
+        });
+
+        while (cardsContainer.firstChild) {
+            cardsContainer.removeChild(cardsContainer.firstChild);
+        }
+        cards.forEach(card => cardsContainer.appendChild(card));
+        
+        updateDropdownStates();
+        updatePagination();
+    }
+
+    // Función para actualizar la paginación
+    function updatePagination() {
+        const visibleCards = Array.from(document.querySelectorAll('.card-item'))
+            .filter(card => !card.classList.contains('filtered-out'));
+        
+        const totalPages = Math.ceil(visibleCards.length / cardsPerPage);
+        
+        if (currentPage > totalPages) {
+            currentPage = totalPages || 1;
+        }
+
+        visibleCards.forEach((card, index) => {
+            const startIndex = (currentPage - 1) * cardsPerPage;
+            const endIndex = startIndex + cardsPerPage;
+            
+            if (index >= startIndex && index < endIndex) {
+                card.style.display = ''; // Mostrar la tarjeta
+            } else {
+                card.style.display = 'none'; // Ocultar la tarjeta
+            }
+        });
+
+        renderPagination(totalPages);
+    }
+
+    // Función para renderizar los botones de paginación
+    function renderPagination(totalPages) {
+        paginationContainer.innerHTML = '';
+        
+        // Botón de "Anterior"
+        const prevItem = document.createElement('li');
+        prevItem.classList.add('page-item', 'disabled');
+        if (currentPage > 1) {
+            prevItem.classList.remove('disabled');
+        }
+
+        const prevLink = document.createElement('a');
+        prevLink.classList.add('page-link');
+        prevLink.href = '#';
+        prevLink.textContent = 'Anterior';
+        prevLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+        prevItem.appendChild(prevLink);
+        paginationContainer.appendChild(prevItem);
+
+        // Botones de páginas
+        for (let i = 1; i <= totalPages; i++) {
+            const pageItem = document.createElement('li');
+            pageItem.classList.add('page-item');
+            if (i === currentPage) {
+                pageItem.classList.add('active');
+            }
+
+            const pageLink = document.createElement('a');
+            pageLink.classList.add('page-link');
+            pageLink.href = '#';
+            pageLink.textContent = i;
+            pageLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                updatePagination();
+            });
+
+            pageItem.appendChild(pageLink);
+            paginationContainer.appendChild(pageItem);
+        }
+
+        // Botón de "Siguiente"
+        const nextItem = document.createElement('li');
+        nextItem.classList.add('page-item', 'disabled');
+        if (currentPage < totalPages) {
+            nextItem.classList.remove('disabled');
+        }
+
+        const nextLink = document.createElement('a');
+        nextLink.classList.add('page-link');
+        nextLink.href = '#';
+        nextLink.textContent = 'Siguiente';
+        nextLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+        nextItem.appendChild(nextLink);
+        paginationContainer.appendChild(nextItem);
+    }
+
+    // Escuchar cambios en el número de tarjetas por página
+    cardsPerPageSelect.addEventListener('change', function() {
+        cardsPerPage = parseInt(cardsPerPageSelect.value);
+        currentPage = 1; // Reiniciar a la primera página
+        updatePagination();
+    });
+
+    // Escuchar eventos en los filtros de búsqueda
+    searchInput.addEventListener('input', filterCards);
+    filterDisponible.addEventListener('change', filterCards);
+
+    // Escuchar clics en los dropdowns de ordenamiento
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const sort = item.dataset.sort;
+            const direction = item.dataset.direction;
+            sortCards(sort, direction);
+        });
+    });
+
+    // Inicializar el sistema de paginación y filtros
+    filterCards();
+    sortCards(currentSort, currentSortDirection);
+});
+
+  </script>
+{% endblock %}
+
+
+

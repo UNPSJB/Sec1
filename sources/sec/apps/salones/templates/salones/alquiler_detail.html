@@ -3,44 +3,297 @@
 {% load static %}
 
 {% block container %}
-<div style="background-color:#0f66c3">
-  <div class="container">
-    <form action="#">
-        <div class="form first">
-        <header> Datos Alquiler </header>
-                <div class="fields">
-                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                    <div class="input-group py-2"> 
-                      <label><b> Número de alquiler: </b></label> &nbsp; {{alquiler.pk}}
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Fecha de reserva: </b></label> &nbsp; {{alquiler.reserva}}
-                    </div>
-                    <div class="input-group py-2" style="display: flex; flex-direction: colum ">
-                      <label><b> Fecha inicio: </b></label> &nbsp; {{alquiler.inicio}}
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Monto: </b></label> &nbsp; {{alquiler.salon.monto}} **revisar**
-                    </div>
-                  </div>
-                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                    <div class="input-group py-2">
-                        <label><b> Afiliado: </b></label> &nbsp; <a href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{alquiler.afiliado}} </a>
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Salón: </b></label> &nbsp; <a href="{% url 'detallarSalon' alquiler.salon.pk %}">{{alquiler.salon}} </a>
-                    </div>
-                    <div class="input-group py-2">
-                      <label><b> Seña: </b></label> &nbsp; {{alquiler.senia}}
-                    </div>
-                  </div>
-                </div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <td><a href="#"class="btn btn-success">Editar</a></td>
-              <td><a href="#"class="btn btn-danger">Eliminar</a></td>
+<div class="container">
+  <form action="#">
+    <div class="form first">
+      <h2> Datos Alquiler </h2>
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+          <div class="card" style="width: 100%;">
+            <div class="card-header">
+              Detalles del Alquiler
             </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <b>Número de alquiler:</b> {{ alquiler.pk }}
+              </li>
+              <li class="list-group-item">
+                <b>Fecha de reserva:</b> {{ alquiler.reserva }}
+              </li>
+              <li class="list-group-item">
+                <b>Fecha inicio:</b> {{ alquiler.inicio }}
+              </li>
+              <li class="list-group-item">
+                <b>Monto:</b> ${{ alquiler.monto|floatformat:0 }}
+              </li>
+              <li class="list-group-item">
+                <b>Estado:</b>{% if object.estado_alquiler == "Concluido" %}
+                                  <span class="text-success">Concluido</span>
+                              {% elif object.estado_alquiler == "Pagado" %}
+                                  <span class="text-success">Pagado</span>
+                                  {% elif object.estado_alquiler == "Pendiente" %}
+                                  <span>Pendiente</span>
+                              {% else %}
+                                  <span class="text-danger">Cancelado</span>
+                              {% endif %}
+              </li>
+            </ul>
+          </div>
         </div>
-    </form>
-  </div>       
+        <div class="col-sm-12 col-md-6 col-lg-5 py-3">
+          <div class="card" style="width: 100%;">
+            <div class="card-header">
+              Información del Afiliado y Salón
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <b>Afiliado:</b> <a class="aAlquileres" href="{% url 'detallarAfiliado' alquiler.afiliado.pk %}">{{ alquiler.afiliado }}</a>
+              </li>
+              <li class="list-group-item">
+                <b>Salón:</b> <a class="aAlquileres" href="{% url 'detallarSalon' alquiler.salon.pk %}">{{ alquiler.salon }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="gap-2 d-md-flex justify-content-md-end" style="height: 40px;">
+        <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#modalServicios">
+          Servicios
+        </button>
+        {% if alquiler.pago_senia %}
+          {% if alquiler.tiene_cuotas %}
+            <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn botones">Pagar</a>
+          {% else %}
+            <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#crearCuotasModal">Pagar</button>
+          {% endif %}
+        {% else %}
+          <!-- Mostrar un botón deshabilitado si no se ha pagado la seña -->
+          <button type="button" class="btn btn-secondary"disabled>Pagar</button>
+        {% endif %}
+        <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary" style="height: 35px;">
+          En Espera
+        </a>
+        {% if hay_lista_espera %}
+        <a href="#" class="btn btn-danger" style="height: 35px;" data-bs-toggle="modal" data-bs-target="#cannotDeleteModal">Eliminar</a>
+        {% else %}
+        <a href="#" class="btn btn-danger" style="height: 35px;" data-bs-toggle="modal" 
+        data-bs-target="#confirmModal" id="deleteButton" 
+        data-url="{% url 'cancelar_alquiler' alquiler.pk %}">Eliminar</a>
+        {% endif %}
+      </div>
+
+    </div>
+    {% if alquiler.pago_senia %}
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#comprobanteModal" style="margin-left: 80px;">
+        <i class="fas fa-file-pdf" style="width: 50px;"></i>
+      </button>
+    {% else %}
+      <a href="javascript:void(0);" class="btn botones" style="margin-left: 80px;" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
+    {% endif %}
 </div>
+</form>
+</div>
+{% block extracss %}
+<style>
+  .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+</style>
+<style>
+  #comprobanteContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center; /* Asegúrate de que el texto esté centrado */
+      width: 100%; /* Ajusta el ancho al 100% para ocupar toda la hoja */
+  }
+</style>
+{% endblock %}
+<!-- modal de confirmacion de eliminar -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+          </div>
+          <div class="modal-body">
+              ¿Estás seguro de que deseas eliminar este alquiler? Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Modal no se puede eliminar -->
+<div class="modal fade" id="cannotDeleteModal" tabindex="-1" role="dialog" aria-labelledby="cannotDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="cannotDeleteModalLabel">No se puede eliminar</h5>
+          </div>
+          <div class="modal-body">
+            No es posible eliminar el alquiler debido a que hay alquileres en la lista de espera. 
+            Por favor, reemplácelo con por uno en espera
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+  // Obtener el botón de eliminación
+  const deleteButton = document.getElementById('deleteButton');
+  // Obtener el botón de confirmación dentro del modal
+  const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+  // Guardar la URL de eliminación en una variable
+  let deleteUrl = '';
+
+  // Al hacer clic en el botón de eliminar, actualizar la URL
+  deleteButton.addEventListener('click', function() {
+      deleteUrl = this.getAttribute('data-url'); // Guardar la URL del botón
+  });
+
+  // Cuando se confirme la eliminación, redirigir a la URL guardada
+  confirmDeleteButton.addEventListener('click', function() {
+      window.location.href = deleteUrl;
+  });
+</script>
+<!-- Modal ver servicios-->
+<div class="modal fade" id="modalServicios" tabindex="-1" aria-labelledby="modalServiciosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalServiciosLabel">Servicios del Alquiler</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          {% for servicio in alquiler.servicios.all %}
+            <li>{{ servicio.nombre }} - {{ servicio.precio|floatformat:0 }}</li>
+          {% empty %}
+            <p>No hay servicios seleccionados.</p>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmarPagoModalLabel">Confirmar Pago de Seña</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              ¿Está seguro que desea pagar la seña?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <form action="{% url 'pagar_senia' alquiler.pk %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn botones">Pagar Seña</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="comprobanteModalLabel">Comprobante</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="comprobanteContent">
+        <div class="card-body">
+          <h5>Comprobante de seña</h5>
+          <p><strong>Afiliado:</strong> {{ alquiler.afiliado }}</p>
+          <p><strong>Salón:</strong> {{ alquiler.salon.nombre }}</p>
+          <p><strong>Fecha de Inicio:</strong> {{ alquiler.inicio }}</p>
+          <p><strong>Seña:</strong> {{ alquiler.senia }}</p>
+          <p><strong>Fecha de Pago de seña:</strong> {{ alquiler.pago_senia }}</p>
+          <p><strong>Monto Total:</strong> {{ alquiler.monto }}</p>
+          <p><strong>Fecha de Reserva:</strong> {{ alquiler.reserva }}</p>
+        </div>
+      </div>
+      <input type="hidden" id="id_alquiler" value="{{ alquiler.pk }}">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn botones" id="downloadButton">Descargar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("downloadButton").addEventListener("click", function () {
+      var element = document.getElementById('comprobanteContent');
+      html2pdf()
+        .from(element)
+        .set({
+          margin: 1,
+          filename: 'comprobante.pdf',
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        })
+        .save();
+    });
+  });
+</script>
+
+
+<!-- Modal para seleccionar la cantidad de cuotas -->
+<div class="modal fade" id="crearCuotasModal" tabindex="-1" role="dialog" aria-labelledby="crearCuotasModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearCuotasModalLabel">Selecciona la cantidad de cuotas</h5>
+      </div>
+      <div class="modal-body">
+        <form id="crearCuotasForm" method="POST" action="{% url 'crear_cuotas' alquiler.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="cuotas">Cuotas:</label>
+            <select class="form-control" id="cuotas" name="cuotas">
+              <option value="1">1 Cuota</option>
+              <option value="3">3 Cuotas</option>
+              <option value="6">6 Cuotas</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn botones" id="confirmarCrearCuotas">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('confirmarCrearCuotas').addEventListener('click', function () {
+
+    var form = document.getElementById('crearCuotasForm');
+
+    form.submit(); // Esto enviará el formulario al backend
+  });
+</script>
+
 {% endblock %}

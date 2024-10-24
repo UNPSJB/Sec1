@@ -1,12 +1,251 @@
 {% extends 'main.html' %}
-{% load crispy_forms_tags %}
 {% load static %}
 
+{% block extracss %}
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+<link href="{% static 'estilos/calendario.css' %}" rel="stylesheet">
+<style>
+    .small-checkbox {
+        transform: scale(0.6); /* Ajusta el tamaño del checkbox */
+        margin-right: 8px; /* Espaciado entre checkbox y etiqueta */
+    }
+
+    .form-check-label {
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+    }
+</style>
+<style>
+    /* Cambiar el tamaño de la fuente del título del mes */
+    .fc-toolbar-chunk {
+        font-size: 0.8rem; /* Ajusta el tamaño según sea necesario */
+    }
+</style>
+
+{% endblock %}
 {% block container %}
 
-<div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        {% crispy form form.helper %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <fieldset>
+                    <h2>Datos Alquiler</h2>
+                    <div class="mb-4">
+                        <h6><b>Nombre del salon: </b>{{ form.initial.salon }}</h6>
+                        <h6><b>Seña requerida (10% del monto del salon): </b>{{ form.initial.senia|floatformat:0 }}</h6>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="id_dni">DNI</label>
+                            {{ form.dni }}
+                        </div>
+
+                        <div class="col-6">
+                            <label for="id_afiliado">Afiliado</label>
+                            <input type="text" id="id_afiliado_nombre" class="form-control" readonly value="{{ request.POST.afiliado_id|default:'' }}">
+                            <input type="hidden" id="id_afiliado" name="afiliado_id" value="{{ form.data.afiliado_id|default:'' }}">
+                        </div>
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label>Servicios:</label>
+                        {% for servicio in servicios %}
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input small-checkbox me-2" type="checkbox" name="servicios"
+                                value="{{ servicio.id }}" {% if servicio.obligatorio %} checked disabled {% endif %}>
+                            <label class="form-check-label">{{ servicio.nombre }} ({{ servicio.precio|floatformat:0 }}
+                                $)</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <input type="hidden" id="id_inicio" name="inicio">
+                <input type="hidden" id="id_salon" value="{{ form.initial.salon.id }}">
+                <div id="calendar-container" class="h-100">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Guardar</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal para mostrar el mensaje de error -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+            </div>
+            <div class="modal-body" id="errorModalBody">
+                No se encontró ningún afiliado con ese DNI.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extrajs %}
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<script>
+    function validateForm(event) {
+        // Evitar el envío del formulario
+        event.preventDefault();
+        
+        // Obtener los valores de los campos
+        const dni = document.getElementById('id_dni').value.trim();
+        const afiliadoId = document.getElementById('id_afiliado').value.trim();
+        const inicio = document.getElementById('id_inicio').value.trim();
+
+        // Validar que los campos no estén vacíos
+        if (!dni || !afiliadoId || dni.length < 7)  {
+            // Mostrar un mensaje de error si falta algún campo
+            document.getElementById('errorModalBody').innerText = "Por favor, ingrese un Dni de afiliado";
+            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
+            return; // No enviar el formulari
+        }
+        if (!inicio) {
+            // Mostrar un mensaje de error si falta algún campo
+            document.getElementById('errorModalBody').innerText = "Por favor, ingrese una fecha de alquiler";
+            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
+            return; // No enviar el formulari
+        }
+
+        // Si todo está correcto, enviar el formulario
+        event.target.form.submit(); // Esto enviará el formulario
+    }
+</script>
+
+<script>
+
+    let timeout;
+
+    document.getElementById('id_dni').addEventListener('input', function () {
+        let dni = this.value;
+
+        clearTimeout(timeout); // Limpiar el timeout anterior
+
+        // Verificar si el DNI tiene 7 u 8 dígitos
+        if (dni.length === 7 || dni.length === 8) {
+            timeout = setTimeout(() => {
+                fetch('/salones/buscar_afiliado/?dni=' + dni)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.afiliado_id) {
+                            document.getElementById('id_afiliado').value = data.afiliado_id;
+                            document.getElementById('id_afiliado_nombre').value = data.nombre_afiliado;
+                        } else {
+                            document.getElementById('id_afiliado_nombre').value = '';
+                            $('#errorModal').modal('show'); // Usa jQuery para mostrar el modal
+                            document.getElementById('errorModalBody').textContent = "No se encontró ningún afiliado con ese DNI.";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al buscar el afiliado:', error);
+                    });
+            }, 600);
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var salonId = document.getElementById('id_salon').value;
+        console.log('entro al script y la id es: ', salonId)
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var selectedDate = null;
+        var previousDayEl = null;
+
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            height: 400,
+
+            events: function (fetchInfo, successCallback, failureCallback) {
+
+                fetch('/salones/obtener_dias_ocupados/' + salonId + '/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const eventos = data.ocupados.map(item => ({
+                            title: 'Ocupado',
+                            start: item.fecha,
+                            allDay: true,
+                            backgroundColor: 'purple',
+                            borderColor: 'purple',
+                            extendedProps: {
+                                alquileresEnEspera: item.alquileres_en_espera // Agregar los alquileres en espera como una propiedad extendida
+                            }
+
+                        }));
+                        console.log("Eventos para FullCalendar:", eventos);
+                        successCallback(eventos);
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener los días ocupados:', error);
+                        failureCallback(error);
+                    });
+            },
+            eventContent: function (arg) {
+                var eventText = document.createElement('div');
+                eventText.innerHTML = arg.event.title;
+
+                // Crear un elemento para mostrar la cantidad de alquileres en espera
+                var esperaText = document.createElement('div');
+                esperaText.innerHTML = `Espera: ${arg.event.extendedProps.alquileresEnEspera}`;
+                esperaText.style.fontSize = '12px';
+                esperaText.style.color = 'white'; // Cambiar el color del texto según
+
+                eventText.appendChild(esperaText);
+                eventText.style.fontSize = '12px';
+
+                return { domNodes: [eventText] };
+            },
+            dateClick: function (info) {
+                // Evitar la selección de fechas anteriores a hoy
+                if (info.date < today) {
+                    return; // No hacer nada si es una fecha pasada
+                }
+
+                if (previousDayEl) {
+                    previousDayEl.style.backgroundColor = '';
+                }
+
+
+                selectedDate = info.dateStr;
+                previousDayEl = info.dayEl;
+                info.dayEl.style.backgroundColor = 'lightblue';
+
+                document.getElementById('id_inicio').value = selectedDate;
+            },
+            dayRender: function(info) {
+                // Si el día es anterior a hoy, cambiar el cursor a 'not-allowed'
+                if (info.date < today) {
+                    info.el.style.pointerEvents = 'none'; // Desactivar eventos en días pasados
+                    info.el.style.opacity = '0.5'; // Hacer los días pasados un poco más claros
+                }
+            }
+        });
+
+        calendar.render();
+    });
+</script>
 {% endblock %}

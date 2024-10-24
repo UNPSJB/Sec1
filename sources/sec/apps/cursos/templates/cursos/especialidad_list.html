@@ -12,9 +12,7 @@
                       <thead>
                           <tr>
                             <th scope="col">nombre</th>
-                            <th scope="col">area</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>  
+                            <th scope="col">area</th> 
                           </tr>
                       </thead>
                       <tbody>
@@ -23,7 +21,7 @@
                           <tr class="bg-transition">
                             <td>{{ especialidad.nombre }}</td>
                             <td>{{ especialidad.get_area_display }}</td>
-                            <td><a href="{% url 'modificarEspecialidad' especialidad.pk %}"class="btn btn-success">Editar</a></td>
+                            <td><a href="{% url 'modificarEspecialidad' especialidad.pk %}" class="btn botones">Editar</a></td>
                             <td><a href="{% url 'eliminarEspecialidad' especialidad.pk %}"class="btn btn-danger">Eliminar</a></td>                                                      
                           </tr>
                           {% endfor %}  

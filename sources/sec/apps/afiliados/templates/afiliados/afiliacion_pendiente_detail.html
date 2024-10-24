@@ -3,100 +3,93 @@
 {% load static %}
 
 {% block container %}
-<div class="py-4">
-    <div class="container py-3" style="background-color: white">
-      <div class="row">
-        <div class="col sm-12 col-md-4 col-lg-4 py-3">
-          <label><b>DATOS PERSONALES</b></label>
-          <div class="input-group py-2">
-            <label><b> Nombre: </b></label> &nbsp; {{afiliado.persona.nombre}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Apellido: </b></label> &nbsp; {{afiliado.persona.apellido}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> DNI: </b></label> &nbsp; {{afiliado.persona.dni}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> ID: </b></label> &nbsp; {{afiliado.id}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Fecha Nacimiento: </b></label> &nbsp; {{afiliado.persona.nacimiento}}
-          </div>
-        </div>
-        <div class="col sm-12 col-md-4 col-lg-4 py-3">
-          <div class="input-group py-2">
-            <label><b> CUIL: </b></label> &nbsp; {{afiliado.cuil}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Nacionalidad: </b></label> &nbsp; {{afiliado.persona.nacionalidad}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Estado Civil: </b></label> &nbsp; {{afiliado.persona.get_estadoCivil_display}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Domicilio: </b></label> &nbsp; {{afiliado.persona.domicilio}}
-          </div>
-          <div class="input-group py-2">
-            <label><b> Teléfono: </b></label> &nbsp; {{afiliado.persona.telefono}}
-          </div>  
-        </div>
-      </div>
-      <div class="container-listados my-3"> 
-        <div class="table-responsive card shadow p-3"> 
-            <div class="row">
-              <div class="col sm-12 col-md-4 col-lg-4 py-3">
-                <h3> Familiares </h3>
-              </div>
-              <div class="col sm-12 col-md-8 col-lg-8 py-3">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn btn-success"> + </a>
-                </div>
-              </div>
-            </div>
-            <table class="table table-striped table-responsive">
-                <thead>
-                    <tr>
-                        <th> DNI </th>
-                        <th> Nombre </th>
-                        <th> Apellido </th>
-                        <th> Fecha de nacimiento </th>
-                        <th> Relación </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <div>
-                      {% for familiar in afiliado.familiares.all%}
-                        <tr>
-                          <td> {{familiar.persona.dni}}</td>
-                          <td> {{familiar.persona.nombre}}</td>
-                          <td> {{familiar.persona.apellido}} </td>
-                          <td> {{familiar.persona.nacimiento}} </td>
-                          <td> {{familiar.get_relacion_display}} </td>
-                          <td><a id="btn-eliminar" data-id="{{ familiar.id }}" data-nombre="{{ familiar.persona.nombre }}" data-apellido="{{ familiar.persona.apellido }}" class="btn btn-success"> - </a></td>
-                        </tr>
-                      {%endfor%} 
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="card-title mb-4">DATOS PERSONALES</h2>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <strong>Nombre:</strong> {{afiliado.persona.nombre}}
                     </div>
-                </tbody>
-            </table>
-          </div> 
-      </div>
-      <div class="col sm-12 col-md-12 col-lg-12">
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <td>
-            <form id="form-aceptar-{{ afiliado.id }}" method="POST" action="{% url 'aceptar_solicitud' afiliado.id %}">
-                {% csrf_token %}
-                <input type="button" class="btn btn-success" value="Aceptar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ afiliado.id }}">
-            </form>
-          </td>
-          <td>
-            <input type="button" class="btn btn-danger" value="Rechazar" data-bs-toggle="modal" data-bs-target="#rechazoModal-{{ afiliado.id }}">
-          </td>
+                    <div class="mb-3">
+                        <strong>Apellido:</strong> {{afiliado.persona.apellido}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>DNI:</strong> {{afiliado.persona.dni}}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <strong>CUIL:</strong> {{afiliado.cuil}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Fecha Nacimiento:</strong> {{afiliado.persona.nacimiento}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Nacionalidad:</strong> {{afiliado.persona.get_nacionalidad_display}}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <strong>Estado Civil:</strong> {{afiliado.persona.get_estadoCivil_display}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Domicilio:</strong> {{afiliado.persona.domicilio}}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Teléfono:</strong> {{afiliado.persona.telefono}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <form id="form-aceptar-{{ afiliado.id }}" method="POST" action="{% url 'aceptar_solicitud' afiliado.id %}" class="d-inline-block aceptarAfiliado">
+                        {% csrf_token %}
+                        <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ afiliado.id }}">Aceptar</button>
+                    </form>
+                    <button type="button" class="btn btn-danger rechazarAfiliado" data-bs-toggle="modal" data-bs-target="#rechazoModal-{{ afiliado.id }}">Rechazar</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="card-title">Familiares</h3>
+                <button data-bs-toggle="modal" data-bs-target="#modalFamilia" class="btn botones">+</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Relación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for familiar in afiliado.familiares.all %}
+                        <tr>
+                            <td>{{familiar.persona.dni}}</td>
+                            <td>{{familiar.persona.nombre}}</td>
+                            <td>{{familiar.persona.apellido}}</td>
+                            <td>{{familiar.persona.nacimiento}}</td>
+                            <td>{{familiar.get_relacion_display}}</td>
+                            <td>
+                                <button id="btn-eliminar" data-id="{{ familiar.id }}" data-nombre="{{ familiar.persona.nombre }}" data-apellido="{{ familiar.persona.apellido }}" class="btn btn-danger btn-sm">-</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block modal %}

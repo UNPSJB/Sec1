@@ -269,7 +269,7 @@ class AulaForm(forms.ModelForm):
                 css_class='form-row'
             ),
             ),
-
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 
@@ -399,6 +399,7 @@ class CrearProfesorForm(forms.Form):
                 Column('nacimiento', css_class='form-group col-md-4 mb-0'),
             ),
             ),
+            HTML('<hr/>'),
             Submit('submit', 'Guardar', css_class='button white'),)
 
 class ModificarProfesorForm(forms.Form):
@@ -449,6 +450,7 @@ class ModificarProfesorForm(forms.Form):
                 Column('experiencia', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
+            HTML('<hr/>'),
             ),
         Submit('submit', 'Guardar', css_class='button white'),)
 
@@ -494,6 +496,7 @@ class CrearDictadoForm(forms.Form):
                 Column('hasta', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
+            HTML('<hr/>'),
             ),
             Submit('submit', 'Guardar', css_class='button white'),)
 
@@ -642,7 +645,6 @@ class ModificarAlumnoForm(forms.Form):
             ),
             ),
             HTML('<hr/>'),   
-
             Submit('submit', 'Guardar', css_class='button white'),)
 
 

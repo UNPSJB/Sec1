@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+{% block container %}
+
+<h2 class="text-center">Comprobante</h2>
+<div class="d-flex justify-content-center">
+    <div class="card text-center" style="width: 24rem;">
+        <div class="card-body">
+            <h4 class="card-title">Detalle</h4>
+            <p><strong>Afiliado:</strong> {{ alquiler.afiliado }}</p>
+            <p><strong>Salón:</strong> {{ alquiler.salon.nombre }}</p>
+            <p><strong>Fecha de Inicio:</strong> {{ alquiler.inicio }}</p>
+            <p><strong>Seña:</strong> {{ alquiler.senia }}</p>
+            <p><strong>Monto Total:</strong> {{ alquiler.monto }}</p>
+            <p><strong>Fecha de Reserva:</strong> {{ alquiler.reserva }}</p>
+        </div>
+    </div>
+</div>
+<a href="{% url 'detallarAlquiler' alquiler.id %}" class="btn btn-primary">Regresar</a>
+{% endblock %}
