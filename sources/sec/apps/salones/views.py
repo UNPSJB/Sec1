@@ -216,13 +216,24 @@ def cambiar_estado_salon(request):
 class SalonUpdateView(UpdateView):
     model = Salon
     form_class = SalonForm
-    success_url = reverse_lazy("listarSalones")
 
     
 
     @method_decorator(staff_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        
+        messages.add_message(self.request, messages.SUCCESS, 'Salón modificado con éxito')
+        
+        return response
+
+
+    def get_success_url(self):
+        # Redirigir a la vista de detalle del salón después de una modificación
+        return reverse('detallarSalon', kwargs={'pk': self.object.pk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
