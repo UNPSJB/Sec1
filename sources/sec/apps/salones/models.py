@@ -59,6 +59,7 @@ class Alquiler (models.Model):
     activo = models.BooleanField(default=True)
     cancelado = models.BooleanField(default=False)
     pago_senia = models.DateField(blank=True,null=True)
+    servicios = models.ManyToManyField(Servicio, blank=True)
     
     @property
     def tiene_cuotas(self):
@@ -80,6 +81,7 @@ class Alquiler (models.Model):
         else:
             if self.inicio < timezone.now().date():
                 self.cancelado = True
+                self.save()
                 return "Cancelado"  # No pago las cuotas y paso la fecha
             else:
                 return "Pendiente"  # No todas las cuotas están pagadas o no hay cuotas creadas

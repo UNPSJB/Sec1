@@ -18,11 +18,11 @@
                 <td>{{ alquiler.afiliado }}</td>
                 <td>{{ alquiler.reserva }}</td>
                 <td>
-                    <form action="{% url 'reemplazar_alquiler' alquiler.id %}" method="post">
+                    <form id="replaceForm" action="{% url 'reemplazar_alquiler' alquiler.id %}" method="post">
                         {% csrf_token %}
                         {% if alquiler_actual %}
                         <input type="hidden" name="alquiler_actual_id" value="{{ alquiler_actual.id }}">
-                        <button type="submit" class="btn btn-danger" style="height: 40px; width: 80px; margin-top: -0px;">Reemplazar</button>
+                        <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#confirmModal">Reemplazar</button>
                         {% endif %}
                     </form>
                 </td>
@@ -30,16 +30,48 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'detallarAlquiler' pk=alquiler_actual.id %}" class="btn btn-primary">Regresar</a>
+    <a href="{% url 'detallarAlquiler' pk=alquiler_actual.id %}" class="btn btn-primary">Ir al alquiler</a>
 </div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar Reemplazo</h5>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas reemplazar el alquiler? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmReplaceButton">Reemplazar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extracss %}
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
+  <style>
+    #replaceForm {
+        margin: 0;
+        padding: 0;
+    }
+  </style>
+
 {% endblock %}
 
 {% block extrajs %}
     <script src="{% static 'js/dataTable.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src=https://cdn.datatables.net/2.1.8/js/dataTables.js></script>
+    <script>
+        document.getElementById('confirmReplaceButton').addEventListener('click', function() {
+            // Envía el formulario
+            document.getElementById('replaceForm').submit();
+        });
+    </script>
 {% endblock %}

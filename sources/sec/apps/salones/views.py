@@ -299,13 +299,17 @@ class AlquilerCreateView(CreateView):
             afiliado = get_object_or_404(Afiliado, id=afiliado_id)
             alquiler.afiliado = afiliado
 
+        alquiler.save()
+        
         servicios_obligatorios = salon.servicio_set.filter(obligatorio=True)
         for servicio in servicios_obligatorios:
+            alquiler.servicios.add(servicio)
             alquiler.monto += servicio.precio
 
         servicios_seleccionados = self.request.POST.getlist('servicios')
         for servicio_id in servicios_seleccionados:
             servicio = get_object_or_404(Servicio, id=servicio_id)
+            alquiler.servicios.add(servicio) 
             alquiler.monto += servicio.precio
 
         if alquiler_existente:
@@ -330,6 +334,8 @@ class AlquilerCreateView(CreateView):
         }))
 
     def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Por favor, corrige los errores en el formulario.')
+        #messages.error(self.request, 'Por favor, corrige los errores en el formulario.')
         return super().form_invalid(form)
 
 """ def obtener_dias_ocupados(request, salon_pk):
@@ -391,11 +397,6 @@ def buscar_afiliado(request):
     return JsonResponse(data)
 
 
-class AlquilerUpdateView(UpdateView):
-    model = Alquiler
-    form_class = AlquilerForm
-    success_url = reverse_lazy("listarAlquileres")
-
 def alquiler_eliminar(request, pk):
     a = Alquiler.objects.get(pk=pk)
     a.delete()
@@ -407,6 +408,25 @@ class AlquilerDeleteView(DeleteView):
 
 class AlquilerDetailView(DetailView):
     model = Alquiler
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        alquiler = self.get_object()
+        # Obtener los servicios asociados al alquiler
+        context['servicios'] = alquiler.servicios.all()  # Servicios agregados al alquiler
+
+        salon_pk = alquiler.salon_id
+
+        # Obtener la fecha de inicio del alquiler actual
+        fecha_inicio = alquiler.inicio
+        lista_espera = Alquiler.objects.filter(
+        salon_id=salon_pk,
+        inicio=fecha_inicio,  # Filtrar por la misma fecha
+        activo=False,
+        cancelado=False
+        )
+        context['hay_lista_espera'] = lista_espera.exists()
+        return context
 
 class AlquilerListView(ListView):
     model = Alquiler
@@ -608,13 +628,15 @@ def reemplazar_alquiler(request, alquiler_id):
     
     return redirect('detallarAlquiler', pk=alquiler_espera.id)
 
-def cancelar_alquiler(alquiler_id):
+def cancelar_alquiler(request, alquiler_id):
     alquiler = get_object_or_404(Alquiler, pk=alquiler_id)
     alquiler.activo = False
     alquiler.cancelado = True
     alquiler.save()
+    messages.success(request, 'El alquiler fue eliminado correctamente.')
+    
+    return redirect('listarAlquileres')
 
-# TODO: Hacer bajas logicas y ver que les dejo modificar
 
 
 

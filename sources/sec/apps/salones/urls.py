@@ -32,7 +32,7 @@ urlpatterns = [
 
     path('crearAlquiler/', AlquilerCreateView.as_view(), name='crearAlquiler'),
     path('crearAlquiler/<int:salon_pk>', AlquilerCreateView.as_view(), name='crearAlquilerSalon'),
-    path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
+    #path('modificarAlquiler/<int:pk>', AlquilerUpdateView.as_view(), name='modificarAlquiler'),
     path('eliminarAlquiler/<int:pk>', AlquilerDeleteView.as_view(), name='eliminarAlquiler'),
     path('detallarAlquiler/<int:pk>', AlquilerDetailView.as_view(), name='detallarAlquiler'),
     path('listarAlquileres/', AlquilerListView.as_view(), name='listarAlquileres'),
@@ -40,6 +40,7 @@ urlpatterns = [
     path('crear_cuotas/<int:alquiler_id>/', crear_cuotas, name='crear_cuotas'),
     path('pagar_senia/<int:alquiler_id>/', pagar_senia, name='pagar_senia'),
     path('reemplazar_alquiler/<int:alquiler_id>/', reemplazar_alquiler, name='reemplazar_alquiler'),
+    path('cancelar_alquiler/<int:alquiler_id>/', cancelar_alquiler, name='cancelar_alquiler'),
     path('salon/<int:salon_pk>/lista_espera/<str:inicio>/', ListaEsperaView.as_view(), name='lista_espera'),
     path('alquiler/<int:alquiler_id>/cuotas/', PagoAlquilerListView.as_view(), name='listar_cuotas'),
     path('buscar_afiliado/', buscar_afiliado, name='buscar_afiliado'),

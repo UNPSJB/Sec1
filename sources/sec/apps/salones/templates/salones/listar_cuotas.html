@@ -3,7 +3,7 @@
 
 {% block container %}
 <div class="table-responsive card shadow p-3">
-    <h3>Listado de cuotas</h3>
+    <h2>Listado de cuotas</h2>
     <table class="table table-sm table-striped">
         <thead>
             <tr>
@@ -19,28 +19,25 @@
             <tr class="bg-transition">
                 <td>{{ cuota.numero }}</td>
                 <td>{{ cuota.monto }}</td>
-                <td>{{ cuota.pago }}</td>
+                <td>{{ cuota.pago|default:"-" }}</td>
                 <td>{{ cuota.alquiler.inicio }}</td>
                 <td style="padding: 0; ">
                     {% if not cuota.pago %}
-                        {% if cuota.puede_pagar %}
-                            <button type="button" class="btn btn-primary btn-sm pagar-cuota-btn" data-cuota-id="{{ cuota.id }}" data-cuota-numero="{{ cuota.numero }}" data-cuota-monto="{{ cuota.monto }}">
-                                Pagar
-                            </button>
-                        {% else %}
-                            <button type="button" class="btn btn-secondary btn-sm" style="height: 30px; width: 80px; margin-top:10px; margin-left: -12px;" disabled>Pagar</button>
-                        {% endif %}
+                    {% if cuota.puede_pagar %}
+                    <button type="button" class="btn btn-primary btn-sm pagar-cuota-btn" data-cuota-id="{{ cuota.id }}"
+                        data-cuota-numero="{{ cuota.numero }}" data-cuota-monto="{{ cuota.monto }}">
+                        Pagar
+                    </button>
+                    {% endif %}
                     {% else %}
-                        <!-- Botón para mostrar el modal del comprobante -->
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#comprobanteModal" 
-                                data-cuota-numero="{{ cuota.numero }}" 
-                                data-cuota-monto="{{ cuota.monto }}" 
-                                data-cuota-pago="{{ cuota.pago }}"
-                                data-cuota-alquiler-id="{{ cuota.alquiler.id }}"
-                                data-cuota-alquiler-afiliado="{{ cuota.alquiler.afiliado }}">
-                                
-                            Ver Comprobante
-                        </button>
+                    <!-- Botón para mostrar el modal del comprobante -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#comprobanteModal" data-cuota-numero="{{ cuota.numero }}"
+                        data-cuota-monto="{{ cuota.monto }}" data-cuota-pago="{{ cuota.pago }}"
+                        data-cuota-alquiler-id="{{ cuota.alquiler.id }}"
+                        data-cuota-alquiler-afiliado="{{ cuota.alquiler.afiliado }}">
+                        <i class="fas fa-file-pdf" style="width: 28px;"></i>
+                    </button>
                     {% endif %}
                 </td>
             </tr>
@@ -54,8 +51,25 @@
     <a href="{% url 'detallarAlquiler' pk=alquiler_id %}" class="btn btn-primary">Regresar</a>
 </div>
 
+{% block extracss %}
+<style>
+    #modal-form {
+        margin: 0;
+        /* Elimina el margen si es necesario */
+        padding: 0;
+        /* Elimina el padding si es necesario */
+    }
+</style>
+<style>
+    .btn-danger {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+    }
+</style>
+{% endblock %}
 <!-- Modal General de Confirmación -->
-<div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,14 +78,15 @@
             </div>
             <div class="modal-body">
                 <!-- Aquí actualizaremos dinámicamente la información de la cuota -->
-                ¿Está seguro que desea pagar la cuota número <span id="modal-cuota-numero"></span> por un monto de <span id="modal-cuota-monto"></span>?
+                ¿Está seguro que desea pagar la cuota número <span id="modal-cuota-numero"></span> por un monto de <span
+                    id="modal-cuota-monto"></span>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <!-- Aquí el action del formulario será actualizado dinámicamente -->
                 <form method="post" id="modal-form" action="">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Pagar</button>
+                    <button type="submit" class="btn btn-primary" style="height: 38px;">Pagar</button>
                 </form>
             </div>
         </div>
@@ -91,12 +106,12 @@
                 var cuotaId = button.getAttribute('data-cuota-id');
                 var cuotaNumero = button.getAttribute('data-cuota-numero');
                 var cuotaMonto = button.getAttribute('data-cuota-monto');
-                
+
                 // Actualizamos el contenido del modal
                 modalNumeroCuota.textContent = cuotaNumero;
                 modalMontoCuota.textContent = cuotaMonto;
 
-                
+
                 // Actualizamos la acción del formulario con la URL correcta para pagar la cuota
                 modalForm.action = "{% url 'registrar_pago' 0 %}".replace('0', cuotaId);
                 //modalForm.action = `/ruta/para/pagar/cuota/${cuotaId}/`;  // Ajusta la URL según tu configuración
@@ -111,24 +126,24 @@
 <!-- Modal del Comprobante de Pago -->
 <div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="comprobanteModalContent">
+                <h5>Detalle</h5>
+                <p><strong>Número de Cuota:</strong> <span id="comprobante-cuota-numero"></span></p>
+                <p><strong>Monto:</strong> $<span id="comprobante-cuota-monto"></span></p>
+                <p><strong>Fecha de Pago:</strong> <span id="comprobante-cuota-pago"></span></p>
+                <p><strong>Numero alquiler:</strong> <span id="comprobante-cuota-alquiler-id"></span></p>
+                <p><strong>Afiliado:</strong> <span id="comprobante-cuota-alquiler-afiliado"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="downloadComprobante" class="btn btn-success">Descargar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
-        <div class="modal-body" id="comprobanteModalContent">
-          <h5>Detalle</h5>
-          <p><strong>Número de Cuota:</strong> <span id="comprobante-cuota-numero"></span></p>
-          <p><strong>Monto:</strong> $<span id="comprobante-cuota-monto"></span></p>
-          <p><strong>Fecha de Pago:</strong> <span id="comprobante-cuota-pago"></span></p>
-          <p><strong>Numero alquiler:</strong> <span id="comprobante-cuota-alquiler-id"></span></p>
-          <p><strong>Afiliado:</strong> <span id="comprobante-cuota-alquiler-afiliado"></span></p>
-        </div>
-        <div class="modal-footer">
-            <button id="downloadComprobante" class="btn btn-success">Descargar</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>

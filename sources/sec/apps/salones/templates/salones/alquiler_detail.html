@@ -24,7 +24,7 @@
                 <b>Fecha inicio:</b> {{ alquiler.inicio }}
               </li>
               <li class="list-group-item">
-                <b>Monto:</b> ${{ alquiler.monto }}
+                <b>Monto:</b> ${{ alquiler.monto|floatformat:0 }}
               </li>
               <li class="list-group-item">
                 <b>Estado:</b>{% if object.estado_alquiler == "Concluido" %}
@@ -57,6 +57,9 @@
         </div>
       </div>
       <div class="gap-2 d-md-flex justify-content-md-end" style="height: 40px;">
+        <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#modalServicios">
+          Servicios
+        </button>
         {% if alquiler.pago_senia %}
           {% if alquiler.tiene_cuotas %}
             <a href="{% url 'listar_cuotas' alquiler.id %}" class="btn botones">Pagar</a>
@@ -65,25 +68,114 @@
           {% endif %}
         {% else %}
           <!-- Mostrar un botón deshabilitado si no se ha pagado la seña -->
-          <button type="button" class="btn botones"disabled>Pagar</button>
+          <button type="button" class="btn btn-secondary"disabled>Pagar</button>
         {% endif %}
-        <a href="#" class="btn botones">Editar</a>
-        <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary">
+        <a href="{% url 'lista_espera' alquiler.salon.pk alquiler.inicio %}" class="btn btn-secondary" style="height: 35px;">
           En Espera
         </a>
-        <a href="{% url 'eliminarAlquiler' alquiler.pk %}" class="btn btn-danger">Eliminar</a>
+        {% if hay_lista_espera %}
+        <a href="#" class="btn btn-danger" style="height: 35px;" data-bs-toggle="modal" data-bs-target="#cannotDeleteModal">Eliminar</a>
+        {% else %}
+        <a href="#" class="btn btn-danger" style="height: 35px;" data-bs-toggle="modal" 
+        data-bs-target="#confirmModal" id="deleteButton" 
+        data-url="{% url 'cancelar_alquiler' alquiler.pk %}">Eliminar</a>
+        {% endif %}
       </div>
 
     </div>
     {% if alquiler.pago_senia %}
-      <button type="button" class="btn botones" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
-          Comprobante Seña
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#comprobanteModal" style="margin-left: 80px;">
+        <i class="fas fa-file-pdf" style="width: 50px;"></i>
       </button>
     {% else %}
-      <a href="javascript:void(0);" class="btn botones" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
+      <a href="javascript:void(0);" class="btn botones" style="margin-left: 80px;" data-bs-toggle="modal" data-bs-target="#confirmarPagoModal">Pagar Seña</a>
     {% endif %}
 </div>
 </form>
+</div>
+{% block extracss %}
+<style>
+  .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+</style>
+{% endblock %}
+<!-- modal de confirmacion de eliminar -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+          </div>
+          <div class="modal-body">
+              ¿Estás seguro de que deseas eliminar este alquiler? Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Modal no se puede eliminar -->
+<div class="modal fade" id="cannotDeleteModal" tabindex="-1" role="dialog" aria-labelledby="cannotDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="cannotDeleteModalLabel">No se puede eliminar</h5>
+          </div>
+          <div class="modal-body">
+            No es posible eliminar el alquiler debido a que hay alquileres en la lista de espera. 
+            Por favor, reemplácelo con por uno en espera
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+  // Obtener el botón de eliminación
+  const deleteButton = document.getElementById('deleteButton');
+  // Obtener el botón de confirmación dentro del modal
+  const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+  // Guardar la URL de eliminación en una variable
+  let deleteUrl = '';
+
+  // Al hacer clic en el botón de eliminar, actualizar la URL
+  deleteButton.addEventListener('click', function() {
+      deleteUrl = this.getAttribute('data-url'); // Guardar la URL del botón
+  });
+
+  // Cuando se confirme la eliminación, redirigir a la URL guardada
+  confirmDeleteButton.addEventListener('click', function() {
+      window.location.href = deleteUrl;
+  });
+</script>
+<!-- Modal ver servicios-->
+<div class="modal fade" id="modalServicios" tabindex="-1" aria-labelledby="modalServiciosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalServiciosLabel">Servicios del Alquiler</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          {% for servicio in alquiler.servicios.all %}
+            <li>{{ servicio.nombre }} - {{ servicio.precio|floatformat:0 }}</li>
+          {% empty %}
+            <p>No hay servicios seleccionados.</p>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="confirmarPagoModal" tabindex="-1" aria-labelledby="confirmarPagoModalLabel" aria-hidden="true">

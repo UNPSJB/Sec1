@@ -11,18 +11,22 @@
         <table class="table table-striped table-responsive dataTable">
           <thead>
             <tr>
-              <th scope="col">seña</th>
-              <th scope="col">reserva</th>
-              <th scope="col">inicio</th> 
-              <th scope="col">accion</th>
+              <th scope="col">Nro alquiler</th>
+              <th scope="col">Afiliado</th>
+              <th scope="col">Salon</th>
+              <th scope="col">Inicio</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Accion</th>
             </tr>
           </thead>
           <tbody>
             {% for alquiler in object_list %}
             <tr class="bg-transition">
-              <td>{{ alquiler.senia }}</td>
-              <td>{{ alquiler.reserva }}</td>
+              <td>{{ alquiler.id }}</td>
+              <td>{{ alquiler.afiliado }}</td>
+              <td>{{ alquiler.salon }}</td>
               <td>{{ alquiler.inicio }}</td>
+              <td>{{ alquiler.estado_alquiler }} </td> 
               <td><a href="{% url 'detallarAlquiler' alquiler.pk %}" class="btn botones"> Ver </a></td>                                         
             </tr>
             {% endfor %}  
