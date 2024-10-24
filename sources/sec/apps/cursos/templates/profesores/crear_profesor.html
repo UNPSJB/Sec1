@@ -74,7 +74,7 @@ $(document).ready(function() {
                         $('#btn-aceptar').off('click').on('click', function() {
                             $('#miModal').modal('hide');
                             // Redirige a la URL deseada usando el pk
-                            window.location.href = `/profesores/detallarProfesor/${response.profesor_activo}`;
+                            window.location.href = `/cursos/detallarProfesor/${response.profesor_activo}`;
                         });
                     }else{
                         $('#submit-id-submit').val('Guardar'); // Cambia el texto del boton
