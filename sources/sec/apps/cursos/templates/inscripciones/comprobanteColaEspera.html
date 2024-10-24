@@ -1,0 +1,49 @@
+<form id="inscripcion-form"method="post">
+    {% csrf_token %}
+    <input type="hidden" id="hidden-action" name="action" value="search">
+              <h2><center>Inscripcion a Lista de espera de {{dictado.actividad.nombre}}</center></h2>
+              <hr/>
+  <div class="row">
+  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+      <div class="input-group py-2">
+        <label><b> DNI: </b></label> &nbsp; {{alumno.persona.dni}}
+      </div>
+      <div class="input-group py-2">
+        <label><b> Nombre: &nbsp;</b>{{alumno.persona.nombre}}</label>
+      </div>
+      <div class="input-group py-2">
+        <label><b> Apellido: </b></label> &nbsp; {{alumno.persona.apellido}}
+      </div>
+  </div>
+  </div>
+      {{ form.dictado }}
+      {{ form.alumno }}
+      <input
+        type="submit"
+        name="submit"
+        value="Confirmar"
+        class="btn btn-primary button white"
+        id="submit-id-submit"
+      />
+  </form>
+  
+  <script>
+    let dictadoId = "{{ dictado.id }}";
+    $('#id_dictado').val(dictadoId);
+    let alumnoId = "{{ alumno.id }}";
+    $('#id_alumno').val(alumnoId);
+    $('#inscripcion-form').on('submit', function(e) {
+                  e.preventDefault(); // Prevenir el envío normal del formulario
+                  $.ajax({
+                      url: "{% url 'crearInscripcionColaEspera' %}", // Cambia esto por tu URL para verificar el DNI
+                      type: "POST",
+                      data: $(this).serialize(),
+                      success: function(response) {
+                        window.location.href = response.redirect_url;
+                      },
+                      error: function() {
+                          alert("Error al verificar el DNI.");
+                      }
+                  });
+          });
+  </script>

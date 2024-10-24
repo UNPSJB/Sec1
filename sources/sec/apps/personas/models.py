@@ -51,11 +51,8 @@ class Persona(models.Model):
     alumnos = PersonaRolManager.from_queryset(PersonaRolQuerySet)(2)
     encargados = EncargadoManager()
 
-    def serProfesor(self, profesor):
+    def serProfesor(self):
         assert not self.es_profesor, "Ya soy Profesor" 
-        profesor.desde = datetime.now()
-        profesor.persona = self
-        profesor.save()
         self.es_profesor = True
         self.save()
 

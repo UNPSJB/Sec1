@@ -1,0 +1,201 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div class="py-4">
+    <div class="container py-3" style="background-color: white">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <img src="{% static 'img/curso.png' %}" class="img-thumbnail" alt="persona">
+        </div>
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b> DATOS DE ACTIVIDAD </b></label>
+          <div class="input-group py-2">
+            <label><b> Nombre: </b></label> &nbsp; {{actividad.nombre}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Fecha Desde: </b></label> &nbsp; {{actividad.desde}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Cupo de referencia: </b></label> &nbsp; {{actividad.cupoReferencia}}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          {% if not actividad.hasta %}
+                                  
+          <div class="col sm-12 col-md-12 col-lg-12">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <td><a href="{% url 'modificarActividad' actividad.pk %}"class="btn btn-success">Editar</a></td>
+              <td><a data-bs-toggle="modal" data-bs-target="#miModalBaja" class="btn btn-danger">Dar de baja</a></td>
+            </div>
+          </div>
+          {% endif %}
+          <div class="input-group py-2">
+            <label><b> Descuento: </b></label> &nbsp; {{actividad.descuento}}%
+          </div>
+          <div class="input-group py-2">
+            <label><b> Precio de referencia: </b></label> &nbsp; ${{actividad.precioReferencia}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Forma Pago: </b></label> &nbsp; {{actividad.get_tipoAbono_display}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Categoria: </b></label> &nbsp; {{actividad.get_categoria_display}}
+          </div>
+        </div>
+      </div> 
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3"> 
+                <div class="row">
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <h3> Dictados </h3>
+                  </div>
+                  {% if not actividad.hasta %}
+                  <div class="col sm-12 col-md-8 col-lg-8 py-3">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <a id="btn-dictado" class="btn btn-success"> + </a>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Aula</th>
+                      <th scope="col">Profesor</th>
+                      <th scope="col">Costo</th> 
+                      <th scope="col">Inicia</th> 
+                      <th scope="col">Termina</th>   
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {% for dictado in actividad.dictado_set.all %}
+                    <tr class="bg-transition">
+                      
+                      <td>{{ dictado.aula }}</td>  
+                      <td>{{ dictado.profesor }} </td>
+                      <td>${{ dictado.costo }}</td>
+                      <td>{{ dictado.inicio }}</td>
+                      <td>{{ dictado.fin }}</td>
+                      <td><a id="btn-dictadoDetail" data-id="{{ dictado.id }}" class="btn btn-dictadoDetail btn-success"> Ver </a></td>             
+                                                                 
+                    </tr>
+                    {% endfor %}  
+                </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal Crear dictado-->
+<div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="id_modal_body">
+                Contenido del modal aquí.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cerrar-modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal detallar dictado-->
+<div class="modal fade" id="miModalDetail" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+          <div class="modal-body" id="id_modalDetail_body">
+              Contenido del modal aquí.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cerrar-modal">Cancelar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal baja-->
+<div class="modal fade" id="miModalBaja" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Confirmar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+          <div class="modal-body" id="id_modalBaja_body">
+              ¿Esta seguro que desea dar de baja esta actividad?
+              <form id="form-baja" method="POST" action="{% url 'bajaActividad' %}" hidden>
+                {% csrf_token %}
+              <input id="id_activiad" type="hidden" name="actividad_id" required="" value={{actividad.id}}>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cerrar-modal">Cancelar</button>
+              <button type="submit" form="form-baja" class="btn btn-success"> Confirmar </button>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrajs %} 
+<script>
+$(document).ready(function() {
+  // Manejar el clic en el botón de comercio
+    $('#btn-dictado').on('click', function(e) {
+        // Realiza la solicitud AJAX
+        $.ajax({
+            url: "{% url 'crearDictado' %}",
+            type: 'GET',  // O 'POST' según lo que necesites
+            success: function(response) {
+                // Maneja la respuesta aquí
+                $('#id_modal_body').html(response);
+                let activiadId = "{{ actividad.id }}";
+                let activiadCupo = "{{ actividad.cupoReferencia }}";
+                let activiadPrecio = "{{ actividad.precioReferencia }}";
+                $('#id_actividad').val(activiadId);
+                $('#id_cupo').val(activiadCupo);
+                $('#id_costo').val(activiadPrecio);
+                $('#miModal').modal('show');
+            },
+            error: function() {
+                $('#resultadoBusqueda').html(`
+                    <div class="alert alert-danger">
+                        Error al crear dictado
+                    </div>
+                `);
+            }
+        });
+    });
+    $('.btn-dictadoDetail').on('click', function(e) {
+        // Realiza la solicitud AJAX
+        let dictadoId = $(this).data('id');
+        let url = "{% url 'detallarDictado' 0 %}".replace('0', dictadoId);
+        $.ajax({
+            url: url,
+            type: 'GET',  // O 'POST' según lo que necesites
+            success: function(response) {
+                // Maneja la respuesta aquí
+                $('#id_modalDetail_body').html(response);
+                $('#miModalDetail').modal('show');
+            },
+            error: function() {
+                $('#resultadoBusqueda').html(`
+                    <div class="alert alert-danger">
+                        Error al mostrar dictado
+                    </div>
+                `);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

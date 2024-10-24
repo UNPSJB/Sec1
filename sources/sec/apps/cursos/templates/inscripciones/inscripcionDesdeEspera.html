@@ -1,0 +1,49 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 content active">
+        <form id="inscripcion-form"method="post">
+            {% csrf_token %}
+            <input type="hidden" id="hidden-action" name="action" value="search">
+            <input type="hidden" id="inscripcion" name="inscripcion_id" value={{inscripcion_id}}>
+                      <h2><center>Inscripcion a {{dictado.actividad.nombre}}</center></h2>
+                      <hr/>
+          <div class="row">
+          <div class="col sm-12 col-md-4 col-lg-4 py-3">
+              <div class="input-group py-2">
+                <label><b> DNI: </b></label> &nbsp; {{alumno.persona.dni}}
+              </div>
+              <div class="input-group py-2">
+                <label><b> Nombre: &nbsp;</b>{{alumno.persona.nombre}}</label>
+              </div>
+              <div class="input-group py-2">
+                <label><b> Apellido: </b></label> &nbsp; {{alumno.persona.apellido}}
+              </div>
+          </div>
+          <div class="col sm-12 col-md-4 col-lg-4 py-3">
+            <div class="input-group py-2">
+              <label><b> Actividad: </b></label> &nbsp; {{dictado.actividad.nombre}}
+            </div>
+            <div class="input-group py-2">
+              <label><b> Pago: &nbsp;</b>${{pago}}</label>
+            </div>
+            <div class="input-group py-2">
+              <label><b> Nose: </b></label> &nbsp;
+            </div>
+          </div>
+          </div>
+              <input
+                type="submit"
+                name="submit"
+                value="Confirmar"
+                class="btn btn-primary button white"
+                id="submit-id-submit"
+              />
+          </form>
+        </div>
+</div>
+{% endblock %}

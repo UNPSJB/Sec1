@@ -1,0 +1,112 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extracss %}
+<style>
+    .content {
+        display: none; /* Ocultar el contenido por defecto */
+
+    }
+    .active {
+        display: block; /* Mostrar solo el contenido activo */
+    }
+
+</style>
+{% endblock %}
+
+{% block container %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 content active" id="contenidoInicial">
+        <form id="buscarAlumno-form"method="post">
+            {% csrf_token %}
+            <input type="hidden" id="hidden-action" name="action" value="search">
+            <h2><center>Inscripcion a {{clase.dictado.actividad.nombre}}</center></h2>
+            <hr/>
+              <legend>Alumno</legend>
+              <div class="row form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <div id="div_id_dni" class="mb-3">
+                        <label for="id_dni" class="form-label">Dni<span class="asteriskField">*</span></label>
+                        <input type="text" name="dni" pattern="(\d{7}|\d{8})" placeholder="########" title="Debe ser un Dni Valido" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="8" class=" form-control" required="" id="id_dni">
+                      </div>
+                </div>
+              </div>
+              <input
+              type="submit"
+              name="submit"
+              value="Siguiente"
+              class="btn btn-primary button white"
+              id="submit-id-submit"
+              />
+            </form>
+        </div>
+        <div id="form-container" class="content"></div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            <div class="modal-body" id="id_modal_body">
+                Contenido del modal aquí.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extrajs %} 
+<script>
+    $(document).ready(function() {
+        $('#buscarAlumno-form').on('submit', function(e) {
+                e.preventDefault(); // Prevenir el envío normal del formulario
+                $.ajax({
+                    url: "{% url 'buscarAlumno' %}", // Cambia esto por tu URL para verificar el DNI
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.action === 'inscribir') {
+                            let claseId = '{{clase.id}}';
+                            $.ajax({
+                                url: "{% url 'crearInscripcionClase' %}", // Cambia esto por tu URL para verificar el DNI
+                                type: "GET",
+                                data: {
+                                    clase_id: claseId,
+                                    alumno_id: response.alumno_id
+                                },
+                                success: function(response) {
+                                    if(response.action === 'ya inscripto'){
+                                        $('#id_modal_body').html('<h5><center>Este alumno ya se encuentra inscripto a la activiad</center></h5>');
+                                        $('#miModal').modal('show');
+                                    }else {
+                                        $('#form-container').html(response.html); // Renderiza la respuesta en el contenedor
+                                        $('#contenidoInicial').removeClass('active');
+                                        $('#form-container').addClass('active');
+                                    }
+                                    
+                                },
+                                error: function() {
+                                    alert("Error al inscribir.");
+                                }
+                            });
+                        }else if(response.action === 'crear') {
+                            $('#id_modal_body').html(response.html);
+                            $('#miModal').modal('show');
+                        }
+                    },
+                    error: function() {
+                        alert("Error al verificar el DNI.");
+                    }
+                });
+        });
+    });
+    </script>
+{% endblock %}

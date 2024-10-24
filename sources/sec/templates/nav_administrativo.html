@@ -40,11 +40,6 @@
   </a>
   <ul class="dropdown-menu">
     <li>
-      <a class="dropdown-item" href="{% url 'crearAlumno' %}"
-        ><i class="fa-solid fa-user-plus"></i> Agregar alumno</a>
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
       <a class="dropdown-item" href="{% url 'listarAlumnos' %}"
         ><i class="fa-solid fa-list"></i> Listado de alumnos</a
       >
@@ -63,42 +58,25 @@
   </a>
   <ul class="dropdown-menu">
     <li>
-      <a class="dropdown-item" href="{% url 'crearCurso' %}"
-        ><i class="fa-solid fa-plus"></i> Crear curso</a>
+      <a class="dropdown-item" href="{% url 'crearActividad' %}"
+        ><i class="fa-solid fa-plus"></i> Crear actividad</a>
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'crearAula' %}"
-        ><i class="fa-solid fa-plus"></i> Crear aula</a>
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'crearEspecialidad' %}"
-        ><i class="fa-solid fa-plus"></i> Crear especialidad</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'listarCursos' %}"
-        ><i class="fa-solid fa-list"></i> Listado de cursos</a
+      <a class="dropdown-item" href="{% url 'listarActividades' %}"
+        ><i class="fa-solid fa-list"></i> Listado de actividades</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
       <a class="dropdown-item" href="{% url 'listarAulas' %}"
-        ><i class="fa-solid fa-list"></i> Listado de aulas</a
+        ><i class="fa-solid fa-list"></i> Aulas</a
       >
     </li>
     <li class="dropdown-divider"></li>
     <li>
-      <a class="dropdown-item" href="{% url 'listarEspecialidades' %}"
-        ><i class="fa-solid fa-list"></i> Listado de especialidades</a
-      >
-    </li>
-    <li class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" href="{% url 'listarPagosDictados' %}"
-        ><i class="fa-solid fa-list"></i> Listado de pagos dictados</a
+      <a class="dropdown-item" href="{% url 'listarPagos' %}"
+        ><i class="fa-solid fa-list"></i> Listado de pagos pendientes</a
       >
     </li>
   </ul>
@@ -123,6 +101,12 @@
     <li>
       <a class="dropdown-item" href="{% url 'listarProfesores' %}"
         ><i class="fa-solid fa-list"></i> Listado de profesores</a
+      >
+    </li>
+    <li class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" href="{% url 'listarPagosProfesor' %}"
+        ><i class="fa-solid fa-list"></i> Listado de pagos pendientes</a
       >
     </li>
   </ul>

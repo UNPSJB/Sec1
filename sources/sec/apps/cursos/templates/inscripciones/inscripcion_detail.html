@@ -1,0 +1,96 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block container %}
+<div class="py-4">
+    <div class="container py-3" style="background-color: white">
+      <div class="row">
+        <div class="col sm-12 col-md-4 col-lg-4 py-3">
+          <label><b> DATOS DE LA INSCRIPCION </b></label>
+          <div class="input-group py-2">
+            <label><b> Alumno: </b></label> &nbsp; {{inscripcion.alumno}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Actividad: </b></label> &nbsp; {{inscripcion.dictado.actividad.nombre}}
+          </div>
+          <div class="input-group py-2">
+            <label><b> Estado: </b></label> &nbsp; {{inscripcion.get_estado_display}}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 py-3">
+          <div class="col sm-12 col-md-12 col-lg-12">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <td><a data-bs-toggle="modal" data-bs-target="#desinscribirModal"class="btn btn-danger">Desiscribir</a></td>
+            </div>
+          </div>
+        </div>
+      </div> 
+      <div class="container-listados my-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="table-responsive card shadow p-3"> 
+                <div class="row">
+                  <div class="col sm-12 col-md-4 col-lg-4 py-3">
+                    <h3> Pagos </h3>
+                  </div>
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Fecha</th>
+                      <th scope="col">Monto</th>
+                      <th scope="col">Estado</th> 
+                      <th scope="col"></th> 
+
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {% for pago in inscripcion.pagos.all %}
+                    <tr class="bg-transition">
+                      
+                      <td>{{ pago.fecha }}</td>  
+                      <td>${{ pago.monto }} </td>
+                      <td> {% if pago.pago %}
+                        Pagado
+                    {% else %}
+                        Pendiente
+                    {% endif %} </td>
+                      <td><a id="btn-dictadoDetail" class="btn btn-success"> Ver </a></td>             
+                                                                 
+                    </tr>
+                    {% endfor %}  
+                </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal rechazo-->
+<div class="modal fade" id="desinscribirModal" tabindex="-1" aria-labelledby="rechazoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rechazoModalLabel">Confirmar Desinscripcion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Esta seguro que desea realizar la desinscripción?
+                <form id="form-desinscribir" method="POST" action="{% url 'desinscribir' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="inscripcion_id" required="" value="{{inscripcion.id}}">
+    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" form="form-desinscribir">Aceptar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  {% endblock %}
